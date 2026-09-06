@@ -1,6 +1,11 @@
 import Markdown from "markdown-to-jsx";
 import Link from "next/link";
-import type { AnchorHTMLAttributes, PropsWithChildren, TableHTMLAttributes } from "react";
+import type {
+  AnchorHTMLAttributes,
+  ImgHTMLAttributes,
+  PropsWithChildren,
+  TableHTMLAttributes,
+} from "react";
 
 import {
   FOOTNOTE_HREF,
@@ -79,11 +84,33 @@ export function MarkdownBody({ text, footnotes, resolveLink = NO_LINK }: Props) 
           h2: { component: "h5" },
           h3: { component: "h6" },
           table: { component: ScrollableTable },
+          img: { component: BlockedImage },
         },
       }}
     >
       {markdown}
     </Markdown>
+  );
+}
+
+/**
+ * 이미지는 그리지 않는다 (PRD 5.4.3).
+ *
+ * `![설명](주소)`는 편집자가 적은 **외부 주소를 읽는 사람의 브라우저가 직접 부르게**
+ * 만든다. 그 요청에 읽는 사람의 IP와 브라우저 정보가 실려 나가는데, 우리는 그 주소가
+ * 무엇인지 통제하지 못한다 — 운영자가 하나씩 보고 넣는 영상 임베드와 달리 편집은
+ * 누구나 하기 때문이다. 마음먹으면 추적 픽셀도 된다.
+ *
+ * 조용히 지우지 않고 자리에 표시를 남긴다. 아무것도 안 보이면 편집자는 문법을 틀린
+ * 줄 알고 같은 것을 몇 번이고 다시 시도한다. 설명(alt)을 함께 보여 주는 것은 그 글이
+ * 편집자가 쓴 것이라 지워 버릴 이유가 없어서다.
+ */
+function BlockedImage({ alt }: ImgHTMLAttributes<HTMLImageElement>) {
+  const label = typeof alt === "string" ? alt.trim() : "";
+  return (
+    <span className={styles.blockedImage} title="이 위키에는 이미지를 넣을 수 없습니다">
+      {label ? `[이미지: ${label}]` : "[이미지]"}
+    </span>
   );
 }
 

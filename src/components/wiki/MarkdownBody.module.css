@@ -169,6 +169,22 @@
   white-space: nowrap;
 }
 
+/* ---------------------------------------------------------------- 이미지 */
+
+/*
+ * 막힌 이미지 자리. 빨간 링크(.missing)와 같은 성질의 표시다 — 뭔가 있었는데 그릴 수
+ * 없다는 것을 편집자에게 알린다. 다만 오류는 아니라 빨강을 쓰지 않는다.
+ */
+.blockedImage {
+  padding: 0 4px;
+  border: 1px dashed var(--paper-line);
+  border-radius: var(--radius-card);
+  color: var(--ink-soft);
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  cursor: help;
+}
+
 /* ------------------------------------------------------------------ 각주 */
 
 .footnote {

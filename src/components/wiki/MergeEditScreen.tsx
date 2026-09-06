@@ -373,7 +373,11 @@ function SyntaxHelp() {
           <code>**굵게**</code> <code>- 목록</code> <code>&gt; 인용</code>{" "}
           <code>[글](https://…)</code>
         </dt>
-        <dd>보통의 마크다운도 그대로 쓸 수 있다. HTML 태그는 글자 그대로 보인다.</dd>
+        <dd>
+          보통의 마크다운도 그대로 쓸 수 있다. 표와 코드 블록도 된다. 다만{" "}
+          <strong>이미지와 HTML 태그는 넣을 수 없다</strong> — 이미지는 읽는 사람이 남의
+          서버를 직접 부르게 되고, HTML은 글자 그대로 보인다.
+        </dd>
       </dl>
     </details>
   );
