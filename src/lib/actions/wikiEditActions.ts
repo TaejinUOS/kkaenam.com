@@ -48,6 +48,8 @@ function revalidateDoc(ref: DocRef) {
   revalidatePath("/admin/wiki/review");
   revalidatePath("/admin/wiki/recent");
   revalidatePath("/my/edits");
+  /* 알림은 편집 표에서 만들어진다. 편집이 움직이면 알림도 움직인다. */
+  revalidatePath("/my/notifications");
 }
 
 export async function submitEditAction(
@@ -209,6 +211,7 @@ export async function rejectEditAction(editId: string, formData: FormData): Prom
   revalidatePath("/wiki/[title]", "page");
   revalidatePath("/admin/wiki/review");
   revalidatePath("/my/edits");
+  revalidatePath("/my/notifications");
   redirect("/admin/wiki/review?done=rejected");
 }
 

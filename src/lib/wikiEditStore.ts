@@ -95,10 +95,16 @@ function newArticleId(): string {
 
 /* --------------------------------------------------------------- 문서 가리키기 */
 
-/** 문서의 정체를 함께 읽어 오는 열. 목록 질의가 전부 이 조각을 쓴다. */
-const DOC_COLUMNS = `d.kind, d.champion_slug, d.title, d.title_key, d.doc_status`;
+/**
+ * 문서의 정체를 함께 읽어 오는 열. 목록 질의가 전부 이 조각을 쓴다.
+ *
+ * 알림 저장소(`notificationStore.ts`)도 같은 조각으로 읽는다 — 알림 한 줄은 결국
+ * 편집 한 줄이라, 문서를 가리키는 방식이 여기서 갈리면 같은 문서가 화면마다 다른
+ * 이름으로 불린다.
+ */
+export const DOC_COLUMNS = `d.kind, d.champion_slug, d.title, d.title_key, d.doc_status`;
 
-type DocColumns = {
+export type DocColumns = {
   kind: string;
   champion_slug: string | null;
   title: string | null;
@@ -112,7 +118,7 @@ type DocColumns = {
  * 매치업 문서는 이름을 저장하지 않으므로(챔피언 카탈로그가 갖고 있다) 여기서는
  * 슬러그만 넘기고, 부르는 이름은 화면 쪽 `wikiDocTarget.ts`가 짓는다.
  */
-function targetOf(row: DocColumns): DocTarget {
+export function targetOf(row: DocColumns): DocTarget {
   if (row.kind === "article") {
     return {
       kind: "article",
