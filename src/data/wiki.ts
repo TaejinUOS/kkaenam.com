@@ -192,7 +192,7 @@ export type WikiUser = {
 export const SYSTEM_USER_ID = "user-system";
 
 /**
- * 섹션 본문 최대 길이 (PRD 15 미결정 5번 해소, 2026-09-03). 마크다운 문법 포함 글자 수다.
+ * 섹션 본문 최대 길이 (PRD 5.4.3). 마크다운 문법 포함 글자 수다.
  *
  * 2026-09-06에 4,000에서 50,000으로 올렸다. 아직 상한에 닿은 문서는 없지만(그때 가장
  * 긴 본문이 2,455자였다) 정글 동선·룬처럼 한 문서가 길어지는 일반 문서가 들어오는
@@ -209,10 +209,10 @@ export const SYSTEM_USER_ID = "user-system";
  */
 export const MAX_BODY_LENGTH = 50000;
 
-/** 편집 요약 최대 길이. 선택 입력이며 비우면 빈 문자열로 저장한다 (미결정 6번 해소). */
+/** 편집 요약 최대 길이. 선택 입력이며 비우면 빈 문자열로 저장한다 (PRD 5.4.3). */
 export const MAX_SUMMARY_LENGTH = 80;
 
-/** 계정당 시간당 편집 제출 상한 (미결정 7번 해소). FR-32. */
+/** 계정당 시간당 편집 제출 상한. FR-32. */
 export const RATE_LIMIT_PER_HOUR = 10;
 
 /**

@@ -1,6 +1,6 @@
 import Markdown from "markdown-to-jsx";
 import Link from "next/link";
-import type { AnchorHTMLAttributes, PropsWithChildren } from "react";
+import type { AnchorHTMLAttributes, PropsWithChildren, TableHTMLAttributes } from "react";
 
 import {
   FOOTNOTE_HREF,
@@ -78,11 +78,27 @@ export function MarkdownBody({ text, footnotes, resolveLink = NO_LINK }: Props) 
           h1: { component: "h5" },
           h2: { component: "h5" },
           h3: { component: "h6" },
+          table: { component: ScrollableTable },
         },
       }}
     >
       {markdown}
     </Markdown>
+  );
+}
+
+/**
+ * 표는 감싸서 내보낸다.
+ *
+ * 넘치는 폭이 **표 안에서만** 밀려야 하기 때문이다. 감싸지 않으면 챔피언 이름이 여럿
+ * 들어간 표 하나가 페이지 전체에 가로 스크롤을 만들어, 아무 관계도 없는 본문 문단까지
+ * 화면 밖으로 끌고 나간다.
+ */
+function ScrollableTable({ children, ...rest }: TableHTMLAttributes<HTMLTableElement>) {
+  return (
+    <div className={styles.tableWrap}>
+      <table {...rest}>{children}</table>
+    </div>
   );
 }
 
