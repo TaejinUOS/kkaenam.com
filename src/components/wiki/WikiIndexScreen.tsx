@@ -406,18 +406,47 @@ function DocTree({ nodes }: { nodes: DocNode[] }) {
   return (
     <ul className={styles.rows}>
       {nodes.map((node) => (
-        <li key={node.titleKey}>
-          <Link href={articleHref(node.title)} className={styles.row}>
-            <span className={styles.rowTitle}>{node.label}</span>
-          </Link>
-          {node.children.length > 0 && (
-            <div className={styles.subtree}>
-              <DocTree nodes={node.children} />
-            </div>
-          )}
-        </li>
+        <DocTreeNode key={node.titleKey} node={node} />
       ))}
     </ul>
+  );
+}
+
+/**
+ * 나무의 한 줄. 하위 문서는 접어 둔다 — 분류 하나에 문서가 몰려 있으면 패널이
+ * 끝없이 늘어져 정작 이 분류 바로 아래에 뭐가 있는지 한눈에 안 들어온다.
+ *
+ * 이름을 누르면 그 문서로 가고, 옆의 화살표를 누르면 그 아래 문서만 펼친다 — 이동과
+ * 펼치기가 같은 자리에 있으면 문서로 가려다 실수로 접거나, 펼치려다 이동해 버린다.
+ */
+function DocTreeNode({ node }: { node: DocNode }) {
+  const [expanded, setExpanded] = useState(false);
+  const hasChildren = node.children.length > 0;
+
+  return (
+    <li>
+      <div className={styles.docRow}>
+        <Link href={articleHref(node.title)} className={styles.docRowLink}>
+          {node.label}
+        </Link>
+        {hasChildren && (
+          <button
+            type="button"
+            className={styles.docToggle}
+            aria-expanded={expanded}
+            aria-label={`${node.label} 하위 문서 ${expanded ? "접기" : "펼치기"}`}
+            onClick={() => setExpanded((value) => !value)}
+          >
+            <ChevronGlyph className={expanded ? styles.docToggleIconOpen : undefined} />
+          </button>
+        )}
+      </div>
+      {hasChildren && expanded && (
+        <div className={styles.subtree}>
+          <DocTree nodes={node.children} />
+        </div>
+      )}
+    </li>
   );
 }
 
@@ -456,6 +485,22 @@ function SearchGlyph() {
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.4} aria-hidden="true">
       <circle cx="10.5" cy="10.5" r="6.5" />
       <path d="M15.4 15.4 21 21" strokeLinecap="square" />
+    </svg>
+  );
+}
+
+/** 접힌 하위 문서 토글. 펼치면 아래를 가리키도록 90도 돌린다 (CSS `docToggleIconOpen`). */
+function ChevronGlyph({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2.4}
+      aria-hidden="true"
+    >
+      <path d="M9 6l6 6-6 6" strokeLinecap="square" strokeLinejoin="round" />
     </svg>
   );
 }

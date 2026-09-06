@@ -596,6 +596,59 @@
   border-left: 1px solid var(--paper-line);
 }
 
+/* 관문 패널의 문서 한 줄. 이름(이동)과 토글(펼치기)을 나란히 둔다 — 자리를 겹치면
+   문서로 가려다 접거나, 펼치려다 이동해 버린다. */
+.docRow {
+  display: flex;
+  align-items: stretch;
+  gap: 4px;
+  border-bottom: 1px solid var(--paper-line);
+}
+
+.docRowLink {
+  flex: 1;
+  min-width: 0;
+  padding: 9px 2px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: background var(--t-poster) var(--ease);
+}
+
+.docRowLink:hover,
+.docRowLink:focus-visible {
+  background: var(--acid);
+}
+
+.docToggle {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  color: var(--ink-soft);
+  background: transparent;
+  cursor: pointer;
+}
+
+.docToggle:hover,
+.docToggle:focus-visible {
+  color: var(--ink);
+  background: var(--acid);
+}
+
+.docToggle svg {
+  width: 16px;
+  height: 16px;
+  transition: transform var(--t-poster) var(--ease);
+}
+
+.docToggleIconOpen {
+  transform: rotate(90deg);
+}
+
 /* 인쇄된 목차처럼 갈래마다 세로 재단선을 세운다. */
 .branch {
   padding-left: 14px;
