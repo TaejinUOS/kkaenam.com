@@ -42,3 +42,13 @@
 .linkList a:hover {
   color: var(--acid);
 }
+
+/*
+ * Riot이 지정한 영어 고지. 한국어 안내보다 한 단계 낮춰 두지만 숨기지는 않는다 —
+ * "플레이어 눈에 쉽게 띄는 곳"에 있어야 한다는 것이 정책의 요구다.
+ */
+.legalEn {
+  margin-top: 6px;
+  font-size: 11px;
+  opacity: 0.75;
+}

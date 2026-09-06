@@ -41,11 +41,24 @@ export function SiteFooter() {
           </ul>
         </nav>
 
-        {/* PRD 16: Riot 정책에 따른 비공식 프로젝트 고지. */}
+        {/*
+          Riot 비공식 프로젝트 고지 (PRD 16).
+
+          영어 문장은 **Riot이 문구를 지정한 것**이라 옮기거나 줄이지 않고 그대로 둔다.
+          일반 정책이 이 문장을 "플레이어 눈에 쉽게 띄는 곳"에 붙이도록 요구한다.
+          한국어 문장은 읽는 사람을 위한 설명이지 그 요구를 대신하지 못한다.
+          근거: https://developer.riotgames.com/policies/general
+        */}
         <p className={styles.legal}>
-          깨남.COM는 Riot Games가 승인하거나 후원하지 않은 비공식 프로젝트입니다. League of Legends와
-          관련 자산은 Riot Games, Inc.의 자산이며, 챔피언 이미지와 스킬 정보는 Riot Games의 Data
-          Dragon을 사용합니다.
+          깨남.COM는 Riot Games가 승인하거나 후원하지 않은 비공식 프로젝트입니다. 챔피언 이미지와
+          스킬 정보는 Riot Games의 Data Dragon을 사용하며, Riot Games의 &ldquo;Legal Jibber
+          Jabber&rdquo; 정책에 따른 팬 프로젝트입니다.
+        </p>
+        <p className={`${styles.legal} ${styles.legalEn}`} lang="en">
+          깨남.COM isn&rsquo;t endorsed by Riot Games and doesn&rsquo;t reflect the views or opinions
+          of Riot Games or anyone officially involved in producing or managing Riot Games properties.
+          Riot Games, and all associated properties are trademarks or registered trademarks of Riot
+          Games, Inc.
         </p>
       </div>
     </footer>

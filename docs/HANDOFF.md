@@ -312,7 +312,7 @@ npx tsx scripts/check-taxonomy.ts          # 이름이 깨지지 않았는지 �
 | Pretendard (본문) | jsDelivr CDN | 서체 라이선스 확인 (블루프린트 10장) |
 | IBM Plex Mono (수치) | Google Fonts (`next/font/google`) | OFL |
 | **SB 어그로체 B (제목)** | `src/app/fonts/SBAggroB.woff` self-host | **파일을 수정·서브셋하지 말 것.** 라이선스가 폰트 파일의 수정·복제·배포를 금지한다. 235KB를 통째로 전송하므로 LCP 예산에 포함해 볼 것 |
-| 카테고리 대표 이미지 12장 | `public/images/` (직접 보유) | **사용 권리 확인이 끝나지 않았다** |
+| 카테고리 대표 이미지 13장 | `public/images/` (챔피언 일러스트) | 확인 끝. Riot "Legal Jibber Jabber" 팬 프로젝트 정책 범위다 — 로고·상표를 쓰지 않고 지정 고지를 하단에 두는 조건이며 둘 다 지키고 있다 (PRD 15 해소 표) |
 
 Riot 비공식 프로젝트 고지는 사이트 하단에 이미 넣어 두었다 (PRD 16).
 공개 배포 전에 Riot 정책을 다시 검토할 것.
