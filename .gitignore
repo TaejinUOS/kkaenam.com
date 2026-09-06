@@ -44,3 +44,7 @@ Thumbs.db
 *.sql.bak
 backup-*.sql
 d1-backup*.sql
+
+# Claude Code 개인 설정. 권한 허용 규칙은 사람마다 다르므로 저장소에 두지 않는다
+# (`.claude/settings.json`은 공유 설정이라 커밋한다).
+.claude/settings.local.json
