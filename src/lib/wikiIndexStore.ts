@@ -12,6 +12,8 @@ import "server-only";
 
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 
+import type { DocTarget } from "@/data/wiki";
+import { docHref, docTitle } from "@/lib/wikiDocTarget";
 import { CATEGORY_PREFIX } from "@/lib/wikiMarkup";
 
 /** `wiki_links.target_key`에서 분류 태그를 걸러내는 LIKE 패턴. */
@@ -149,4 +151,42 @@ export async function getWantedArticles(limit = 30): Promise<WantedArticle[]> {
     titleKey: row.target_key,
     linkCount: row.n,
   }));
+}
+
+export type Backlink = {
+  title: string;
+  href: string;
+};
+
+/**
+ * 이 이름을 `[[…]]`로 건 문서들 (역링크).
+ *
+ * "아직 없는 문서"에서 이름만 보고는 왜 이 문서가 필요한지 알 수 없다 — `/wiki/wanted`를
+ * 눌러 온 사람이 "누가 이 이름을 불렀는지"를 먼저 읽어야 무엇을 써야 할지 가늠할 수
+ * 있다. 이미 있는 문서에서도 같은 이유로 쓸 수 있지만, 지금은 없는 문서 화면에서만
+ * 부른다.
+ *
+ * 게시된 문서만 보여준다 — 승인 대기 중이거나 거절된 제안이 건 링크까지 보이면 아직
+ * 공개되지 않은 문서의 존재가 새어 나간다.
+ */
+export async function getBacklinks(targetKey: string): Promise<Backlink[]> {
+  const DB = await db();
+  const rows = await DB.prepare(
+    `SELECT DISTINCT d.kind, d.champion_slug, d.title, d.title_key
+       FROM wiki_links l
+       JOIN wiki_docs d ON d.id = l.source_doc
+      WHERE l.target_key = ?1 AND d.doc_status = 'published'`,
+  )
+    .bind(targetKey)
+    .all<{ kind: string; champion_slug: string | null; title: string | null; title_key: string | null }>();
+
+  const links = (rows.results ?? []).map((row) => {
+    const target: DocTarget =
+      row.kind === "article"
+        ? { kind: "article", title: row.title ?? "", titleKey: row.title_key ?? "", status: "published" }
+        : { kind: "matchup", championSlug: row.champion_slug ?? "" };
+    return { title: docTitle(target), href: docHref(target) };
+  });
+  links.sort((a, b) => a.title.localeCompare(b.title, "ko"));
+  return links;
 }

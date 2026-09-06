@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { ArticleScreen } from "@/components/wiki/ArticleScreen";
 import { getViewer } from "@/lib/authGuard";
+import { getBacklinks, type Backlink } from "@/lib/wikiIndexStore";
 import { articleHref, titleKey } from "@/lib/wikiTitle";
 import { getArticleView, getDocTree, resolveDocLinks, type DocNode } from "@/lib/wikiStore";
 
@@ -68,7 +69,10 @@ export default async function WikiArticlePage({ params }: { params: Promise<Rout
     (article.status === "published" ||
       (!!viewer && (viewer.role === "admin" || viewer.id === article.proposedBy)));
 
-  if (!article || !visible) return <MissingArticle title={title} childDocs={childDocs} />;
+  if (!article || !visible) {
+    const backlinks = await getBacklinks(titleKey(title));
+    return <MissingArticle title={title} childDocs={childDocs} backlinks={backlinks} />;
+  }
 
   const wikiLinks = await resolveDocLinks([article.body]);
 
@@ -94,7 +98,15 @@ export default async function WikiArticlePage({ params }: { params: Promise<Rout
  * 다만 이 이름 아래에 이미 문서가 달려 있다면 그것도 함께 보여 준다. 이름이 비어 있다고
  * 그 아래 문서까지 감추면, 부모가 안 쓰였다는 이유로 자식이 통째로 사라진다.
  */
-function MissingArticle({ title, childDocs }: { title: string; childDocs: DocNode[] }) {
+function MissingArticle({
+  title,
+  childDocs,
+  backlinks,
+}: {
+  title: string;
+  childDocs: DocNode[];
+  backlinks: Backlink[];
+}) {
   return (
     <div className={styles.screen}>
       <div className="shell">
@@ -125,6 +137,21 @@ function MissingArticle({ title, childDocs }: { title: string; childDocs: DocNod
             위키 목차로
           </Link>
         </div>
+
+        {backlinks.length > 0 && (
+          <section className={styles.orphans} aria-label="이 문서를 부른 문서">
+            <p className={styles.orphansTitle}>이 이름을 부른 문서</p>
+            <ul className={styles.orphanRows}>
+              {backlinks.map((link) => (
+                <li key={link.href}>
+                  <Link href={link.href} className={styles.orphanRow}>
+                    {link.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
 
         {childDocs.length > 0 && (
           <section className={styles.orphans} aria-label="이 이름 아래의 문서">
