@@ -39,7 +39,8 @@ export default async function WikiIndexPage() {
       countWantedArticles(),
       /* 관문이 몇 개든 질의는 하나다 — 간선을 통째로 읽고 나무는 메모리에서 세운다. */
       getDocTrees(portalKeys),
-      listUncategorizedArticles(),
+      /* 관문의 뿌리 문서(`라인전`)는 부모가 없는 것이 정상이라 "분류 없음"에서 뺀다. */
+      listUncategorizedArticles(portalKeys),
     ]);
 
   const data = buildWikiIndexData(taxonomy, trees, articles, uncategorized);

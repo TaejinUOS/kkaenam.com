@@ -384,9 +384,18 @@ export async function getDocTrees(names: string[]): Promise<Record<string, DocNo
  * 부모를 적지 않은 문서다. 부모를 적었지만 그 부모가 관문까지 이어지지 않는 문서는
  * 여기 걸리지 않는다 — 그건 "정리 안 됨"이 아니라 "끊긴 가지"라 성격이 다르고,
  * 지금은 잡아내지 않는다.
+ *
+ * **관문의 뿌리 문서는 뺀다.** 관문 이름과 같은 문서(`라인전`)는 부모가 없는 것이
+ * 정상이다 — 나무의 꼭대기이기 때문이다. 그걸 "정리가 안 된 문서"와 같은 통에 담으면
+ * 운영자가 정리할 것이 없는데 정리할 것이 있다고 읽게 된다.
  */
-export async function listUncategorizedArticles(): Promise<DocNode[]> {
+export async function listUncategorizedArticles(rootKeys: string[] = []): Promise<DocNode[]> {
   const DB = await db();
+  const roots = rootKeys.map(titleKey);
+  const rootFilter = roots.length
+    ? `AND d.title_key NOT IN (${roots.map((_, i) => `?${i + 2}`).join(", ")})`
+    : "";
+
   const rows = await DB.prepare(
     `SELECT d.title, d.title_key, d.updated_at
        FROM wiki_docs d
@@ -394,9 +403,10 @@ export async function listUncategorizedArticles(): Promise<DocNode[]> {
         AND NOT EXISTS (
           SELECT 1 FROM wiki_links l WHERE l.source_doc = d.id AND l.target_key LIKE ?1
         )
+        ${rootFilter}
       ORDER BY d.title`,
   )
-    .bind(`${CATEGORY_PREFIX}%`)
+    .bind(`${CATEGORY_PREFIX}%`, ...roots)
     .all<{ title: string; title_key: string; updated_at: string }>();
 
   return (rows.results ?? []).map((r) => ({
