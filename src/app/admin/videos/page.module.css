@@ -1,0 +1,230 @@
+/*
+ * 영상 등록. 다른 관리자 화면과 같이 잉크 면 위에 놓인다 — 읽는 지면이 아니라
+ * 조작하는 도구라, 종이 지면과 구분되는 편이 낫다.
+ */
+
+.screen {
+  display: grid;
+  gap: 18px;
+  padding-block: clamp(32px, 6vw, 64px) clamp(60px, 12vw, 140px);
+}
+
+.title {
+  font-size: clamp(32px, 6vw, 64px);
+  line-height: 0.95;
+}
+
+.lead {
+  max-width: 68ch;
+  color: var(--smoke);
+  word-break: keep-all;
+}
+
+.lead strong {
+  color: var(--paper);
+}
+
+.done,
+.error {
+  padding: 10px 12px;
+  border: var(--line);
+  border-radius: var(--radius-card);
+  /* body가 크림색 글자를 물려주므로 밝은 면에서는 글자색을 직접 세운다. */
+  color: var(--ink);
+  font-weight: 700;
+  word-break: keep-all;
+}
+
+.done {
+  background: var(--acid);
+}
+
+.error {
+  background: var(--gum);
+}
+
+/* -------------------------------------------------------------- 등록 폼 */
+
+.addForm {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+  padding: 16px;
+  border: var(--line-w) solid rgba(244, 235, 221, 0.3);
+  border-radius: var(--radius-card);
+  background: var(--ink-raised);
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  flex: 1 1 200px;
+}
+
+/* 주소와 제목은 긴 값이라 좁은 칸에 밀어 넣으면 앞뒤가 안 보인다. */
+.fieldWide {
+  flex: 2 1 320px;
+}
+
+.fieldLabel {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--smoke);
+}
+
+.input {
+  width: 100%;
+  padding: 10px 12px;
+  border: var(--line-paper);
+  border-radius: var(--radius-card);
+  background: var(--ink-sunken);
+  color: var(--paper);
+}
+
+/* ---------------------------------------------------------------- 목록 */
+
+.empty {
+  color: var(--smoke);
+  font-size: 14px;
+}
+
+.groups {
+  display: grid;
+  gap: 16px;
+}
+
+.group {
+  padding: 14px 16px;
+  border: var(--line-w) solid rgba(244, 235, 221, 0.22);
+  border-radius: var(--radius-card);
+}
+
+.groupTitle {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.groupLink:hover {
+  background: var(--acid);
+  color: var(--ink);
+}
+
+.count {
+  font-size: 12px;
+  color: var(--smoke);
+}
+
+.rows {
+  display: grid;
+  gap: 8px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 8px 12px;
+  border: 1px solid rgba(244, 235, 221, 0.34);
+  border-radius: var(--radius-card);
+  background: var(--ink-raised);
+}
+
+/* 감춘 영상. 목록에서 지우지 않고 흐리게 두어 되돌릴 대상으로 남긴다. */
+.rowHidden {
+  border-style: dashed;
+  opacity: 0.62;
+}
+
+.thumb {
+  width: 120px;
+  height: 68px;
+  border-radius: var(--radius-card);
+  object-fit: cover;
+  flex: none;
+}
+
+.info {
+  display: grid;
+  gap: 4px;
+  /* 제목과 메타가 왼쪽을 채우고 조작 버튼이 오른쪽 끝에 선다. */
+  flex: 1 1 260px;
+  min-width: 0;
+}
+
+.rowTitle {
+  font-size: 15px;
+  font-weight: 700;
+  word-break: keep-all;
+}
+
+.rowTitle:hover {
+  background: var(--acid);
+  color: var(--ink);
+}
+
+.meta {
+  font-size: 12px;
+  color: var(--smoke);
+}
+
+.flag {
+  margin-left: 6px;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--gum);
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.control {
+  padding: 6px 10px;
+  border: 1px solid rgba(244, 235, 221, 0.34);
+  border-radius: var(--radius-card);
+  color: var(--smoke);
+  font-size: 13px;
+  line-height: 1;
+}
+
+.control:hover,
+.control:focus-visible {
+  background: var(--acid);
+  color: var(--ink);
+}
+
+.remove:hover,
+.remove:focus-visible {
+  background: var(--gum);
+}
+
+.move {
+  padding: 6px 8px;
+  color: var(--smoke);
+  font-size: 15px;
+  line-height: 1;
+}
+
+.move:hover,
+.move:focus-visible {
+  background: var(--acid);
+  color: var(--ink);
+}
+
+@media (max-width: 560px) {
+  .thumb {
+    width: 88px;
+    height: 50px;
+  }
+}

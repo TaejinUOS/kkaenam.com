@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback } from "react";
 
+import type { VideoView } from "@/lib/videoStore";
 import type { WikiLinkMap } from "@/lib/wikiLink";
 import type { WikiView } from "@/lib/wikiStore";
 import { buildQuery } from "@/lib/url";
@@ -37,6 +38,8 @@ type Props = {
   /** 서버가 D1에서 읽어 온 위키 문서. */
   wiki: WikiView;
   wikiLinks: WikiLinkMap;
+  /** 운영자가 등록한 영상 (PRD 5.3.2). 비어 있으면 영상 탭이 빈 상태를 그린다. */
+  videos: VideoView[];
   /** 이 챔피언이 놓인 포지션들의 챔피언을 합친 것. Me 콤보박스의 기본 검색 대상. */
   nearbyChampions: ChampionOption[];
   allChampions: ChampionOption[];
@@ -56,6 +59,7 @@ export function MatchupScreen({
   champion,
   wiki,
   wikiLinks,
+  videos,
   nearbyChampions,
   allChampions,
   viewer,
@@ -186,7 +190,11 @@ export function MatchupScreen({
                 viewer={viewer}
               />
             ) : (
-              <VideoPanel champion={champion} positionLabel={positionLabel} />
+              <VideoPanel
+                champion={champion}
+                positionLabel={positionLabel}
+                videos={videos}
+              />
             )}
           </div>
         </div>

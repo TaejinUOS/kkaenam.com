@@ -32,6 +32,130 @@
   color: var(--ink-soft);
 }
 
+/* ------------------------------------------------------------- 영상 목록 */
+
+.list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin: 0;
+}
+
+.card {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+/*
+ * 16:9 자리를 먼저 잡는다. 썸네일과 iframe이 같은 상자를 쓰므로, 재생을 눌러도
+ * 카드 높이가 흔들리지 않는다 — 목록 중간의 영상을 누를 때 아래 카드가 밀려나면
+ * 방금 누른 것이 어디로 갔는지 다시 찾아야 한다.
+ */
+.frame {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border: var(--line-w) solid var(--paper-line);
+  border-radius: var(--radius-card);
+  background: var(--ink);
+  overflow: hidden;
+}
+
+.player,
+.facade {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.facade {
+  display: block;
+  padding: 0;
+}
+
+/*
+ * 유튜브 썸네일(hqdefault)은 480×360으로 오고, 그 안에 16:9 화면이 위아래 검은 띠와
+ * 함께 들어 있다. 16:9 상자에 `cover`로 채우면 잘려 나가는 위아래가 **정확히 그 띠**다
+ * (4:3을 16:9로 덮으면 높이의 12.5%씩이 잘리고, 띠가 딱 그만큼이다). 그래서 따로
+ * 확대하지 않는다 — 더 키우면 영상 화면 자체를 잘라 먹는다.
+ */
+.thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--t-marker) var(--ease);
+}
+
+.facade:hover .thumb,
+.facade:focus-visible .thumb {
+  transform: scale(1.04);
+}
+
+/* 재생 표식. 썸네일이 밝든 어둡든 보이게 잉크 면 위에 형광색으로 둔다. */
+.play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border: var(--line);
+  border-radius: 50%;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 20px;
+  /* ▶ 글리프가 왼쪽으로 치우쳐 보여 시각적 중심을 맞춘다. */
+  padding-left: 4px;
+  box-shadow: var(--shadow-cut);
+}
+
+.facade:hover .play,
+.facade:focus-visible .play {
+  background: var(--acid);
+}
+
+.caption {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.cardTitle {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.45;
+  word-break: keep-all;
+}
+
+.cardMeta {
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+}
+
+.source {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.source:hover {
+  background: var(--acid);
+  color: var(--ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .thumb,
+  .facade:hover .thumb,
+  .facade:focus-visible .thumb {
+    transition: none;
+    transform: none;
+  }
+}
+
 /* 16:9 자리만 잡아 둔 골격 */
 .skeleton {
   display: grid;
@@ -52,6 +176,7 @@
 }
 
 @media (max-width: 640px) {
+  .list,
   .skeleton {
     grid-template-columns: minmax(0, 1fr);
   }
