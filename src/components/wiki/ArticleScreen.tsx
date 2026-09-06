@@ -3,11 +3,12 @@
 import Link from "next/link";
 import { useCallback, useMemo } from "react";
 
-import type { CategoryMember, CategoryNode, CategoryView } from "@/lib/wikiStore";
+import type { DocNode } from "@/lib/wikiStore";
 import type { WikiLinkMap } from "@/lib/wikiLink";
 import { collectWikiLinkTitles, parseCategoryName } from "@/lib/wikiMarkup";
 import { articleHref } from "@/lib/wikiTitle";
 
+import { DeleteArticleButton } from "./DeleteArticleButton";
 import { type DocSection, WikiDocument } from "./WikiDocument";
 import styles from "./ArticleScreen.module.css";
 
@@ -15,6 +16,8 @@ type Viewer = { id: string; name: string; role: "member" | "admin" } | null;
 
 type Props = {
   title: string;
+  /** 운영자가 이 문서를 내릴 때 서버가 다시 찾는 열쇠. */
+  titleKey: string;
   /** 본문. 이름 붙은 섹션은 3단계에서 붙는다. */
   body: string;
   revision: number;
@@ -24,8 +27,13 @@ type Props = {
   proposed: boolean;
   /** 본문에 적힌 `[[...]]`를 서버가 미리 풀어 둔 결과. */
   wikiLinks: WikiLinkMap;
-  /** 이 문서 자체가 분류(`분류:이름`)일 때만 온다 — 그 분류에 속한 문서들. */
-  categoryMembers?: CategoryView;
+  /**
+   * 이 문서를 부모로 적은(`[[분류:이 문서]]`) 문서들. 끝까지 중첩된다.
+   *
+   * 분류 문서만 받는 것이 아니다 — 어떤 문서든 자기 아래 문서를 가질 수 있다
+   * (`docs/WIKI_EXPANSION.md` "위계는 문서가 만든다").
+   */
+  childDocs: DocNode[];
   viewer: Viewer;
 };
 
@@ -44,13 +52,14 @@ const BODY_ID = "general";
  */
 export function ArticleScreen({
   title,
+  titleKey,
   body,
   revision,
   updatedAt,
   updatedBy,
   proposed,
   wikiLinks,
-  categoryMembers,
+  childDocs,
   viewer,
 }: Props) {
   const resolveLink = useCallback((target: string) => wikiLinks[target] ?? null, [wikiLinks]);
@@ -137,18 +146,28 @@ export function ArticleScreen({
         )}
 
         {/*
-          이 문서 자체가 분류(`분류:이름`)일 때만 온다. 손으로 쓴 본문 아래에 그 분류에
-          속한 문서를 자동으로 이어 붙인다 — namuwiki의 분류 문서와 같은 동작이다.
-          하위분류는 끝까지 재귀적으로 펼친다(`getCategoryView`가 그렇게 읽어 온다).
+          손으로 쓴 본문 아래에 이 문서 아래의 문서를 자동으로 이어 붙인다. 분류 문서든
+          일반 문서든 똑같이 붙는다 — `동수 법칙`을 열면 그 아래 `전선`이 보여야 한다.
         */}
-        {categoryMembers && (categoryMembers.docs.length > 0 || categoryMembers.subcategories.length > 0) && (
-          <section className={styles.memberList} aria-label="이 분류의 문서">
-            <p className={styles.memberListTitle}>이 분류의 문서</p>
-            {categoryMembers.docs.length > 0 && <CategoryMemberDocs docs={categoryMembers.docs} />}
-            {categoryMembers.subcategories.map((sub) => (
-              <CategoryMemberBranch key={sub.name} node={sub} />
-            ))}
+        {childDocs.length > 0 && (
+          <section className={styles.memberList} aria-label="이 문서 아래의 문서">
+            <p className={styles.memberListTitle}>이 문서 아래</p>
+            <ChildDocs nodes={childDocs} />
           </section>
+        )}
+
+        {/*
+          운영자만 보는 자리. 문서를 내리는 일은 읽는 흐름의 일부가 아니므로 본문과
+          목록 아래, 메타 줄 옆에 둔다.
+        */}
+        {!proposed && viewer?.role === "admin" && (
+          <div className={styles.adminBar}>
+            <DeleteArticleButton
+              titleKey={titleKey}
+              title={title}
+              childCount={childDocs.length}
+            />
+          </div>
         )}
 
         {!proposed && (
@@ -171,35 +190,23 @@ export function ArticleScreen({
   );
 }
 
-/** 분류에 속한 문서 목록 한 줄. */
-function CategoryMemberDocs({ docs }: { docs: CategoryMember[] }) {
+/** 이 문서 아래의 문서. 한 줄이 곧 읽을 수 있는 문서이고, 아래가 있으면 들여 이어 그린다. */
+function ChildDocs({ nodes }: { nodes: DocNode[] }) {
   return (
     <ul className={styles.memberRows}>
-      {docs.map((doc) => (
-        <li key={doc.titleKey}>
-          <Link href={articleHref(doc.title)} className={styles.memberRow}>
-            {doc.title}
+      {nodes.map((node) => (
+        <li key={node.titleKey}>
+          <Link href={articleHref(node.title)} className={styles.memberRow}>
+            {node.label}
           </Link>
+          {node.children.length > 0 && (
+            <div className={styles.memberSub}>
+              <ChildDocs nodes={node.children} />
+            </div>
+          )}
         </li>
       ))}
     </ul>
-  );
-}
-
-/** 하위분류 한 갈래. 자기 문서를 그리고, 자기 하위분류를 재귀적으로 그린다. */
-function CategoryMemberBranch({ node }: { node: CategoryNode }) {
-  return (
-    <div className={styles.memberSub}>
-      <p className={styles.memberSubLabel}>
-        <Link href={articleHref(`분류:${node.name}`)} className={styles.categoryTag}>
-          {node.name}
-        </Link>
-      </p>
-      {node.docs.length > 0 && <CategoryMemberDocs docs={node.docs} />}
-      {node.subcategories.map((sub) => (
-        <CategoryMemberBranch key={sub.name} node={sub} />
-      ))}
-    </div>
   );
 }
 

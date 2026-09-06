@@ -128,8 +128,12 @@ export type DocKind = "matchup" | "article";
  * `published`만 본다. 주소를 아는 제안자와 운영자만 볼 수 있다.
  * `rejected`는 이름을 놓아준 뒤 남는 껍데기다. 「내 편집」이 거절 사유를 보여
  * 주려면 편집 행이 살아 있어야 하고, 그러려면 부모 행도 남아야 한다.
+ *
+ * `deleted`는 운영자가 내린 문서다 (마이그레이션 0010). `rejected`와 같이 이름을
+ * 놓아주고 행은 남긴다 — 다만 이쪽은 한 번 게시됐던 문서라 역사와 기여 기록이
+ * 붙어 있고, 그것을 지우지 않는 것이 이 상태가 존재하는 이유다.
  */
-export type DocStatus = "published" | "proposed" | "rejected";
+export type DocStatus = "published" | "proposed" | "rejected" | "deleted";
 
 /**
  * 문서를 가리키는 법. 편집·검토·역사·되돌리기가 챔피언 슬러그 대신 이 값을 받는다.

@@ -586,6 +586,16 @@
   gap: clamp(14px, 2vw, 32px);
 }
 
+/*
+ * 문서 아래 문서. 재단선을 한 단 더 세워 깊이를 눈으로 세게 한다 — 위계가 몇 단이든
+ * 같은 규칙이 반복된다.
+ */
+.subtree {
+  margin: 2px 0 6px;
+  padding-left: 12px;
+  border-left: 1px solid var(--paper-line);
+}
+
 /* 인쇄된 목차처럼 갈래마다 세로 재단선을 세운다. */
 .branch {
   padding-left: 14px;

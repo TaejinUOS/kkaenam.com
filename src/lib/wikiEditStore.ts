@@ -1033,3 +1033,167 @@ export async function getMyContribution(authorId: string): Promise<MyContributio
     docs: row?.docs ?? 0,
   };
 }
+
+// -------------------------------------------------------- 문서 내리기 (운영자)
+
+/**
+ * 일반 문서를 내린다 (마이그레이션 0010).
+ *
+ * **행을 지우지 않는다.** 자식 표가 `ON DELETE CASCADE`라 문서 행을 지우면 그 문서의
+ * 리비전·검토 사유·기여 기록이 전부 함께 사라진다. 그건 문서 하나를 없애는 일이
+ * 아니라 여러 사람이 남긴 기록을 없애는 일이다.
+ *
+ * 대신 세 가지를 한 묶음(`DB.batch`)으로 한다.
+ *
+ *   1. `doc_status = 'deleted'` — 목록·검색·링크·나무 질의가 전부 `published`만
+ *      보므로, 이 한 줄로 문서는 어디에서도 사라진다.
+ *   2. `title_key = NULL` — 이름을 놓아준다. 거절된 제안과 같은 처리다. 이름을 쥔 채
+ *      보이지도 않으면 아무도 그 이름으로 다시 쓸 수 없다.
+ *   3. `wiki_links`에서 이 문서가 건 링크를 지운다 — 내려간 문서가 계속 남의 나무에
+ *      가지를 뻗고 "아직 없는 문서" 수를 부풀리면 안 된다.
+ *
+ * 매치업 문서는 받지 않는다. 챔피언이 카탈로그에 있는 한 그 주소는 늘 열려 있고
+ * (첫 편집이 곧 생성이다), 목록에서 내리는 일은 챔피언 운영 상태(FR-39)가 이미 한다.
+ */
+export type DeleteArticleResult =
+  | { ok: true; title: string }
+  | { ok: false; error: "not_found" | "not_article" | "validation" };
+
+export async function deleteArticle(input: {
+  titleKey: string;
+  adminId: string;
+  reason: string;
+}): Promise<DeleteArticleResult> {
+  const reason = input.reason.trim();
+  if (!reason) return { ok: false, error: "validation" };
+  if (reason.length > MAX_SUMMARY_LENGTH) return { ok: false, error: "validation" };
+
+  const DB = await db();
+  const row = await DB.prepare(
+    `SELECT id, kind, title, doc_status FROM wiki_docs WHERE kind = 'article' AND title_key = ?1`,
+  )
+    .bind(input.titleKey)
+    .first<{ id: string; kind: string; title: string; doc_status: string }>();
+
+  if (!row) return { ok: false, error: "not_found" };
+  if (row.kind !== "article") return { ok: false, error: "not_article" };
+  if (row.doc_status !== "published") return { ok: false, error: "not_found" };
+
+  await DB.batch([
+    DB.prepare(
+      `UPDATE wiki_docs
+          SET doc_status = 'deleted', title_key = NULL,
+              deleted_at = ?1, deleted_by = ?2, delete_reason = ?3
+        WHERE id = ?4`,
+    ).bind(new Date().toISOString(), input.adminId, reason, row.id),
+    DB.prepare(`DELETE FROM wiki_links WHERE source_doc = ?1`).bind(row.id),
+  ]);
+
+  return { ok: true, title: row.title };
+}
+
+export type DeletedArticleRow = {
+  docId: string;
+  title: string;
+  /** 이 이름이 아직 비어 있는가. 누가 같은 이름으로 새 문서를 쓰면 복구할 수 없다. */
+  nameFree: boolean;
+  deletedAt: string | null;
+  deletedBy: string | null;
+  reason: string | null;
+};
+
+/**
+ * 내려간 문서 목록 (`/admin/wiki/deleted`).
+ *
+ * 이름을 놓아주었으므로 주소로는 더 이상 찾아갈 수 없다. 되돌릴 수 있는 조작인데
+ * 되돌릴 자리가 없으면 되돌릴 수 없는 조작과 같으므로, 이 목록이 그 자리다.
+ */
+export async function listDeletedArticles(): Promise<DeletedArticleRow[]> {
+  const DB = await db();
+  const rows = await DB.prepare(
+    `SELECT d.id, d.title, d.deleted_at, d.delete_reason, u.name AS admin_name
+       FROM wiki_docs d
+       LEFT JOIN users u ON u.id = d.deleted_by
+      WHERE d.kind = 'article' AND d.doc_status = 'deleted'
+      ORDER BY d.deleted_at DESC`,
+  ).all<{
+      id: string;
+      title: string;
+      deleted_at: string | null;
+      delete_reason: string | null;
+      admin_name: string | null;
+    }>();
+
+  const list = rows.results ?? [];
+  if (list.length === 0) return [];
+
+  /* 이름이 그 사이 다시 쓰였는지 한 번에 확인한다. 목록마다 질의하지 않는다. */
+  const keys = [...new Set(list.map((r) => titleKey(r.title)))];
+  const taken = await DB.prepare(
+    `SELECT title_key FROM wiki_docs
+      WHERE kind = 'article' AND doc_status <> 'deleted'
+        AND title_key IN (${keys.map((_, i) => `?${i + 1}`).join(", ")})`,
+  )
+    .bind(...keys)
+    .all<{ title_key: string }>();
+  const takenKeys = new Set((taken.results ?? []).map((r) => r.title_key));
+
+  return list.map((r) => ({
+    docId: r.id,
+    title: r.title,
+    nameFree: !takenKeys.has(titleKey(r.title)),
+    deletedAt: r.deleted_at,
+    deletedBy: r.admin_name,
+    reason: r.delete_reason,
+  }));
+}
+
+export type RestoreArticleResult =
+  | { ok: true; title: string }
+  | { ok: false; error: "not_found" | "name_taken" };
+
+/**
+ * 내린 문서를 되돌린다.
+ *
+ * 이름을 놓아주었으므로 그 사이 누가 같은 이름으로 문서를 만들었을 수 있다. 그때는
+ * 복구하지 않는다 — 유일 인덱스가 어차피 막지만, 실패를 예외가 아니라 **값**으로
+ * 돌려줘야 화면이 "이 이름은 이미 다시 쓰였습니다"라고 말할 수 있다.
+ *
+ * 본문이 걸고 있던 링크는 다시 심는다. 내릴 때 지웠으므로 그러지 않으면 복구된 문서가
+ * 나무에서 계속 떠 있게 된다.
+ */
+export async function restoreArticle(
+  docId: string,
+  adminId: string,
+): Promise<RestoreArticleResult> {
+  const DB = await db();
+  const row = await DB.prepare(
+    `SELECT id, title, general FROM wiki_docs
+      WHERE id = ?1 AND kind = 'article' AND doc_status = 'deleted'`,
+  )
+    .bind(docId)
+    .first<{ id: string; title: string; general: string }>();
+  if (!row) return { ok: false, error: "not_found" };
+
+  const key = titleKey(row.title);
+  const taken = await DB.prepare(
+    `SELECT id FROM wiki_docs
+      WHERE kind = 'article' AND doc_status <> 'deleted' AND title_key = ?1`,
+  )
+    .bind(key)
+    .first<{ id: string }>();
+  if (taken) return { ok: false, error: "name_taken" };
+
+  await DB.batch([
+    DB.prepare(
+      `UPDATE wiki_docs
+          SET doc_status = 'published', title_key = ?1,
+              deleted_at = NULL, deleted_by = NULL, delete_reason = NULL,
+              updated_at = ?2, updated_by = ?3
+        WHERE id = ?4`,
+    ).bind(key, new Date().toISOString(), adminId, row.id),
+    ...linkStatements(DB, row.id, null, row.general),
+  ]);
+
+  return { ok: true, title: row.title };
+}

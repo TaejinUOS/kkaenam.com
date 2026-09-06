@@ -44,3 +44,38 @@
   flex-wrap: wrap;
   margin-top: 24px;
 }
+
+/*
+ * 없는 문서인데 그 아래에 이미 문서가 달려 있는 경우. 부모가 안 쓰였다고 자식이
+ * 사라지면 안 되므로 여기에 이어 붙인다.
+ */
+.orphans {
+  margin-top: clamp(24px, 4vw, 40px);
+  padding-top: 16px;
+  border-top: var(--line-w) solid var(--paper-line);
+}
+
+.orphansTitle {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 8px;
+}
+
+.orphanRows {
+  display: grid;
+  gap: 2px;
+}
+
+.orphanRow {
+  display: block;
+  padding: 6px 8px;
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.orphanRow:hover {
+  background: var(--paper-shade);
+}

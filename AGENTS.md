@@ -95,6 +95,13 @@ npm run shots                             # 주요 화면 캡처 (dev 서버가 
   남는 것은 전부 일반 문서 후보이고, `/wiki/wanted`가 `getWantedArticles()`로 이 표를
   읽어 "많이 걸린 이름부터" 보여 준다. 쓰는 자리는 `wikiEditStore.ts`의 `linkStatements`
 
+**문서 위계는 `[[분류:이름]]` 하나로 만든다.** 그 이름이 `분류:`로 시작하는 문서든 평범한
+일반 문서든 상관없다 — **어떤 문서든 자기 아래에 문서를 가질 수 있고 동시에 자기도 읽는
+글이다.** 접두사는 가지가 될 자격이 아니라 주소 표기일 뿐이다(`wikiStore.ts`의
+`parentKeyOf`). 나무를 읽는 것은 `getDocTree`/`getDocTrees` 하나이고, 간선을 한 질의로
+읽어 메모리에서 세운다 — 가지마다 질의를 내면 문서 수만큼 왕복한다. 배경은
+`docs/WIKI_EXPANSION.md`의 "위계는 문서가 만든다".
+
 **문서를 가리킬 때는 `DocRef`를 쓴다** (`src/data/wiki.ts`). 편집·검토·역사·되돌리기는
 챔피언 슬러그가 아니라 이 값을 받으며, 화면에 보이는 이름·주소·섹션 이름은
 `src/lib/wikiDocTarget.ts`가 한 곳에서 짓는다. 새 화면에서 문서 이름을 직접 조립하지 않는다.

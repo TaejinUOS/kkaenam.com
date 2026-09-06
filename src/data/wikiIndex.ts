@@ -11,8 +11,7 @@
 import type { TaxonomySnapshot } from "@/lib/taxonomyStore";
 import { UNCATEGORIZED_KEY } from "@/lib/wikiCategoryKey";
 import { matchupDocTitle } from "@/lib/wikiLink";
-import { CATEGORY_PREFIX } from "@/lib/wikiMarkup";
-import type { CategoryMember, CategoryNode, CategoryView } from "@/lib/wikiStore";
+import type { DocNode } from "@/lib/wikiStore";
 import { articleHref } from "@/lib/wikiTitle";
 
 import { getCategoriesFor, positions } from "./champions";
@@ -20,17 +19,14 @@ import { coverPortals, shelfPortals, type Portal } from "./portals";
 
 export type PortalView = Portal & {
   /**
-   * 이 관문에 달린 일반 문서 수. 바로 속한 문서 + 모든 하위분류(끝까지)에 속한
-   * 문서를 중복 없이 합친 값이다.
+   * 이 관문 아래의 문서 수. 바로 아래 문서 + 그 아래 문서를 끝까지, 중복 없이 센다.
    *
    * 0인 관문은 숫자 대신 "첫 문서를 기다립니다"로 그린다 — `문서 0`을 큰 커버 아래
    * 붙이면 죽은 사이트로 보이고, 그건 사실도 아니다.
    */
   docCount: number;
-  /** 이 관문에 바로 속한 문서. */
-  docs: CategoryMember[];
-  /** 이 관문 바로 아래의 하위분류. 각 노드가 자기 하위분류를 재귀적으로 담는다. */
-  subcategories: CategoryNode[];
+  /** 이 관문 바로 아래의 문서. 각 문서가 자기 아래 문서를 재귀적으로 담는다. */
+  children: DocNode[];
 };
 
 /** 분류 나무의 한 갈래. 블루프린트 04 구역이 이 목록을 세로줄로 그린다. */
@@ -47,7 +43,7 @@ export type TreeItem = {
   href?: string;
   /** 아직 문서가 없는 항목. 빨간 링크와 같은 뜻으로 흐리게 그린다. */
   pending?: boolean;
-  /** 이 항목 아래의 하위분류. 지금은 관문의 하위분류 한 단계까지만 채워진다. */
+  /** 이 항목 아래의 문서. 끝까지 중첩된다. */
   children?: TreeItem[];
 };
 
@@ -84,8 +80,8 @@ export type WikiIndexData = {
   shelf: PortalView[];
   tree: TreeBranch[];
   search: SearchEntry[];
-  /** 어떤 분류에도 안 걸린 게시된 일반 문서. "분류 없음" 통에 쓰인다. */
-  uncategorized: CategoryMember[];
+  /** 어떤 문서 아래에도 놓이지 않은 게시된 일반 문서. "분류 없음" 통에 쓰인다. */
+  uncategorized: DocNode[];
 };
 
 /**
@@ -100,44 +96,42 @@ export function classifiedChampionSlugs(taxonomy: TaxonomySnapshot): string[] {
 }
 
 /**
- * `docs` + 모든 하위분류(끝까지)의 문서를 재귀적으로 모아 하나로 합친다(titleKey로
- * 중복 제거). D1을 부르지 않는 순수 계산이라 여기 둔다 — `wikiStore.ts`에 두면
+ * 나무 아래 문서를 끝까지 모아 하나로 합친다(titleKey로 중복 제거). 같은 문서가 서로
+ * 다른 두 부모 아래 있어도 한 번만 센다.
+ *
+ * D1을 부르지 않는 순수 계산이라 여기 둔다 — `wikiStore.ts`에 두면
  * `WikiIndexScreen.tsx`(클라이언트)가 이 파일을 값으로 import할 때 `server-only`를
  * 함께 끌고 들어와 빌드가 깨진다.
  */
-function collectCategoryDocs(view: CategoryView | CategoryNode): CategoryMember[] {
-  const seen = new Map<string, CategoryMember>();
-  const walk = (node: CategoryView | CategoryNode) => {
-    for (const doc of node.docs) seen.set(doc.titleKey, doc);
-    for (const sub of node.subcategories) walk(sub);
+function collectTreeDocs(nodes: DocNode[]): DocNode[] {
+  const seen = new Map<string, DocNode>();
+  const walk = (list: DocNode[]) => {
+    for (const node of list) {
+      seen.set(node.titleKey, node);
+      walk(node.children);
+    }
   };
-  walk(view);
+  walk(nodes);
   return [...seen.values()];
 }
 
 export function buildWikiIndexData(
   taxonomy: TaxonomySnapshot,
-  /** 관문별 분류 뷰(직속 문서 + 하위분류, 끝까지). `wikiStore.ts`의 `getCategoryView`가 채운다. */
-  categoryViews: Record<string, CategoryView> = {},
+  /** 관문별 문서 나무(끝까지). `wikiStore.ts`의 `getDocTrees`가 채운다. */
+  trees: Record<string, DocNode[]> = {},
   /** 게시된 일반 문서의 이름. 검색이 이 목록도 함께 훑는다. */
   articles: { title: string; titleKey: string }[] = [],
-  /** 어떤 분류에도 안 걸린 게시된 일반 문서. `wikiStore.ts`의 `listUncategorizedArticles`가 채운다. */
-  uncategorized: CategoryMember[] = [],
+  /** 어떤 문서 아래에도 없는 게시된 일반 문서. `wikiStore.ts`의 `listUncategorizedArticles`가 채운다. */
+  uncategorized: DocNode[] = [],
 ): WikiIndexData {
-  /* 직속 + 모든 하위분류(끝까지)의 문서를 titleKey로 중복 없이 합친 수. 같은 문서가
-   * 관문과 하위분류 양쪽에 걸려도 두 번 세지 않는다. */
-  const countOf = (view: CategoryView | undefined): number =>
-    view ? collectCategoryDocs(view).length : 0;
+  const countOf = (nodes: DocNode[] | undefined): number =>
+    nodes ? collectTreeDocs(nodes).length : 0;
 
-  const withCount = (portal: Portal): PortalView => {
-    const view = categoryViews[portal.key];
-    return {
-      ...portal,
-      docCount: countOf(view),
-      docs: view?.docs ?? [],
-      subcategories: view?.subcategories ?? [],
-    };
-  };
+  const withCount = (portal: Portal): PortalView => ({
+    ...portal,
+    docCount: countOf(trees[portal.key]),
+    children: trees[portal.key] ?? [],
+  });
 
   /*
    * 챔피언당 한 줄이다. 포지션마다 담으면 럭스가 결과에 세 번 나오는데, 그 셋은
@@ -184,12 +178,11 @@ export function buildWikiIndexData(
     });
   }
 
-  /** 하위분류 노드를 그 아래 하위분류까지 재귀적으로 `TreeItem`으로 옮긴다. */
-  const treeItemFromNode = (node: CategoryNode): TreeItem => ({
-    label: node.name,
-    href: articleHref(`${CATEGORY_PREFIX}${node.name}`),
-    pending: collectCategoryDocs(node).length === 0,
-    children: node.subcategories.map(treeItemFromNode),
+  /** 문서 노드를 그 아래 문서까지 재귀적으로 `TreeItem`으로 옮긴다. */
+  const treeItemFromNode = (node: DocNode): TreeItem => ({
+    label: node.label,
+    href: articleHref(node.title),
+    children: node.children.map(treeItemFromNode),
   });
 
   /*
@@ -209,15 +202,12 @@ export function buildWikiIndexData(
     },
     {
       label: "일반 문서",
-      items: [...coverPortals(), ...shelfPortals()].map((portal) => {
-        const view = categoryViews[portal.key];
-        return {
-          label: portal.label,
-          href: `/wiki?${new URLSearchParams({ 분류: portal.key })}`,
-          pending: countOf(view) === 0,
-          children: (view?.subcategories ?? []).map(treeItemFromNode),
-        };
-      }),
+      items: [...coverPortals(), ...shelfPortals()].map((portal) => ({
+        label: portal.label,
+        href: `/wiki?${new URLSearchParams({ 분류: portal.key })}`,
+        pending: countOf(trees[portal.key]) === 0,
+        children: (trees[portal.key] ?? []).map(treeItemFromNode),
+      })),
     },
     {
       label: "기타",

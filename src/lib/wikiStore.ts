@@ -259,122 +259,138 @@ export async function resolveDocLinks(bodies: string[]): Promise<WikiLinkMap> {
 /* -------------------------------------------------------------------- 분류 */
 
 /*
- * 이 절의 타입은 `wikiIndex.ts`가 값(함수) 없이 타입만 가져다 쓴다 — `wikiIndex.ts`는
- * 클라이언트 컴포넌트(`WikiIndexScreen.tsx`)가 값으로 import하므로, 이 표를 다루는
- * 계산 함수(예: 트리를 훑어 문서를 모으는 것)를 여기 두면 그 함수를 부르는 순간
- * `wikiIndex.ts` 전체가 `server-only`를 끌어들여 클라이언트 빌드가 깨진다. 그런
- * 순수 계산은 `wikiIndex.ts` 쪽에 둔다(`collectCategoryDocs`).
+ * ------------------------------------------------------------------ 문서 위계
+ *
+ * 문서가 본문에 `[[분류:다른 문서]]`를 적으면 **그 문서의 아래**로 들어간다.
+ * 나뭇가지가 될 수 있는 문서와 잎으로만 있는 문서를 나누지 않는다 — 어떤 문서든
+ * 자기 아래에 문서를 가질 수 있고, 동시에 자기도 읽는 글이다
+ * (`docs/WIKI_EXPANSION.md` "위계는 문서가 만든다").
+ *
+ * 예전에는 제목이 `분류:`로 시작하는 문서만 가지가 될 수 있었다. 그 규칙 때문에
+ * `전선`이 `[[분류:동수 법칙]]`을 적어도 `동수 법칙`이 일반 문서라 트리가 거기서
+ * 끊겼고, 그 문서는 검색 말고는 닿을 수 없었다. 접두사는 이제 **주소를 짓는 표기**일
+ * 뿐 가지 여부를 정하지 않는다.
+ *
+ * 이 절의 타입은 `wikiIndex.ts`가 값(함수) 없이 타입만 가져다 쓴다 —
+ * `wikiIndex.ts`는 클라이언트 컴포넌트(`WikiIndexScreen.tsx`)가 값으로 import하므로,
+ * 이 나무를 훑는 계산 함수를 여기 두면 그 함수를 부르는 순간 `wikiIndex.ts` 전체가
+ * `server-only`를 끌어들여 클라이언트 빌드가 깨진다. 그런 순수 계산은 `wikiIndex.ts`
+ * 쪽에 둔다(`collectTreeDocs`).
  */
-export type CategoryMember = { title: string; titleKey: string; updatedAt: string | null };
 
-/** 분류 나무의 한 갈래(하위분류 하나). 재귀적으로 그 아래 하위분류를 전부 담는다. */
-export type CategoryNode = {
-  name: string;
-  /** 이 분류에 바로 속한 문서. 하위분류 문서(제목이 `분류:`로 시작하는 것)는 제외한다. */
-  docs: CategoryMember[];
-  /** 이 분류를 상위로 적은(`[[분류:이 이름]]`) 하위분류. */
-  subcategories: CategoryNode[];
-};
-
-export type CategoryView = {
-  docs: CategoryMember[];
-  subcategories: CategoryNode[];
+/** 위계 나무의 한 문서. 자기 아래 문서를 재귀적으로 담는다. */
+export type DocNode = {
+  /** 문서의 정식 이름. `분류:` 접두사가 붙어 있을 수 있다 (주소가 그 이름이다). */
+  title: string;
+  /** 화면에 쓰는 이름. `분류:`를 뗀 것 — 나무에서 접두사는 잡음이다. */
+  label: string;
+  titleKey: string;
+  updatedAt: string | null;
+  children: DocNode[];
 };
 
 /** 순환·과도한 깊이를 막는 안전판. 실제로 이 깊이까지 쓸 일은 거의 없다. */
-const MAX_CATEGORY_DEPTH = 12;
+const MAX_TREE_DEPTH = 12;
 
 /**
- * 한 분류(`[[분류:이름]]`)에 속한 문서를 읽는다. 하위분류는 **끝까지** 재귀적으로
- * 따라간다 — "분류:라인전" 문서를 열면 라인전 → 라인관리 → 그 아래 하위분류까지
- * 전부 펼쳐서 보여줘야 한다.
+ * 어떤 문서를 부모로 가리키는 표기의 키.
  *
- * `wiki_links`는 매치업으로 안 풀리는 이름을 전부 담으므로(`wikiEditStore.ts`의
- * `linkStatements`), 분류도 새 저장소 없이 이 표 하나로 찾는다
- * (`docs/WIKI_EXPANSION.md` "분류 자체는 새 저장소가 없다").
- *
- * 순환(`분류:A`가 `분류:B`를, `분류:B`가 다시 `분류:A`를 상위로 적는 경우)은 **그 경로
- * 위에서만** 막는다 — 같은 분류가 서로 다른 두 상위 아래 나란히 있는 것(다이아몬드
- * 모양)은 순환이 아니라 각자 온전히 펼쳐져야 한다. 그래서 "지금까지 온 경로"만 도는
- * `ancestors` 집합을 재귀 호출마다 새로 만든다 — 형제 가지끼리 공유하지 않는다.
+ * `[[분류:동수 법칙]]`은 `분류:동수법칙`이라는 키로 저장된다(`titleKey`). 그 부모가
+ * 일반 문서 `동수 법칙`이든 분류 문서 `분류:동수 법칙`이든 **같은 키**로 닿아야 하므로,
+ * 문서 이름에서 접두사를 뗀 다음 다시 붙여 키를 짓는다.
  */
-export async function getCategoryView(name: string): Promise<CategoryView> {
-  const DB = await db();
-  const { docs, subNames } = await splitMembers(DB, name);
-
-  const ancestors = new Set([name]);
-  const subcategories = await Promise.all(
-    subNames.map((subName) => buildCategoryNode(DB, subName, ancestors, 1)),
-  );
-
-  return { docs, subcategories };
+function parentKeyOf(title: string): string {
+  return `${CATEGORY_PREFIX}${titleKey(parseCategoryName(title) ?? title)}`;
 }
 
-async function buildCategoryNode(
-  DB: D1Database,
-  name: string,
-  ancestors: ReadonlySet<string>,
-  depth: number,
-): Promise<CategoryNode> {
-  if (ancestors.has(name) || depth >= MAX_CATEGORY_DEPTH) {
-    return { name, docs: [], subcategories: [] };
-  }
+type ChildRow = { parent: string; title: string; title_key: string; updated_at: string | null };
 
-  const { docs, subNames } = await splitMembers(DB, name);
-  const nextAncestors = new Set(ancestors).add(name);
-  const subcategories = await Promise.all(
-    subNames.map((subName) => buildCategoryNode(DB, subName, nextAncestors, depth + 1)),
-  );
-
-  return { name, docs, subcategories };
-}
-
-async function splitMembers(
-  DB: D1Database,
-  name: string,
-): Promise<{ docs: CategoryMember[]; subNames: string[] }> {
-  const members = await categoryMembers(DB, name);
-  const docs: CategoryMember[] = [];
-  const subNames: string[] = [];
-  for (const member of members) {
-    const subName = parseCategoryName(member.title);
-    if (subName) subNames.push(subName);
-    else docs.push(member);
-  }
-  return { docs, subNames };
-}
-
-async function categoryMembers(DB: D1Database, name: string): Promise<CategoryMember[]> {
-  const key = titleKey(`${CATEGORY_PREFIX}${name}`);
+/**
+ * 위계를 이루는 간선을 **한 번에** 읽는다.
+ *
+ * 예전에는 가지 하나마다 질의를 하나씩 냈다. 모든 문서가 가지가 될 수 있게 되면서 그
+ * 방식은 문서 수만큼 왕복하게 되므로, 간선 전체(문서당 분류 태그 수만큼의 작은 표)를
+ * 한 번에 읽고 나무는 메모리에서 세운다. `/wiki` 첫 화면이 관문 다섯 개를 그리는 데도
+ * 질의는 하나다.
+ */
+async function loadEdges(DB: D1Database): Promise<Map<string, ChildRow[]>> {
   const rows = await DB.prepare(
-    `SELECT d.title, d.title_key, d.updated_at
+    `SELECT l.target_key AS parent, d.title, d.title_key, d.updated_at
        FROM wiki_links l JOIN wiki_docs d ON d.id = l.source_doc
-      WHERE l.target_key = ?1 AND d.kind = 'article' AND d.doc_status = 'published'
+      WHERE l.target_key LIKE ?1
+        AND d.kind = 'article' AND d.doc_status = 'published'
       ORDER BY d.title`,
   )
-    .bind(key)
-    .all<{ title: string; title_key: string; updated_at: string }>();
+    .bind(`${CATEGORY_PREFIX}%`)
+    .all<ChildRow>();
 
-  return (rows.results ?? []).map((r) => ({
-    title: r.title,
-    titleKey: r.title_key,
-    updatedAt: r.updated_at,
+  const byParent = new Map<string, ChildRow[]>();
+  for (const row of rows.results ?? []) {
+    const list = byParent.get(row.parent);
+    if (list) list.push(row);
+    else byParent.set(row.parent, [row]);
+  }
+  return byParent;
+}
+
+/**
+ * 한 부모 아래의 나무를 세운다.
+ *
+ * 순환(`A`가 `B`를, `B`가 다시 `A`를 부모로 적는 경우)은 **그 경로 위에서만** 막는다 —
+ * 같은 문서가 서로 다른 두 부모 아래 나란히 있는 것(다이아몬드)은 순환이 아니라 각자
+ * 온전히 펼쳐져야 한다. 그래서 "지금까지 온 경로"만 도는 `ancestors` 집합을 재귀마다
+ * 새로 만든다 — 형제 가지끼리 공유하지 않는다.
+ */
+function buildTree(
+  edges: Map<string, ChildRow[]>,
+  parentKey: string,
+  ancestors: ReadonlySet<string>,
+  depth: number,
+): DocNode[] {
+  if (ancestors.has(parentKey) || depth >= MAX_TREE_DEPTH) return [];
+
+  const nextAncestors = new Set(ancestors).add(parentKey);
+  return (edges.get(parentKey) ?? []).map((row) => ({
+    title: row.title,
+    label: parseCategoryName(row.title) ?? row.title,
+    titleKey: row.title_key,
+    updatedAt: row.updated_at,
+    children: buildTree(edges, parentKeyOf(row.title), nextAncestors, depth + 1),
   }));
 }
 
 /**
- * 어떤 분류에도 안 걸린, 게시된 일반 문서 (`/wiki` 04 구역의 "분류 없음" 통).
- *
- * 분류 문서 자신("분류:라인전" 같은)은 뺀다 — 그 문서가 상위 분류를 안 적었다고 해서
- * "분류를 안 단 일반 글"과 같은 뜻은 아니다.
+ * 이름 하나 아래의 문서 나무. 관문(`라인전`)에도, 문서 이름(`동수 법칙`)에도 쓴다 —
+ * 둘의 차이는 커버 이미지가 붙느냐뿐이고 여기서는 같은 것이다.
  */
-export async function listUncategorizedArticles(): Promise<CategoryMember[]> {
+export async function getDocTree(name: string): Promise<DocNode[]> {
+  const DB = await db();
+  const edges = await loadEdges(DB);
+  return buildTree(edges, parentKeyOf(name), new Set(), 0);
+}
+
+/** 여러 이름의 나무를 한 질의로. `/wiki` 첫 화면이 관문 전부를 이걸로 그린다. */
+export async function getDocTrees(names: string[]): Promise<Record<string, DocNode[]>> {
+  const DB = await db();
+  const edges = await loadEdges(DB);
+  return Object.fromEntries(
+    names.map((name) => [name, buildTree(edges, parentKeyOf(name), new Set(), 0)]),
+  );
+}
+
+/**
+ * 어떤 문서 아래에도 놓이지 않은, 게시된 일반 문서 (`/wiki` 04 구역의 "분류 없음" 통).
+ *
+ * 부모를 적지 않은 문서다. 부모를 적었지만 그 부모가 관문까지 이어지지 않는 문서는
+ * 여기 걸리지 않는다 — 그건 "정리 안 됨"이 아니라 "끊긴 가지"라 성격이 다르고,
+ * 지금은 잡아내지 않는다.
+ */
+export async function listUncategorizedArticles(): Promise<DocNode[]> {
   const DB = await db();
   const rows = await DB.prepare(
     `SELECT d.title, d.title_key, d.updated_at
        FROM wiki_docs d
       WHERE d.kind = 'article' AND d.doc_status = 'published'
-        AND d.title NOT LIKE ?1
         AND NOT EXISTS (
           SELECT 1 FROM wiki_links l WHERE l.source_doc = d.id AND l.target_key LIKE ?1
         )
@@ -385,7 +401,9 @@ export async function listUncategorizedArticles(): Promise<CategoryMember[]> {
 
   return (rows.results ?? []).map((r) => ({
     title: r.title,
+    label: parseCategoryName(r.title) ?? r.title,
     titleKey: r.title_key,
     updatedAt: r.updated_at,
+    children: [],
   }));
 }

@@ -25,6 +25,9 @@ export default async function AdminHomePage() {
         <Link href="/admin/taxonomy" className={`btn ${styles.link}`}>
           분류 편집
         </Link>
+        <Link href="/admin/wiki/deleted" className={`btn ${styles.link}`}>
+          내린 문서
+        </Link>
       </div>
     </div>
   );

@@ -3,9 +3,8 @@ import Link from "next/link";
 
 import { ArticleScreen } from "@/components/wiki/ArticleScreen";
 import { getViewer } from "@/lib/authGuard";
-import { parseCategoryName } from "@/lib/wikiMarkup";
-import { titleKey } from "@/lib/wikiTitle";
-import { getArticleView, getCategoryView, resolveDocLinks } from "@/lib/wikiStore";
+import { articleHref, titleKey } from "@/lib/wikiTitle";
+import { getArticleView, getDocTree, resolveDocLinks, type DocNode } from "@/lib/wikiStore";
 
 import styles from "./page.module.css";
 
@@ -53,38 +52,49 @@ export async function generateMetadata({
  */
 export default async function WikiArticlePage({ params }: { params: Promise<RouteParams> }) {
   const title = decodeTitle((await params).title);
-  const [article, viewer] = await Promise.all([getArticleView(titleKey(title)), getViewer()]);
+  /*
+   * 아래 문서는 **없는 문서에서도** 읽는다. `[[분류:동수 법칙]]`을 단 문서가 있는데
+   * `동수 법칙`이 아직 없을 수 있고, 그때 빈 화면을 주면 그 아래 문서들이 어디에서도
+   * 보이지 않게 된다 — 실제로 `전선`이 그렇게 사라져 있었다.
+   */
+  const [article, viewer, childDocs] = await Promise.all([
+    getArticleView(titleKey(title)),
+    getViewer(),
+    getDocTree(title),
+  ]);
 
   const visible =
     article &&
     (article.status === "published" ||
       (!!viewer && (viewer.role === "admin" || viewer.id === article.proposedBy)));
 
-  if (!article || !visible) return <MissingArticle title={title} />;
+  if (!article || !visible) return <MissingArticle title={title} childDocs={childDocs} />;
 
-  const categoryName = parseCategoryName(article.title);
-  const [wikiLinks, categoryMembers] = await Promise.all([
-    resolveDocLinks([article.body]),
-    categoryName ? getCategoryView(categoryName) : Promise.resolve(undefined),
-  ]);
+  const wikiLinks = await resolveDocLinks([article.body]);
 
   return (
     <ArticleScreen
       title={article.title}
+      titleKey={titleKey(article.title)}
       body={article.body}
       revision={article.revision}
       updatedAt={article.updatedAt}
       updatedBy={article.updatedBy}
       proposed={article.status === "proposed"}
       wikiLinks={wikiLinks}
-      categoryMembers={categoryMembers}
+      childDocs={childDocs}
       viewer={viewer}
     />
   );
 }
 
-/** 아직 없는 문서. 이 화면의 일은 하나뿐이다 — 쓰러 가게 하는 것. */
-function MissingArticle({ title }: { title: string }) {
+/**
+ * 아직 없는 문서. 이 화면의 일은 쓰러 가게 하는 것이다.
+ *
+ * 다만 이 이름 아래에 이미 문서가 달려 있다면 그것도 함께 보여 준다. 이름이 비어 있다고
+ * 그 아래 문서까지 감추면, 부모가 안 쓰였다는 이유로 자식이 통째로 사라진다.
+ */
+function MissingArticle({ title, childDocs }: { title: string; childDocs: DocNode[] }) {
   return (
     <div className={styles.screen}>
       <div className="shell">
@@ -115,6 +125,21 @@ function MissingArticle({ title }: { title: string }) {
             위키 목차로
           </Link>
         </div>
+
+        {childDocs.length > 0 && (
+          <section className={styles.orphans} aria-label="이 이름 아래의 문서">
+            <p className={styles.orphansTitle}>이 이름 아래에 이미 있는 문서</p>
+            <ul className={styles.orphanRows}>
+              {childDocs.map((node) => (
+                <li key={node.titleKey}>
+                  <Link href={articleHref(node.title)} className={styles.orphanRow}>
+                    {node.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
       </div>
     </div>
   );

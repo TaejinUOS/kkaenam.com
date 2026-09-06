@@ -8,7 +8,7 @@ import type { TreeItem, WikiIndexData } from "@/data/wikiIndex";
 import { prefersReducedMotion } from "@/lib/motion";
 import { buildQuery, matchesName, normalizeQuery } from "@/lib/url";
 import { UNCATEGORIZED_KEY } from "@/lib/wikiCategoryKey";
-import type { CategoryMember, CategoryNode } from "@/lib/wikiStore";
+import type { DocNode } from "@/lib/wikiStore";
 import { articleHref } from "@/lib/wikiTitle";
 
 import styles from "./WikiIndexScreen.module.css";
@@ -208,7 +208,7 @@ export function WikiIndexScreen({ data, docCount, weekEditCount, recent, counter
                     <p className={`mono ${styles.panelPath}`}>/wiki?분류={activePortal.key}</p>
                   </div>
 
-                  {activePortal.docs.length === 0 && activePortal.subcategories.length === 0 ? (
+                  {activePortal.children.length === 0 ? (
                     /*
                       빈 화면을 막다른 길로 두지 않고 무엇을 하면 여기 문서가 모이는지 적는다.
                       위키에서 비어 있음은 실패가 아니라 초대다.
@@ -219,12 +219,7 @@ export function WikiIndexScreen({ data, docCount, weekEditCount, recent, counter
                       문서가 여기에 모입니다.
                     </p>
                   ) : (
-                    <>
-                      {activePortal.docs.length > 0 && <CategoryDocs docs={activePortal.docs} />}
-                      {activePortal.subcategories.map((sub) => (
-                        <CategoryBranch key={sub.name} node={sub} />
-                      ))}
-                    </>
+                    <DocTree nodes={activePortal.children} />
                   )}
                 </section>
               )}
@@ -238,7 +233,7 @@ export function WikiIndexScreen({ data, docCount, weekEditCount, recent, counter
                   {data.uncategorized.length === 0 ? (
                     <p className={styles.panelEmpty}>모든 일반 문서가 분류돼 있습니다.</p>
                   ) : (
-                    <CategoryDocs docs={data.uncategorized} />
+                    <DocTree nodes={data.uncategorized} />
                   )}
                 </section>
               )}
@@ -401,35 +396,28 @@ export function WikiIndexScreen({ data, docCount, weekEditCount, recent, counter
   );
 }
 
-/** 문서 목록 한 줄짜리 줄. 관문 패널과 "분류 없음" 패널이 함께 쓴다. */
-function CategoryDocs({ docs }: { docs: CategoryMember[] }) {
+/**
+ * 문서 나무. 관문 패널과 "분류 없음" 패널이 함께 쓴다.
+ *
+ * 문서와 분류를 따로 그리지 않는다 — 어떤 문서든 자기 아래 문서를 가질 수 있으므로
+ * 한 줄은 언제나 "읽을 수 있는 문서 하나"이고, 아래가 있으면 한 단 들여 이어 그린다.
+ */
+function DocTree({ nodes }: { nodes: DocNode[] }) {
   return (
     <ul className={styles.rows}>
-      {docs.map((doc) => (
-        <li key={doc.titleKey}>
-          <Link href={articleHref(doc.title)} className={styles.row}>
-            <span className={styles.rowTitle}>{doc.title}</span>
+      {nodes.map((node) => (
+        <li key={node.titleKey}>
+          <Link href={articleHref(node.title)} className={styles.row}>
+            <span className={styles.rowTitle}>{node.label}</span>
           </Link>
+          {node.children.length > 0 && (
+            <div className={styles.subtree}>
+              <DocTree nodes={node.children} />
+            </div>
+          )}
         </li>
       ))}
     </ul>
-  );
-}
-
-/** 관문 패널 안의 하위분류 한 갈래. 자기 문서를 그리고, 자기 하위분류를 재귀적으로 그린다. */
-function CategoryBranch({ node }: { node: CategoryNode }) {
-  return (
-    <div className={styles.branch}>
-      <p className={styles.branchLabel}>
-        <Link href={articleHref(`분류:${node.name}`)} className={styles.branchLink}>
-          {node.name}
-        </Link>
-      </p>
-      {node.docs.length > 0 && <CategoryDocs docs={node.docs} />}
-      {node.subcategories.map((sub) => (
-        <CategoryBranch key={sub.name} node={sub} />
-      ))}
-    </div>
   );
 }
 

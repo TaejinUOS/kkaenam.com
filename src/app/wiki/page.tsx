@@ -9,7 +9,7 @@ import { getTaxonomy } from "@/lib/taxonomyStore";
 import { docHref, docSectionLabel, docTitle } from "@/lib/wikiDocTarget";
 import { listRecentChanges } from "@/lib/wikiEditStore";
 import { countWantedArticles, getWikiIndexStats, listArticleTitles } from "@/lib/wikiIndexStore";
-import { getCategoryView, listUncategorizedArticles, type CategoryView } from "@/lib/wikiStore";
+import { getDocTrees, listUncategorizedArticles } from "@/lib/wikiStore";
 
 export const metadata: Metadata = {
   title: "위키",
@@ -24,25 +24,25 @@ const RECENT_ON_INDEX = 8;
  *
  * 이 화면의 숫자는 전부 실제 값이다. 블루프린트의 `DOCS 128 / 7D 24`는 조판 확인용
  * 예시였고, 여기서는 D1이 실제로 가진 값을 읽는다. 관문별 문서 수는 `wiki_links`로
- * 세고(`getCategoryView`), 미분류 문서는 `listUncategorizedArticles`가 세어 04
+ * 세고(`getDocTrees`), 미분류 문서는 `listUncategorizedArticles`가 세어 04
  * 구역의 "분류 없음" 통을 채운다.
  */
 export default async function WikiIndexPage() {
   const portalKeys = [...coverPortals(), ...shelfPortals()].map((p) => p.key);
 
-  const [stats, changes, taxonomy, articles, wantedArticleCount, categoryViewEntries, uncategorized] =
+  const [stats, changes, taxonomy, articles, wantedArticleCount, trees, uncategorized] =
     await Promise.all([
       getWikiIndexStats(),
       listRecentChanges(RECENT_ON_INDEX),
       getTaxonomy(),
       listArticleTitles(),
       countWantedArticles(),
-      Promise.all(portalKeys.map(async (key) => [key, await getCategoryView(key)] as const)),
+      /* 관문이 몇 개든 질의는 하나다 — 간선을 통째로 읽고 나무는 메모리에서 세운다. */
+      getDocTrees(portalKeys),
       listUncategorizedArticles(),
     ]);
-  const categoryViews: Record<string, CategoryView> = Object.fromEntries(categoryViewEntries);
 
-  const data = buildWikiIndexData(taxonomy, categoryViews, articles, uncategorized);
+  const data = buildWikiIndexData(taxonomy, trees, articles, uncategorized);
 
   /*
    * 상대 시각은 여기서 짓는다. 클라이언트에서 계산하면 수화가 어긋난다.

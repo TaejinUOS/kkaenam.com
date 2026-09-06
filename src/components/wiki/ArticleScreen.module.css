@@ -190,3 +190,10 @@
 .historyLink:hover {
   color: var(--ink);
 }
+
+/* 운영자 전용 줄. 읽는 사람에게는 없는 자리라 위에 선을 그어 문서와 끊는다. */
+.adminBar {
+  margin-top: clamp(20px, 3vw, 32px);
+  padding-top: 14px;
+  border-top: 1px dashed var(--paper-line);
+}

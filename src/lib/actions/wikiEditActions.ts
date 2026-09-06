@@ -18,8 +18,10 @@ import { requireActionAdmin, requireActionUser } from "@/lib/authGuard";
 import { TITLE_PROBLEM_MESSAGE, titleKey } from "@/lib/wikiTitle";
 import {
   approveEdit,
+  deleteArticle,
   proposeArticle,
   rejectEdit,
+  restoreArticle,
   revertDoc,
   submitEdit,
 } from "@/lib/wikiEditStore";
@@ -233,4 +235,82 @@ export async function revertDocAction(
   revalidateDoc(doc);
 
   return { ok: true, message: `되돌렸습니다 (섹션 ${result.changedSections}개 변경).` };
+}
+
+// -------------------------------------------------------- 문서 내리기 (운영자)
+
+/**
+ * 일반 문서를 내린다.
+ *
+ * 사유를 반드시 받는다. 되돌릴 수 있는 조작이라도 **왜 내렸는지가 남지 않으면** 나중에
+ * 되돌릴지 판단할 근거가 없다 — 검토 거절이 사유를 요구하는 것과 같다.
+ */
+export async function deleteArticleAction(
+  key: string,
+  _prev: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  const auth = await requireActionAdmin();
+  if (!auth.ok) return { ok: false, message: "권한이 없습니다." };
+
+  const reason = String(formData.get("reason") ?? "").trim();
+  if (!reason) return { ok: false, message: "내리는 사유를 적어 주세요." };
+
+  const result = await deleteArticle({ titleKey: key, adminId: auth.viewer.id, reason });
+  if (!result.ok) {
+    return {
+      ok: false,
+      message:
+        result.error === "not_article"
+          ? "매치업 문서는 내릴 수 없습니다."
+          : result.error === "validation"
+            ? "사유가 너무 깁니다."
+            : "이미 없거나 내려간 문서입니다.",
+    };
+  }
+
+  /* 이 문서를 담고 있던 목록·나무·링크가 전부 바뀐다. 일반 문서 구간을 통째로 무른다. */
+  revalidatePath("/wiki/[title]", "page");
+  revalidatePath("/wiki");
+  revalidatePath("/wiki/recent");
+  revalidatePath("/wiki/wanted");
+  revalidatePath("/admin/wiki/deleted");
+
+  redirect(`/wiki?내림=${encodeURIComponent(result.title)}`);
+}
+
+/**
+ * 내린 문서를 되돌린다. 그 사이 이름이 다시 쓰였으면 되돌리지 않는다.
+ *
+ * 문서 id를 `bind`가 아니라 폼의 숨은 칸으로 받는다 — 되돌리기는 사유 같은 입력이
+ * 없어서 `bind`를 쓰면 `useActionState` 규약상 쓰지 않는 인자 둘이 뒤에 남는다.
+ */
+export async function restoreArticleAction(
+  _prev: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  const auth = await requireActionAdmin();
+  if (!auth.ok) return { ok: false, message: "권한이 없습니다." };
+
+  const docId = String(formData.get("docId") ?? "");
+  if (!docId) return { ok: false, message: "잘못된 요청입니다." };
+
+  const result = await restoreArticle(docId, auth.viewer.id);
+  if (!result.ok) {
+    return {
+      ok: false,
+      message:
+        result.error === "name_taken"
+          ? "그 사이 같은 이름으로 새 문서가 만들어졌습니다. 복구할 수 없습니다."
+          : "찾을 수 없습니다.",
+    };
+  }
+
+  revalidatePath("/wiki/[title]", "page");
+  revalidatePath("/wiki");
+  revalidatePath("/wiki/recent");
+  revalidatePath("/wiki/wanted");
+  revalidatePath("/admin/wiki/deleted");
+
+  return { ok: true, message: `${result.title} 문서를 되돌렸습니다.` };
 }
