@@ -1,0 +1,91 @@
+/*
+ * 헤더 아래 공지 한 줄.
+ *
+ * 헤더와 본문 사이에 끼는 자리라 두 가지를 지켜야 한다. 헤더보다 눈에 띄면 안 되고
+ * (사이트의 첫 줄은 로고와 메뉴다), 본문에 묻혀도 안 된다. 그래서 배경은 헤더와 같은
+ * 잉크 계열로 두고 형광 딱지 하나로만 시선을 잡는다.
+ */
+
+.notice {
+  border-bottom: var(--line-w) solid rgba(244, 235, 221, 0.22);
+  background: var(--ink-raised);
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-block: 8px;
+}
+
+/* 형광 딱지. 이 줄이 안내라는 것을 글을 읽기 전에 알린다. */
+.label {
+  flex: none;
+  padding: 2px 7px;
+  border-radius: var(--radius-card);
+  background: var(--acid);
+  color: var(--ink);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 1.6;
+}
+
+.body {
+  flex: 1;
+  min-width: 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--smoke);
+  word-break: keep-all;
+}
+
+.link {
+  color: var(--paper);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  /* 문장 끝에 붙는 링크라 줄바꿈에서 딱지처럼 홀로 떨어지지 않게 묶는다. */
+  white-space: nowrap;
+}
+
+.link:hover {
+  background: var(--acid);
+  color: var(--ink);
+}
+
+.close {
+  flex: none;
+  /*
+   * 손가락으로 누르는 표적은 24px보다 작지 않게 둔다. 글자는 작아도 되지만
+   * 누를 수 있는 넓이는 따로다.
+   */
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-card);
+  color: var(--smoke);
+  font-size: 17px;
+  line-height: 1;
+}
+
+.close:hover,
+.close:focus-visible {
+  background: var(--gum);
+  color: var(--ink);
+}
+
+@media (max-width: 640px) {
+  .bar {
+    /* 좁은 화면에서는 딱지와 닫기를 윗줄에 두고 글이 아래로 흐르게 한다. */
+    flex-wrap: wrap;
+  }
+
+  .body {
+    /* 한 줄을 통째로 쓰게 해 세 조각이 서로 밀지 않도록. */
+    order: 3;
+    flex-basis: 100%;
+  }
+
+  .close {
+    margin-left: auto;
+  }
+}

@@ -1,11 +1,14 @@
 import type { Metadata, Viewport } from "next";
+import { cookies } from "next/headers";
 import { IBM_Plex_Mono, Nanum_Pen_Script } from "next/font/google";
 import localFont from "next/font/local";
 
 import { AuthStatus } from "@/components/AuthStatus";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
+import { SiteNotice } from "@/components/SiteNotice";
 import { ZineFilters } from "@/components/ZineFilters";
+import { ACTIVE_NOTICE, NOTICE_COOKIE } from "@/data/siteNotice";
 import { getViewer } from "@/lib/authGuard";
 import { getHeaderState } from "@/lib/notificationStore";
 
@@ -84,6 +87,15 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const viewer = await getViewer();
   const header = viewer ? await getHeaderState(viewer.id) : null;
 
+  /*
+   * 공지를 닫았는지는 서버에서 판단한다. 브라우저에서만 알 수 있으면 이미 닫은
+   * 사람에게도 배너가 한 번 그려졌다 사라지며 본문이 밀린다. 쿠키를 읽는 것이
+   * 이 레이아웃을 동적으로 만들지도 않는다 — 위 `getViewer()`가 이미 세션 쿠키를
+   * 읽고 있어 어차피 요청마다 그려진다.
+   */
+  const noticeDismissed =
+    ACTIVE_NOTICE !== null && (await cookies()).get(NOTICE_COOKIE)?.value === ACTIVE_NOTICE.id;
+
   return (
     <html lang="ko" className={`${displayFace.variable} ${plexMono.variable} ${handFace.variable}`}>
       <head>
@@ -105,6 +117,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <SiteHeader userName={header?.name ?? null}>
           <AuthStatus signedIn={Boolean(viewer)} unread={header?.unread ?? 0} />
         </SiteHeader>
+        {/*
+          공지는 헤더 **아래**, 본문 위에 둔다. 헤더 안에 넣으면 sticky 높이가 공지
+          유무에 따라 달라져 스크롤 기준이 흔들리고, 본문 안에 넣으면 화면마다
+          자리를 다시 잡아야 한다.
+        */}
+        <SiteNotice dismissed={noticeDismissed} />
         <main id="main">{children}</main>
         <SiteFooter />
       </body>
