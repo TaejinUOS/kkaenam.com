@@ -618,6 +618,12 @@
   transition: background var(--t-poster) var(--ease);
 }
 
+/* 토글이 없는 줄(하위 문서가 없는 문서)도 이름은 토글 있는 줄과 같은 자리에서
+   시작해야 나무의 왼쪽 선이 들쭉날쭉하지 않다 — 토글 폭(30px) + 줄 간격(4px). */
+.docRowLinkAlone {
+  margin-left: 34px;
+}
+
 .docRowLink:hover,
 .docRowLink:focus-visible {
   background: var(--acid);

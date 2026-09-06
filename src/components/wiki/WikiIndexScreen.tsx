@@ -428,9 +428,6 @@ function DocTreeNode({ node }: { node: DocNode }) {
   return (
     <li>
       <div className={styles.docRow}>
-        <Link href={articleHref(node.title)} className={styles.docRowLink}>
-          {node.label}
-        </Link>
         {hasChildren && (
           <button
             type="button"
@@ -442,6 +439,12 @@ function DocTreeNode({ node }: { node: DocNode }) {
             <ChevronGlyph className={expanded ? styles.docToggleIconOpen : undefined} />
           </button>
         )}
+        <Link
+          href={articleHref(node.title)}
+          className={`${styles.docRowLink} ${hasChildren ? "" : styles.docRowLinkAlone}`}
+        >
+          {node.label}
+        </Link>
       </div>
       {hasChildren && expanded && (
         <div className={styles.subtree}>
