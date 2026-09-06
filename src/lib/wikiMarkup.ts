@@ -32,6 +32,32 @@ export function parseCategoryName(title: string): string | null {
 export const MISSING_DOC_HREF = "#wiki-missing";
 
 /**
+ * 해석된 위키링크의 href 접두사. 뒤에 실제 주소가 인코딩되어 붙는다.
+ *
+ * 주소를 그대로 두지 않고 한 번 감싸는 것은, 렌더러가 `[[문서명]]`으로 걸린 링크와
+ * 편집자가 손으로 적은 마크다운 링크(`[글](/주소)`)를 **구별해야 하기** 때문이다.
+ * 위키링크는 문서 사이를 오가는 뼈대라 문장마다 여러 개가 박히고, 거기까지 밑줄을
+ * 그으면 본문이 줄무늬가 된다 — 색만으로 충분하다. 반면 손으로 적은 링크는 드물게
+ * 나오므로 밑줄이 있어야 눈에 띈다. 이 구별은 href를 보고서만 할 수 있다.
+ */
+export const WIKI_DOC_HREF = "#wiki-doc:";
+
+/** 해석된 위키링크의 href. 마크다운 링크 안에 들어가므로 인코딩한다. */
+export function wikiDocHref(target: string): string {
+  return `${WIKI_DOC_HREF}${encodeURIComponent(target)}`;
+}
+
+/** `wikiDocHref`가 지은 href에서 실제 주소를 되찾는다. 그 꼴이 아니면 null. */
+export function wikiDocTarget(href: string): string | null {
+  if (!href.startsWith(WIKI_DOC_HREF)) return null;
+  try {
+    return decodeURIComponent(href.slice(WIKI_DOC_HREF.length));
+  } catch {
+    return null;
+  }
+}
+
+/**
  * 아직 없는 문서의 href. 접두사 뒤에 **이름을 실어 보낸다.**
  *
  * 이름을 함께 보내는 것은 빨간 링크가 이제 막다른 표시가 아니라 **초대**이기
@@ -265,7 +291,8 @@ export function linkifyWikiLinks(body: string, resolve: WikiLinkResolver): strin
       const title = rawTitle.trim();
       if (parseCategoryName(title)) return "";
       const label = (rawLabel ?? title).trim();
-      return `[${label}](${resolve(title) ?? missingDocHref(title)})`;
+      const target = resolve(title);
+      return `[${label}](${target ? wikiDocHref(target) : missingDocHref(title)})`;
     }),
   );
 }

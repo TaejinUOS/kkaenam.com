@@ -10,6 +10,7 @@ import {
   extractFootnotes,
   linkifyWikiLinks,
   missingDocTitle,
+  wikiDocTarget,
 } from "@/lib/wikiMarkup";
 import { articleHref, checkArticleTitle } from "@/lib/wikiTitle";
 
@@ -86,7 +87,7 @@ export function MarkdownBody({ text, footnotes, resolveLink = NO_LINK }: Props) 
 }
 
 /**
- * 링크 렌더러. 링크를 네 갈래로 나눈다.
+ * 링크 렌더러. 링크를 다섯 갈래로 나눈다.
  *
  * 갈래마다 색이 다른 것은 장식이 아니다. 같은 밑줄이라도 문서 안으로 들어가는지,
  * 사이트를 떠나는지, 아직 없는 문서인지에 따라 누르기 전에 알아야 할 것이 다르다.
@@ -132,7 +133,25 @@ function makeLink(notes: Footnote[], resolveLink: WikiLinkResolver) {
       );
     }
 
-    // 3. 사이트 안 — 새 탭을 열지 않고 클라이언트 이동한다.
+    /*
+     * 3. 위키링크로 걸린 문서 — 밑줄 없이 색으로만 구별한다.
+     *
+     * `[[...]]`는 문서를 잇는 뼈대라 한 문장에 여러 개가 박힌다. 거기까지 밑줄을
+     * 그으면 본문이 줄무늬가 되어 오히려 어디가 링크인지 읽기 어려워진다. 아래 4번의
+     * 손으로 적은 링크는 드물게 나오므로 밑줄을 그대로 둔다.
+     */
+    if (typeof href === "string") {
+      const target = wikiDocTarget(href);
+      if (target) {
+        return (
+          <Link {...rest} href={target} className={styles.wiki}>
+            {children}
+          </Link>
+        );
+      }
+    }
+
+    // 4. 사이트 안 — 새 탭을 열지 않고 클라이언트 이동한다.
     if (typeof href === "string" && href.startsWith("/")) {
       /*
        * `rest`를 먼저 펼친다. markdown-to-jsx가 빈 `className`을 함께 넘겨서, 뒤에
@@ -145,7 +164,7 @@ function makeLink(notes: Footnote[], resolveLink: WikiLinkResolver) {
       );
     }
 
-    // 4. 바깥 — http(s)만 허용한다. 그 밖의 스킴(javascript:, data:)은 href를 지운다.
+    // 5. 바깥 — http(s)만 허용한다. 그 밖의 스킴(javascript:, data:)은 href를 지운다.
     const external = typeof href === "string" && /^https?:\/\//i.test(href) ? href : undefined;
     if (!external) {
       // 같은 문서 안 앵커(#...)는 그대로 둔다. 편집자가 직접 거는 상호 참조다.
