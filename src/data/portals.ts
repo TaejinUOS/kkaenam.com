@@ -9,6 +9,10 @@
  * 이유다. `wiki_portals` 표와 관리 화면은 4단계에서 붙이고, 그때 이 파일이 시드가 된다.
  *
  * 축은 **시간축**이다. 포지션축은 `상대법` 메뉴가 이미 통째로 갖고 있어 쓸 수 없다.
+ *
+ * **`정글`만 예외다** (2026-09-06, `docs/WIKI_EXPANSION.md` "관문은 한 축에서 고른다"의
+ * 번복 메모). 정글은 라인전이 없어 시간축의 다른 어느 관문에도 깔끔히 안 들어가고,
+ * 나머지 포지션(서폿·원딜 등)까지 따라 올릴 필요 없이 정글 하나만 얹었다.
  */
 
 export type Portal = {
@@ -36,13 +40,14 @@ export type Portal = {
 /**
  * 표지에 걸리는 관문 수.
  *
- * 관문은 운영하면서 늘어나지만 **표지는 세 장으로 고정**한다 ("회전이 아니라 편성").
+ * 관문은 운영하면서 늘어나지만 **표지는 장수를 고정**한다 ("회전이 아니라 편성").
  * 캐러셀로 돌리지 않는 이유는 목차의 일이 전부 보여 주는 것이기 때문이고, 표지에서
  * 빠진 관문도 아래 분류 나무에 이름으로 그대로 있다.
  *
- * 이 값이 3인 것은 `POSTER_WEIGHTS[3] = [5, 4, 3]` 조판과 짝을 이룬다.
+ * 이 값이 4인 것은 `WikiIndexScreen.tsx`의 `POSTER_WEIGHTS[4] = [5, 4, 3, 3]`
+ * 조판과 짝을 이룬다 (2026-09-06, 정글 관문을 얹으며 3 → 4).
  */
-export const COVER_SLOTS = 3;
+export const COVER_SLOTS = 4;
 
 export const portals: Portal[] = [
   {
@@ -62,12 +67,32 @@ export const portals: Portal[] = [
     order: 2,
   },
   {
+    key: "한타",
+    label: "한타",
+    coverImage: "/images/portal/teamfight-clash.webp",
+    coverAlt: "진입 각도와 포지셔닝을 표시한 한타 도해",
+    blurb: "포지셔닝 · 진입 · 궁 순서",
+    order: 3,
+  },
+  {
+    key: "정글",
+    label: "정글",
+    /*
+     * 2026-09-06: 운영자가 직접 준비해 `public/images/portal/jungle-pathing.webp`에
+     * 넣기로 했다. 다른 넷과 같은 규격(1536×1024 webp, 챔피언 아트가 아니라 도해)이다.
+     */
+    coverImage: "/images/portal/jungle-pathing.webp",
+    coverAlt: "동선과 갱 타이밍을 표시한 정글 도해",
+    blurb: "동선 · 클리어 · 갱 타이밍 · 오브젝트",
+    order: 4,
+  },
+  {
     key: "사전",
     label: "사전",
     coverImage: "/images/portal/reference-guide.webp",
     coverAlt: "룬과 아이템 도표를 늘어놓은 사전 도해",
     blurb: "룬 · 아이템 · 용어 · 수치",
-    order: 3,
+    order: 5,
   },
   {
     key: "밴픽",
@@ -75,15 +100,7 @@ export const portals: Portal[] = [
     coverImage: "/images/portal/draft-board.webp",
     coverAlt: "조합과 밴 우선순위를 표시한 밴픽 도해",
     blurb: "조합 · 카운터픽 · 밴 우선순위",
-    order: 4,
-  },
-  {
-    key: "한타",
-    label: "한타",
-    coverImage: "/images/portal/teamfight-clash.webp",
-    coverAlt: "진입 각도와 포지셔닝을 표시한 한타 도해",
-    blurb: "포지셔닝 · 진입 · 궁 순서",
-    order: 5,
+    order: 6,
   },
 ];
 
