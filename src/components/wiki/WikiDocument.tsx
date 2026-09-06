@@ -94,7 +94,14 @@ export function WikiDocument({ sections, resolveLink, focusId, focusNonce = 0 }:
       };
     });
 
-    numberOutline(items.map((item) => item.node));
+    /*
+     * 섹션 자기 자신("본문", "공통 상대법" 같은)은 번호를 안 받는다 — 그 이름은
+     * 화면이 붙인 라벨이지 편집자가 쓴 제목이 아니다. 그래서 각 섹션의 children부터
+     * 번호를 새로 매긴다: `#`이 "1.1"이 아니라 "1."이 되고, `##`은 "1.1.1"이 아니라
+     * "1.1"이 된다. 섹션이 여럿이어도(공통 + 내 챔피언 등) 서로 다른 문단이라
+     * 번호를 이어 쓰지 않고 섹션마다 1.부터 다시 센다.
+     */
+    for (const item of items) numberOutline(item.node.children);
 
     // 목차에서 접힌 제목으로 뛸 때 조상들을 함께 펼치려면 계보를 알아야 한다.
     const lineage = new Map<string, string[]>();
