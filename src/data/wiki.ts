@@ -201,6 +201,17 @@ export const MAX_SUMMARY_LENGTH = 80;
 export const RATE_LIMIT_PER_HOUR = 10;
 
 /**
+ * 시간당 상한을 적용하지 않는 계정.
+ *
+ * 구글 계정 닉네임 `롤깨남`(`user-9a00f65b-31ca-46b0-882f-637f95422884`, 운영자)은
+ * 위키를 실제로 꾸리는 계정이라 짧은 시간에 여러 문서를 고치는 일이 흔하다. FR-32의
+ * 상한은 도배를 막기 위한 것이지 운영자 본인을 막기 위한 것이 아니다.
+ */
+export const RATE_LIMIT_EXEMPT_IDS: readonly string[] = [
+  "user-9a00f65b-31ca-46b0-882f-637f95422884",
+];
+
+/**
  * 섹션이 비어 있는지 판정한다.
  *
  * 이 판정이 "즉시 반영"과 "검토 대기"를 가르므로 반드시 서버에서, 저장 시점의

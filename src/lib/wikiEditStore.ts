@@ -19,6 +19,7 @@ import { getCloudflareContext } from "@opennextjs/cloudflare";
 import {
   MAX_BODY_LENGTH,
   MAX_SUMMARY_LENGTH,
+  RATE_LIMIT_EXEMPT_IDS,
   RATE_LIMIT_PER_HOUR,
   isEmptyBody,
   type AcceptedVia,
@@ -223,15 +224,17 @@ export async function submitEdit(input: SubmitEditInput): Promise<SubmitEditResu
   const DB = await db();
   const now = new Date().toISOString();
 
-  // 제출 제한 (FR-32): 계정당 시간당 상한.
-  const hourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
-  const recent = await DB.prepare(
-    `SELECT COUNT(*) AS n FROM wiki_edits WHERE author = ?1 AND created_at > ?2`,
-  )
-    .bind(input.authorId, hourAgo)
-    .first<{ n: number }>();
-  if ((recent?.n ?? 0) >= RATE_LIMIT_PER_HOUR) {
-    return { ok: false, error: "rate_limited" };
+  // 제출 제한 (FR-32): 계정당 시간당 상한. 예외 계정은 조회조차 건너뛴다.
+  if (!RATE_LIMIT_EXEMPT_IDS.includes(input.authorId)) {
+    const hourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+    const recent = await DB.prepare(
+      `SELECT COUNT(*) AS n FROM wiki_edits WHERE author = ?1 AND created_at > ?2`,
+    )
+      .bind(input.authorId, hourAgo)
+      .first<{ n: number }>();
+    if ((recent?.n ?? 0) >= RATE_LIMIT_PER_HOUR) {
+      return { ok: false, error: "rate_limited" };
+    }
   }
 
   const doc = await resolveDoc(DB, input.doc, { createMatchup: { patch: input.patch, now } });
@@ -390,13 +393,15 @@ export async function proposeArticle(input: ProposeArticleInput): Promise<Propos
    * 제출 제한 (FR-32)은 편집과 같은 지갑을 쓴다. 문서 생성은 편집보다 무거운 일이라
    * 여기에만 헐거운 상한을 두면 그쪽으로 도배가 흐른다.
    */
-  const hourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
-  const recent = await DB.prepare(
-    `SELECT COUNT(*) AS n FROM wiki_edits WHERE author = ?1 AND created_at > ?2`,
-  )
-    .bind(input.authorId, hourAgo)
-    .first<{ n: number }>();
-  if ((recent?.n ?? 0) >= RATE_LIMIT_PER_HOUR) return { ok: false, error: "rate_limited" };
+  if (!RATE_LIMIT_EXEMPT_IDS.includes(input.authorId)) {
+    const hourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+    const recent = await DB.prepare(
+      `SELECT COUNT(*) AS n FROM wiki_edits WHERE author = ?1 AND created_at > ?2`,
+    )
+      .bind(input.authorId, hourAgo)
+      .first<{ n: number }>();
+    if ((recent?.n ?? 0) >= RATE_LIMIT_PER_HOUR) return { ok: false, error: "rate_limited" };
+  }
 
   // 이미 있는 일반 문서, 그리고 **검토 중인 제안**과도 겹치는가.
   const existing = await DB.prepare(
