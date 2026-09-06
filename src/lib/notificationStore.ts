@@ -49,17 +49,31 @@ export type NotificationItem = {
   unread: boolean;
 };
 
+export type HeaderState = {
+  /** 헤더에 적을 이름. **세션이 아니라 D1의 값이다** — 아래 주석 참고. */
+  name: string;
+  unread: number;
+};
+
 /**
- * 읽지 않은 알림 수. 헤더가 페이지마다 부른다.
+ * 헤더가 페이지마다 한 번 부르는 질의. 표시 이름과 읽지 않은 알림 수를 함께 읽는다.
  *
- * 역할과 기준 시각을 `users`에서 함께 읽어 질의 하나로 끝낸다 — 헤더는 모든 화면에
- * 얹히므로 여기서 왕복을 하나 더 하면 사이트 전체가 그만큼 느려진다. 역할을 세션이
- * 아니라 DB에서 보는 것은, 권한이 바뀐 뒤에도 살아 있는 세션이 있기 때문이다.
+ * **이름이 알림 저장소에 있는 것은 어색하다.** 그래도 여기 둔 이유는 헤더가 모든
+ * 화면에 얹혀 있어서다 — 이름을 따로 읽으면 사이트 전체가 D1 왕복 하나만큼 느려지고,
+ * 두 값은 어차피 같은 `users` 행에서 나온다.
+ *
+ * **이름을 세션에서 읽으면 안 된다.** `token.name`은 소셜 제공자가 준 이름이고
+ * 로그인 시점에 한 번만 채워지므로(`src/auth.ts`의 `jwt` 콜백), 닉네임을 바꿔도
+ * 다시 로그인할 때까지 옛 이름이 헤더에 남는다. 마이페이지가 `getProfile`로 D1을
+ * 보는 것과 같은 이유다.
+ *
+ * 역할도 마찬가지로 DB에서 본다. 권한이 바뀐 뒤에도 살아 있는 세션이 있다.
  */
-export async function countUnreadNotifications(userId: string): Promise<number> {
+export async function getHeaderState(userId: string): Promise<HeaderState | null> {
   const DB = await db();
   const row = await DB.prepare(
     `SELECT
+       u.name AS name,
        (SELECT COUNT(*) FROM wiki_edits e
          WHERE e.author = u.id
            AND e.reviewed_at IS NOT NULL
@@ -75,9 +89,11 @@ export async function countUnreadNotifications(userId: string): Promise<number> 
      FROM users u WHERE u.id = ?1`,
   )
     .bind(userId)
-    .first<{ n: number }>();
+    .first<{ name: string; n: number }>();
 
-  return row?.n ?? 0;
+  /* 세션은 살아 있는데 계정 행이 없다 — 방금 탈퇴한 경우다. 헤더는 이름 없이 그린다. */
+  if (!row) return null;
+  return { name: row.name, unread: row.n };
 }
 
 export type NotificationFeed = {

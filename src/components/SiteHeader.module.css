@@ -117,6 +117,19 @@
     radial-gradient(ellipse 62% 42% at 50% 104%, currentColor 0 60%, transparent 61%);
 }
 
+/*
+ * 이 자리에는 `마이페이지`(5자)가 서기도 하고 닉네임(최대 20자)이 서기도 한다.
+ * 긴 이름이 주 메뉴를 밀어내지 않도록 자르되, 자른 티(…)를 남긴다.
+ */
+.myPageLabel {
+  display: inline-block;
+  /* 한글은 `ch`(숫자 0의 폭)의 두 배쯤이라 이 값이 대략 일곱 자다. */
+  max-width: 14ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: bottom;
+}
+
 /* --------------------------------------------- 메뉴 hover 콘텐츠 오버레이 */
 
 .dim {

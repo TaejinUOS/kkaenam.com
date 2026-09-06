@@ -1,22 +1,29 @@
 import Link from "next/link";
 
-import { auth, signOut } from "@/auth";
-import { BADGE_MAX, countUnreadNotifications } from "@/lib/notificationStore";
+import { signOut } from "@/auth";
+import { BADGE_MAX } from "@/lib/notificationStore";
 
 import styles from "./AuthStatus.module.css";
+
+type Props = {
+  signedIn: boolean;
+  /** 읽지 않은 알림 수. 세는 일은 `layout.tsx`가 한 번에 한다. */
+  unread: number;
+};
 
 /**
  * 헤더의 로그인 상태 표시 (PRD FR-22). 서버 컴포넌트라 `layout.tsx`가
  * `SiteHeader`(클라이언트 컴포넌트)의 `children`으로 내려준다.
  *
- * 헤더에 남기는 것은 **여기서만 알 수 있는 것**뿐이다. 닉네임·내 편집·관리자 메뉴는
+ * 헤더에 남기는 것은 **여기서만 알 수 있는 것**뿐이다. 내 편집·관리자 메뉴는
  * 마이페이지에 다 있어 헤더에 두 벌로 둘 이유가 없었지만, 새 소식이 있다는 사실은
  * 들어가 보기 전에는 알 수 없다. 그래서 그 자리를 알림이 받는다.
+ *
+ * 세션과 알림 수를 직접 읽지 않고 받는다. 옆의 마이페이지 링크도 같은 값(이름)이
+ * 필요해서, 헤더가 쓰는 것을 `layout.tsx`가 한 번에 읽어 나눠 준다.
  */
-export async function AuthStatus() {
-  const session = await auth();
-
-  if (!session?.user) {
+export function AuthStatus({ signedIn, unread }: Props) {
+  if (!signedIn) {
     return (
       <div className={styles.wrap}>
         <Link className={styles.login} href="/login">
@@ -25,8 +32,6 @@ export async function AuthStatus() {
       </div>
     );
   }
-
-  const unread = await countUnreadNotifications(session.user.id);
 
   return (
     <div className={styles.wrap}>

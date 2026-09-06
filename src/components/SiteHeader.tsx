@@ -38,7 +38,17 @@ function isCurrent(pathname: string, item: NavItem) {
   return pathname === item.href || pathname.startsWith(`${item.href}/`);
 }
 
-export function SiteHeader({ children }: { children?: ReactNode }) {
+export function SiteHeader({
+  userName,
+  children,
+}: {
+  /**
+   * 로그인한 사람의 표시 이름. 마이페이지 메뉴의 레이블이 된다 — 로그인하면
+   * `마이페이지`라는 기능 이름 대신 **자기 이름**이 헤더에 선다. 비로그인은 null.
+   */
+  userName?: string | null;
+  children?: ReactNode;
+}) {
   const pathname = usePathname();
   // 블루프린트 6.1: 메뉴 hover 시 페이지를 흐리게 하지 않고 콘텐츠에 옅은 잉크를 덮는다.
   const [navHovered, setNavHovered] = useState(false);
@@ -91,7 +101,13 @@ export function SiteHeader({ children }: { children?: ReactNode }) {
           >
             <span className={styles.avatar} aria-hidden="true" />
             {/* 좁은 화면에서 숨길 수 있도록 레이블을 감싼다. 아바타만 남는다. */}
-            <span className={styles.myPageLabel}>{MY_PAGE.label}</span>
+            <span className={styles.myPageLabel}>{userName ?? MY_PAGE.label}</span>
+            {/*
+              이름만 적힌 링크는 어디로 가는지 알려 주지 않는다. 보이는 글자를 이름으로
+              바꾸는 대신 목적지를 소리로만 덧붙인다 — 읽히는 이름은 `깨남 마이페이지`가
+              되어 보이는 글자를 그대로 포함한다 (WCAG 2.5.3).
+            */}
+            {userName && <span className="sr-only">마이페이지</span>}
           </Link>
 
           {children}

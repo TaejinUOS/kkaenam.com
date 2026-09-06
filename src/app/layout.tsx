@@ -6,6 +6,8 @@ import { AuthStatus } from "@/components/AuthStatus";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { ZineFilters } from "@/components/ZineFilters";
+import { getViewer } from "@/lib/authGuard";
+import { getHeaderState } from "@/lib/notificationStore";
 
 import "./globals.css";
 
@@ -73,7 +75,15 @@ export const viewport: Viewport = {
   themeColor: "#101014",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+/**
+ * 헤더가 쓰는 값은 여기서 한 번만 읽는다. 마이페이지 레이블(이름)과 알림 배지(수)가
+ * 같은 `users` 행에서 나오는데, 두 컴포넌트가 각자 읽으면 모든 화면이 D1 왕복
+ * 하나씩을 더 문다 — 헤더는 사이트 전체에 얹혀 있다.
+ */
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const viewer = await getViewer();
+  const header = viewer ? await getHeaderState(viewer.id) : null;
+
   return (
     <html lang="ko" className={`${displayFace.variable} ${plexMono.variable} ${handFace.variable}`}>
       <head>
@@ -92,8 +102,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           본문으로 건너뛰기
         </a>
         <ZineFilters />
-        <SiteHeader>
-          <AuthStatus />
+        <SiteHeader userName={header?.name ?? null}>
+          <AuthStatus signedIn={Boolean(viewer)} unread={header?.unread ?? 0} />
         </SiteHeader>
         <main id="main">{children}</main>
         <SiteFooter />
