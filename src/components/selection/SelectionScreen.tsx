@@ -8,8 +8,9 @@ import { eunNeun } from "@/lib/josa";
 import { prefersReducedMotion } from "@/lib/motion";
 import { buildQuery } from "@/lib/url";
 
-import { CategoryIcon, ShurikenIcon } from "./categoryIcons";
 import { ContactSheet } from "./ContactSheet";
+import { PosterIconSticker } from "./PosterIconSticker";
+import { ArrowDrawing, CrownDrawing, NinjaSigil, StampRings, TapeDrawing, UnderlineDrawing } from "./SelectionArtwork";
 import styles from "./SelectionScreen.module.css";
 
 /** 블루프린트 6.2: 포스터 수에 따라 데스크톱 12열을 다르게 나눈다. */
@@ -114,9 +115,10 @@ export function SelectionScreen({ data, defaultPosition, patch }: Props) {
             {/* 블루프린트 우상단의 표창 스티커·깨남.COM 도장·메모지 콜라주. 장식이라 정보는 담지 않는다. */}
             <div className={styles.stickerCluster} aria-hidden="true">
               <span className={styles.ninjaSticker}>
-                <ShurikenIcon className={styles.ninjaGlyph} />
+                <NinjaSigil className={styles.ninjaGlyph} />
               </span>
               <span className={styles.stampSticker}>
+                <StampRings className={styles.stampArtwork} />
                 <span className={`hand ${styles.stampRing}`}>
                   깨남
                   <br />
@@ -127,6 +129,7 @@ export function SelectionScreen({ data, defaultPosition, patch }: Props) {
                 이기는 법,
                 <br />
                 여기 다 있음.
+                <UnderlineDrawing className={styles.noteUnderline} />
               </span>
             </div>
           </div>
@@ -194,9 +197,13 @@ export function SelectionScreen({ data, defaultPosition, patch }: Props) {
                   {/* 카테고리명은 이미지 바깥으로 튀어나오게 배치한다 (블루프린트 6.2). */}
                   <span className={`display ${styles.posterLabel}`}>{category.name}</span>
 
+                  {index === 0 && <CrownDrawing className={styles.posterCrown} />}
+                  {index === 1 && <ArrowDrawing className={styles.posterArrow} />}
+                  {index === 2 && <TapeDrawing className={styles.posterTape} />}
+
                   {/* 블루프린트의 표창/불꽃/검 스티커: 카테고리별 아이콘을 프레임 모서리에 붙인다. */}
                   <span className={styles.posterIcon} aria-hidden="true">
-                    <CategoryIcon
+                    <PosterIconSticker
                       positionSlug={positionSlug}
                       categorySlug={category.slug}
                       className={styles.posterIconGlyph}

@@ -48,27 +48,48 @@
   color: var(--smoke);
 }
 
-/* 반복 조작하는 컨트롤이므로 pill 형태를 사용한다. */
+/* 목업의 뜯긴 노트지. 입력 자체는 수평을 유지해 커서와 포커스가 어긋나지 않는다. */
 .search {
+  isolation: isolate;
   position: relative;
   display: inline-flex;
   align-items: center;
   min-width: min(300px, 100%);
+  min-height: 62px;
+}
+
+.searchPaper {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.searchTape {
+  position: absolute;
+  width: 64px;
+  height: 24px;
+  right: 10px;
+  top: -12px;
+  transform: rotate(18deg);
+  pointer-events: none;
 }
 
 .searchInput {
   width: 100%;
-  padding: 10px 42px 10px 18px;
-  background: var(--paper);
+  padding: 12px 52px 12px 28px;
+  background: transparent;
   color: var(--ink);
-  border: var(--line);
-  border-radius: var(--radius-control);
+  border: 0;
+  border-radius: 0;
   font-size: 15px;
   font-weight: 600;
 }
 
 .searchInput::placeholder {
-  color: #8b7f6d;
+  color: var(--ink-soft);
   font-weight: 500;
 }
 
@@ -80,22 +101,24 @@
 .searchIcon {
   position: absolute;
   right: 16px;
-  width: 15px;
-  height: 15px;
-  border: 2px solid var(--ink);
-  border-radius: 50%;
+  width: 28px;
+  height: 32px;
+  color: var(--ink);
   pointer-events: none;
 }
 
-.searchIcon::after {
-  content: "";
-  position: absolute;
-  right: -5px;
-  bottom: -4px;
-  width: 8px;
-  height: 2px;
-  background: var(--ink);
-  transform: rotate(45deg);
+@media (forced-colors: active) {
+  .searchPaper,
+  .searchTape,
+  .searchIcon {
+    display: none;
+  }
+
+  .searchInput {
+    background: Canvas;
+    color: CanvasText;
+    border: 2px solid CanvasText;
+  }
 }
 
 /* ------------------------------------------------------- 아이콘 그리드 */

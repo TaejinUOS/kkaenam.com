@@ -176,9 +176,9 @@
   place-items: center;
   flex: none;
   width: clamp(44px, 4.6vw, 64px);
-  height: clamp(44px, 4.6vw, 64px);
+  height: clamp(58px, 6vw, 82px);
   color: var(--ink);
-  transform: rotate(-8deg);
+  transform: rotate(12deg);
   /* ::before가 배경을 맡으므로 z-index 음수가 배지 밖으로 새지 않게 가둔다. */
   isolation: isolate;
 }
@@ -200,23 +200,37 @@
 }
 
 .ninjaGlyph {
-  width: 58%;
-  height: 58%;
+  width: 72%;
+  height: 82%;
+}
+
+.ninjaSticker::after {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border: 1px solid currentColor;
+  pointer-events: none;
 }
 
 .stampSticker {
+  position: relative;
+  isolation: isolate;
   display: grid;
   place-items: center;
   flex: none;
   width: clamp(50px, 5.4vw, 72px);
   height: clamp(50px, 5.4vw, 72px);
   margin-left: clamp(-12px, -0.9vw, -9px);
-  background: var(--cobalt);
   color: var(--ink);
-  border: var(--line);
-  border-radius: 50%;
-  box-shadow: var(--shadow-cut);
-  transform: rotate(5deg);
+  transform: rotate(-9deg);
+}
+
+.stampArtwork {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
 }
 
 .stampRing {
@@ -224,8 +238,6 @@
   place-items: center;
   width: calc(100% - 12px);
   height: calc(100% - 12px);
-  border: 1.5px dashed currentColor;
-  border-radius: 50%;
   padding: 4px;
   /* 펜 글씨가 어그로체보다 작아 보여 한 단계 키운다 (기존 9~13px). */
   font-size: clamp(12px, 1.45vw, 17px);
@@ -238,14 +250,14 @@
   position: relative;
   flex: none;
   margin-left: -8px;
-  padding: clamp(7px, 0.8vw, 9px) clamp(10px, 1.1vw, 13px) clamp(8px, 0.9vw, 10px);
+  padding: clamp(7px, 0.8vw, 9px) clamp(10px, 1.1vw, 13px) clamp(17px, 1.7vw, 24px);
   color: var(--ink);
   /* 위와 같은 이유로 한 단계 키운다 (기존 12~15px). */
   font-size: clamp(15px, 1.5vw, 19px);
   /* 펜 글씨는 상하 여백을 글자 안에 품고 있어, 1.2를 주면 두 줄이 허옇게 벌어진다. */
   line-height: 0.98;
   white-space: nowrap;
-  transform: rotate(2.4deg);
+  transform: rotate(-6deg);
   isolation: isolate;
 }
 
@@ -255,9 +267,18 @@
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: #f4d33d;
+  background: var(--acid);
   border: var(--line);
   filter: url(#zine-torn-4);
+}
+
+.noteUnderline {
+  position: absolute;
+  right: 10%;
+  bottom: 5%;
+  width: 70%;
+  height: 22%;
+  pointer-events: none;
 }
 
 /* ----------------------------------------------------------- 포지션 탭 */
@@ -335,7 +356,7 @@
   /* 블루프린트처럼 카드가 필름 스트립으로 붙어 보이도록 간격을 최소화한다. */
   gap: clamp(6px, 0.9vw, 14px);
   /* 라벨이 프레임 밖으로 튀어나오므로 좌우 여유를 둔다. */
-  padding: 26px 12px 8px;
+  padding: 44px 12px 8px;
   margin-inline: -12px;
 }
 
@@ -468,31 +489,73 @@
 
 /* 목업의 카테고리 아이콘 스티커: 프레임 우하단에 붙인다. */
 .posterIcon {
+  --sticker-angle: -12deg;
   position: absolute;
   right: -4px;
   bottom: -6px;
   z-index: 2;
-  width: clamp(38px, 4.4vw, 60px);
-  height: clamp(38px, 4.4vw, 60px);
-  display: grid;
-  place-items: center;
-  background: var(--label-bg, var(--acid));
+  width: clamp(88px, 9vw, 144px);
+  max-width: 64cqi;
+  aspect-ratio: 144 / 104;
+  display: block;
   color: var(--ink);
-  border: var(--line);
-  border-radius: var(--radius-card);
-  transform: rotate(4deg);
-  box-shadow: var(--shadow-cut);
+  transform: rotate(var(--sticker-angle));
+  transform-origin: 65% 65%;
+  filter: drop-shadow(3px 4px 0 var(--ink));
   transition: transform var(--t-poster) var(--ease);
 }
 
 .posterIconGlyph {
-  width: 58%;
-  height: 58%;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* 목업의 펜 낙서는 프레임에 고정해 제목이나 클릭 영역을 가리지 않는다. */
+.posterCrown,
+.posterArrow,
+.posterTape {
+  position: absolute;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.posterCrown {
+  color: var(--gum);
+  width: clamp(38px, 4.5vw, 64px);
+  height: auto;
+  left: -12px;
+  bottom: calc(100% + 12px);
+  transform: rotate(-15deg);
+}
+
+.posterArrow {
+  color: var(--gum);
+  width: clamp(36px, 4vw, 56px);
+  height: auto;
+  right: 12%;
+  bottom: calc(100% + 8px);
+}
+
+.posterTape {
+  width: clamp(44px, 4.8vw, 68px);
+  height: auto;
+  bottom: -7px;
+  left: 12px;
+  transform: rotate(19deg);
+}
+
+.poster:nth-child(2) .posterIcon {
+  --sticker-angle: -7deg;
+}
+
+.poster:nth-child(3) .posterIcon {
+  --sticker-angle: -5deg;
 }
 
 .poster:hover .posterIcon,
 .poster:focus-visible .posterIcon {
-  transform: rotate(4deg) scale(1.08);
+  transform: rotate(var(--sticker-angle)) scale(1.05);
 }
 
 /* 목업의 라벨 색 순서: Acid → Gum → Cobalt */
@@ -511,11 +574,9 @@
 /*
  * 라벨 글씨는 세 포스터 모두 잉크로 통일한다.
  * Cobalt 위 Ink는 3.28:1로 본문 기준에는 못 미치지만, 라벨은 34px 이상 굵은 글자라
- * WCAG 큰 텍스트 기준(3:1)을 넘긴다. 아이콘은 가는 선이라 Paper를 유지한다.
+ * WCAG 큰 텍스트 기준(3:1)을 넘긴다. 장식 스티커도 목업의 검정 인쇄를 따른다.
+ * 카테고리 정보는 별도의 텍스트 라벨이 전달한다.
  */
-.poster:nth-child(3) .posterIcon {
-  color: var(--paper);
-}
 
 /*
  * 선택된 카테고리. 강조 그림자는 라벨 스티커와 같은 색을 쓴다.
@@ -643,5 +704,20 @@
   .posterLabel {
     font-size: clamp(34px, 9cqi, 52px);
     top: -20px;
+  }
+
+  /* 세로 포스터 사이에서는 위쪽 낙서가 이전 포스터와 겹치므로 왕관 하나만 남긴다. */
+  .posterCrown {
+    width: 36px;
+    left: auto;
+    right: 12px;
+    top: -29px;
+    bottom: auto;
+    transform: rotate(12deg);
+  }
+
+  .posterArrow,
+  .posterTape {
+    display: none;
   }
 }

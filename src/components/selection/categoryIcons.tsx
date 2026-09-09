@@ -3,7 +3,7 @@ import type { JSX, SVGProps } from "react";
 /**
  * 포지션별 카테고리 포스터 우하단에 붙는 스티커 아이콘.
  * 블루프린트의 표창(암살자)/불꽃(메이지)/검(브루저) 스티커를 기준으로
- * 나머지 9개 카테고리도 같은 굵기·톤의 모노라인 아이콘으로 맞췄다.
+ * 목업처럼 면으로 찍은 실루엣을 기준으로 모든 포지션의 인쇄 굵기를 맞춘다.
  */
 
 type IconProps = SVGProps<SVGSVGElement>;
@@ -18,6 +18,7 @@ function Base({ children, ...props }: IconProps & { children: React.ReactNode })
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
+      focusable="false"
       {...props}
     >
       {children}
@@ -27,72 +28,69 @@ function Base({ children, ...props }: IconProps & { children: React.ReactNode })
 
 function ShieldIcon(props: IconProps) {
   return (
-    <Base {...props}>
-      <path d="M12 3 19 6v5.5c0 4.7-3 8.1-7 9.5-4-1.4-7-4.8-7-9.5V6z" />
-      <path d="M9 12l2 2 4.5-5" />
+    <Base viewBox="0 0 100 100" {...props}>
+      <path d="M50 5L88 20L84 57C81 75 66 88 50 96C34 88 19 75 16 57L12 20ZM50 17L24 27L27 56C29 67 38 77 50 84C62 77 71 67 73 56L76 27Z" fill="currentColor" fillRule="evenodd" stroke="none" />
+      <path d="M47 28H56V47H69V56H56V73L47 78V56H33V47H47Z" fill="currentColor" stroke="none" />
     </Base>
   );
 }
 
 function CrossedSwordsIcon(props: IconProps) {
   return (
-    <Base {...props}>
-      <path d="M4 4l7 7" />
-      <path d="M4 4l2.4-.4L7 6l-2.4 2.4L4 4z" fill="currentColor" stroke="none" />
-      <path d="M20 4l-7 7" />
-      <path d="M20 4l-2.4-.4L17 6l2.4 2.4L20 4z" fill="currentColor" stroke="none" />
-      <path d="M6 20l12-12" />
-      <path d="M18 8l2-2" />
+    <Base viewBox="0 0 100 100" {...props}>
+      <g fill="currentColor" stroke="none">
+        <path d="M9 5L31 14L69 61L77 55L84 64L74 72L88 87L80 94L66 79L57 87L50 78L58 70L18 25Z" />
+        <path d="M91 5L69 14L52 35L63 49L82 25ZM38 51L31 61L23 55L16 64L26 72L12 87L20 94L34 79L43 87L50 78L42 70L47 64Z" />
+      </g>
     </Base>
   );
 }
 
 function DaggerIcon(props: IconProps) {
   return (
-    <Base {...props}>
-      <path d="M5 19L17 7" />
-      <path d="M17 7l3-3 1 1-3 3z" fill="currentColor" stroke="none" />
-      <path d="M5 19l1.8-.5.5-1.8z" fill="currentColor" stroke="none" />
-      <path d="M13 5l3 3" />
+    <Base viewBox="0 0 100 100" {...props}>
+      <path d="M91 5L77 43L49 68L32 51L57 23ZM77 20L41 54L48 58Z" fill="currentColor" fillRule="evenodd" stroke="none" />
+      <path d="M25 45L55 75L46 82L38 74L22 93L9 81L28 64L18 54Z" fill="currentColor" stroke="none" />
     </Base>
   );
 }
 
 function ClawIcon(props: IconProps) {
   return (
-    <Base {...props}>
-      <path d="M6 4c-1 5 0 11 3 17" />
-      <path d="M12 3c-.6 5.4.4 11.4 3 18" />
-      <path d="M18 4c.8 5-.2 11-3 17" />
+    <Base viewBox="0 0 100 100" {...props}>
+      <g fill="currentColor" stroke="none">
+        <path d="M25 10L40 18L31 29L33 34C20 53 20 68 28 88C7 72 5 55 13 35L18 32L17 24Z" />
+        <path d="M50 4L66 12L56 26L58 31C44 53 43 75 49 97C29 78 29 56 39 30L44 27L42 20Z" />
+        <path d="M78 10L91 20L82 32L84 37C70 57 64 75 66 93C51 76 57 52 67 32L72 28L71 22Z" />
+      </g>
     </Base>
   );
 }
 
 function SparkIcon(props: IconProps) {
   return (
-    <Base {...props}>
-      <path d="M12 2c0 4-1 6-4 9 3 0 5 1 4 9 0-4 1-6 4-9-3 0-5-1-4-9z" fill="currentColor" stroke="none" />
-      <path d="M4 18l1.2 1.2M20 6l-1.2 1.2" />
+    <Base viewBox="0 0 100 100" {...props}>
+      <path d="M61 3L23 53L45 58L34 96L80 40L57 36Z" fill="currentColor" stroke="none" />
+      <path d="M34 14C15 25 9 42 14 58M12 70L20 78M69 84C87 73 94 56 89 40M87 28L80 20" strokeWidth="5" strokeLinecap="butt" />
     </Base>
   );
 }
 
-/**
- * 마스트헤드 스티커 클러스터(표창 배지)에서도 그대로 재사용한다.
- *
- * 날 네 장은 중심에서 같은 거리(10.5)에 두어 방사 대칭을 지키고, 제어점을 중심 쪽으로
- * 당겨 변을 오목하게 만든다. 곡선의 허리가 날 끝 반지름의 절반쯤에 오는데,
- * 직선 변으로 이으면 표창이 아니라 반짝임으로 읽힌다.
- *
- * 가운데 구멍은 색을 덮어씌우지 않고 `evenodd`로 패스에서 파낸다. 이 아이콘은 애시드 ·
- * 검 · 코발트 세 가지 배경 위에 놓이므로, 구멍에 색을 지정하면 어느 한 배경에서는 반드시
- * 어긋난다 (실제로 잉크색을 박아 두어 검정 위 검정으로 묻혀 있었다).
- */
+/** 휘어진 네 날과 원형 축. 가운데 구멍은 배경색 대신 실제 투명한 패스로 뚫는다. */
 export function ShurikenIcon(props: IconProps) {
   return (
-    <Base {...props}>
+    <Base viewBox="0 0 100 100" {...props}>
+      <g fill="currentColor" stroke="none">
+        {[0, 90, 180, 270].map((angle) => (
+          <path
+            key={angle}
+            transform={`rotate(${angle} 50 50)`}
+            d="M48 38C58 24 73 16 91 12C89 28 82 42 69 51L73 33L58 48Z"
+          />
+        ))}
+      </g>
       <path
-        d="M12 1.5Q14.2 9.8 22.5 12Q14.2 14.2 12 22.5Q9.8 14.2 1.5 12Q9.8 9.8 12 1.5ZM12 9.9A2.1 2.1 0 1 0 12 14.1A2.1 2.1 0 1 0 12 9.9Z"
+        d="M50 34A16 16 0 1 0 50 66A16 16 0 1 0 50 34ZM50 44A6 6 0 1 0 50 56A6 6 0 1 0 50 44Z"
         fillRule="evenodd"
         fill="currentColor"
         stroke="none"
@@ -103,64 +101,61 @@ export function ShurikenIcon(props: IconProps) {
 
 function FlameIcon(props: IconProps) {
   return (
-    <Base {...props}>
-      <path d="M12 2c1 3-2 4-2 7a4 4 0 108 0c0-2-1-3-2-4 .5 2-1 2.5-1.5 1C13.5 4 12 3 12 2z" fill="currentColor" stroke="none" />
-      <path d="M8.5 14.5a3.5 3.5 0 007 0c0-2-1.5-3-2.5-4.5" />
+    <Base viewBox="0 0 100 100" {...props}>
+      <g fill="currentColor" stroke="none">
+        <path d="M47 4C61 17 67 29 67 41C73 37 73 32 72 28C91 45 97 65 86 80C81 88 74 92 66 94C77 83 77 71 69 61C68 68 64 73 60 75C61 61 52 51 50 41C46 56 31 65 33 79C34 86 38 91 44 95C26 93 13 82 12 68C12 60 16 52 22 47C18 61 23 68 27 70C19 43 49 33 47 4Z" />
+        <path d="M50 67C51 74 54 78 58 81L64 76C69 87 61 96 52 96C42 96 36 86 41 78L45 82C45 76 47 71 50 67Z" />
+      </g>
     </Base>
   );
 }
 
 function SwordIcon(props: IconProps) {
   return (
-    <Base {...props}>
-      <path d="M6 18L17.5 6.5" />
-      <path d="M17.5 6.5l2-2 1 1-2 2z" fill="currentColor" stroke="none" />
-      <path d="M6 18l-1.8.6.6-1.8z" fill="currentColor" stroke="none" />
-      <path d="M13 8l2 2" />
-      <path d="M9.5 14.5l1.6 1.6" />
+    <Base viewBox="0 0 100 100" {...props}>
+      <g fill="currentColor" stroke="none">
+        {/* 서로 반대 방향으로 뻗는 두 칼날과 각진 가드. */}
+        <path d="M79 5L71 35L65 26L39 52L44 57L31 59L21 69L15 63L25 53L27 40L32 45L58 19L49 15Z" />
+        <path d="M79 5L71 35L65 26L39 52L44 57L31 59L21 69L15 63L25 53L27 40L32 45L58 19L49 15Z" transform="rotate(180 50 50)" />
+      </g>
     </Base>
   );
 }
 
 function BowIcon(props: IconProps) {
   return (
-    <Base {...props}>
-      <path d="M4 20L18 6" />
-      <path d="M18 6h-5.5" />
-      <path d="M18 6v5.5" />
-      <path d="M4 20l2.4-.3.3-2.4z" fill="currentColor" stroke="none" />
+    <Base viewBox="0 0 100 100" {...props}>
+      <path d="M19 14C43 5 77 31 85 61L80 78L69 73C71 55 48 30 29 27L23 34Z" fill="currentColor" stroke="none" />
+      <path d="M21 19L22 77L78 76" strokeWidth="3" strokeLinejoin="miter" />
+      <path d="M86 11L77 37L71 29L31 70L31 79L16 94L17 82L6 83L21 68L28 68L67 25L59 21Z" fill="currentColor" stroke="none" />
     </Base>
   );
 }
 
 function HeartIcon(props: IconProps) {
   return (
-    <Base {...props}>
-      <path
-        d="M12 20S3.5 14.6 3.5 8.9 8 4 12 8c4-4 8.5-.9 8.5.9C20.5 14.6 12 20 12 20z"
-        fill="currentColor"
-        stroke="none"
-      />
+    <Base viewBox="0 0 100 100" {...props}>
+      <path d="M50 89L19 60C-9 34 17 1 41 19L50 28L59 19C83 1 109 34 81 60ZM21 28C14 34 15 44 21 49L25 43C21 39 23 34 26 32Z" fill="currentColor" fillRule="evenodd" stroke="none" />
+      <path d="M6 66L16 76M26 86L34 93M83 74L93 65" strokeWidth="3" />
     </Base>
   );
 }
 
 function HookIcon(props: IconProps) {
   return (
-    <Base {...props}>
-      <path d="M9 3v9a4 4 0 008 0" />
-      <path d="M9 21l6-9" />
-      <circle cx="9" cy="3" r="1.6" fill="currentColor" stroke="none" />
+    <Base viewBox="0 0 100 100" {...props}>
+      <path d="M43 4A12 12 0 1 0 43 28A12 12 0 1 0 43 4ZM43 11A5 5 0 1 0 43 21A5 5 0 1 0 43 11Z" fill="currentColor" fillRule="evenodd" stroke="none" />
+      <path d="M38 26H49V67C49 90 77 86 78 67L64 70L89 42L91 69C91 107 37 109 37 70Z" fill="currentColor" stroke="none" />
+      <path d="M31 34L54 29M32 42L54 37M32 50L54 45" strokeWidth="3" />
     </Base>
   );
 }
 
 function ChaosIcon(props: IconProps) {
   return (
-    <Base {...props}>
-      <path d="M6 8c0-2.5 2.2-4.5 5-4.5 3 0 5 1.8 5 4.2 0 3-4 3-4 6" />
-      <circle cx="12" cy="18.5" r="1.4" fill="currentColor" stroke="none" />
-      <path d="M4 4l1.4 1.4M20 4l-1.4 1.4" />
+    <Base viewBox="0 0 100 100" {...props}>
+      <path d="M13 31C9 7 57 1 63 24C69 46 43 45 43 62L30 65C26 41 53 40 50 27C47 15 26 20 27 31Z" fill="currentColor" stroke="none" />
+      <path d="M74 13L92 17L78 66L69 64ZM29 74L43 72L45 88L31 91ZM67 75L81 78L76 93L63 89Z" fill="currentColor" stroke="none" />
     </Base>
   );
 }

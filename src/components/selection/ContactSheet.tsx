@@ -8,6 +8,7 @@ import type { CategoryView, ChampionChip } from "@/data/selection";
 import { buildQuery, matchesName, normalizeQuery } from "@/lib/url";
 
 import styles from "./ContactSheet.module.css";
+import { NotebookPaper, SearchDrawing, TapeDrawing } from "./SelectionArtwork";
 
 type Props = {
   positionSlug: string;
@@ -69,6 +70,8 @@ export function ContactSheet({ positionSlug, positionName, category, champions }
         </div>
 
         <label className={styles.search}>
+          <NotebookPaper className={styles.searchPaper} />
+          <TapeDrawing className={styles.searchTape} />
           <span className="sr-only">
             {positionName} {category.name} 안에서 챔피언 이름 검색
           </span>
@@ -80,7 +83,7 @@ export function ContactSheet({ positionSlug, positionName, category, champions }
             autoComplete="off"
             onChange={(event) => setTerm(event.target.value)}
           />
-          <span className={styles.searchIcon} aria-hidden="true" />
+          <SearchDrawing className={styles.searchIcon} />
         </label>
       </header>
 
