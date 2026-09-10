@@ -27,7 +27,7 @@ export function LegalPage({
       <div className={styles.body}>{children}</div>
 
       <Link className={`btn btn--ghost ${styles.back}`} href="/">
-        상대법으로 돌아가기
+        챔피언으로 돌아가기
       </Link>
     </div>
   );

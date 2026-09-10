@@ -6,16 +6,18 @@ import { useCallback } from "react";
 
 import type { VideoView } from "@/lib/videoStore";
 import type { WikiLinkMap } from "@/lib/wikiLink";
-import type { WikiView } from "@/lib/wikiStore";
+import type { ArticleView, DocNode, WikiView } from "@/lib/wikiStore";
 import { buildQuery } from "@/lib/url";
 
 import { ChampionAside } from "./ChampionAside";
+import { ChampionWikiPanel } from "./ChampionWikiPanel";
 import styles from "./MatchupScreen.module.css";
 import type { ChampionOption, ChampionView, PlacementView } from "./types";
 import { VideoPanel } from "./VideoPanel";
 import { WikiPanel } from "./WikiPanel";
 
 const TABS = [
+  { id: "champion" },
   { id: "board", label: "상대법" },
   { id: "video", label: "영상" },
 ] as const;
@@ -37,6 +39,9 @@ type Props = {
   champion: ChampionView;
   /** 서버가 D1에서 읽어 온 위키 문서. */
   wiki: WikiView;
+  /** 챔피언 이름과 같은 일반 위키 문서. 없거나 볼 수 없는 제안이면 null. */
+  championArticle: ArticleView | null;
+  championChildDocs: DocNode[];
   wikiLinks: WikiLinkMap;
   /** 운영자가 등록한 영상 (PRD 5.3.2). 비어 있으면 영상 탭이 빈 상태를 그린다. */
   videos: VideoView[];
@@ -58,6 +63,8 @@ export function MatchupScreen({
   placements,
   champion,
   wiki,
+  championArticle,
+  championChildDocs,
   wikiLinks,
   videos,
   nearbyChampions,
@@ -77,7 +84,7 @@ export function MatchupScreen({
 
   // 탭 상태를 URL에 반영해 새로고침·뒤로 가기 후에도 복원한다 (PRD 5.3.2, FR-10).
   const tabParam = searchParams.get("tab");
-  const tab: TabId = TABS.some((t) => t.id === tabParam) ? (tabParam as TabId) : "board";
+  const tab: TabId = TABS.some((t) => t.id === tabParam) ? (tabParam as TabId) : "champion";
 
   const setParams = useCallback(
     (patchParams: Record<string, string | null>) => {
@@ -97,7 +104,7 @@ export function MatchupScreen({
             className={styles.crumbLink}
             href={first ? `/?position=${first.position.slug}` : "/"}
           >
-            상대법
+            챔피언
           </Link>
           <span aria-hidden="true">/</span>
           {/*
@@ -152,7 +159,7 @@ export function MatchupScreen({
 
         <div className={`${styles.main} on-paper`}>
           {/* 종이 인덱스 탭처럼 상단 테두리에 붙인다 (블루프린트 6.3). */}
-          <div className={styles.tabs} role="tablist" aria-label="상대법 콘텐츠">
+          <div className={styles.tabs} role="tablist" aria-label={`${champion.name} 콘텐츠`}>
             {TABS.map((item) => {
               const current = item.id === tab;
               return (
@@ -165,9 +172,9 @@ export function MatchupScreen({
                   aria-controls={`panel-${item.id}`}
                   tabIndex={current ? 0 : -1}
                   className={`${styles.tab} ${current ? styles.tabCurrent : ""}`}
-                  onClick={() => setParams({ tab: item.id === "board" ? null : item.id })}
+                  onClick={() => setParams({ tab: item.id === "champion" ? null : item.id })}
                 >
-                  {item.label}
+                  {"label" in item ? item.label : champion.name}
                 </button>
               );
             })}
@@ -179,7 +186,15 @@ export function MatchupScreen({
             id={`panel-${tab}`}
             aria-labelledby={`tab-${tab}`}
           >
-            {tab === "board" ? (
+            {tab === "champion" ? (
+              <ChampionWikiPanel
+                championName={champion.name}
+                article={championArticle}
+                wikiLinks={wikiLinks}
+                childDocs={championChildDocs}
+                viewer={viewer}
+              />
+            ) : tab === "board" ? (
               <WikiPanel
                 positionLabel={positionLabel}
                 champion={champion}

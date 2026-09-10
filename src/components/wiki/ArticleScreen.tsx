@@ -14,7 +14,7 @@ import styles from "./ArticleScreen.module.css";
 
 type Viewer = { id: string; name: string; role: "member" | "admin" } | null;
 
-type Props = {
+export type ArticleDocumentProps = {
   title: string;
   /** 운영자가 이 문서를 내릴 때 서버가 다시 찾는 열쇠. */
   titleKey: string;
@@ -35,6 +35,9 @@ type Props = {
    */
   childDocs: DocNode[];
   viewer: Viewer;
+  /** 챔피언 화면 안에서는 이미 페이지 제목이 있으므로 한 단계 낮춰 쓴다. */
+  headingLevel?: "h1" | "h2";
+  kicker?: string;
 };
 
 /** 본문 섹션의 앵커. 매치업 문서의 `general`과 같은 자리다. */
@@ -61,7 +64,54 @@ export function ArticleScreen({
   wikiLinks,
   childDocs,
   viewer,
-}: Props) {
+}: ArticleDocumentProps) {
+  return (
+    <div className={styles.screen}>
+      <div className="shell">
+        <nav className={styles.crumbs} aria-label="현재 위치">
+          <Link href="/wiki" className={styles.crumbLink}>
+            위키
+          </Link>
+          <span aria-hidden="true"> / </span>
+          <span className={styles.crumbCurrent}>{title}</span>
+        </nav>
+
+        <ArticleDocument
+          title={title}
+          titleKey={titleKey}
+          body={body}
+          revision={revision}
+          updatedAt={updatedAt}
+          updatedBy={updatedBy}
+          proposed={proposed}
+          wikiLinks={wikiLinks}
+          childDocs={childDocs}
+          viewer={viewer}
+        />
+      </div>
+    </div>
+  );
+}
+
+/**
+ * 일반 위키 문서의 실제 지면. 독립 `/wiki/…` 화면과 챔피언의 첫 탭이 같은 문서를
+ * 서로 다른 껍데기 안에서 보여 주므로, 본문·편집·역사·분류 처리는 이 컴포넌트 하나를
+ * 함께 쓴다.
+ */
+export function ArticleDocument({
+  title,
+  titleKey,
+  body,
+  revision,
+  updatedAt,
+  updatedBy,
+  proposed,
+  wikiLinks,
+  childDocs,
+  viewer,
+  headingLevel = "h1",
+  kicker = "WIKI ARTICLE",
+}: ArticleDocumentProps) {
   const resolveLink = useCallback((target: string) => wikiLinks[target] ?? null, [wikiLinks]);
 
   const base = articleHref(title);
@@ -103,90 +153,78 @@ export function ArticleScreen({
     [body, editHref, proposed, viewer],
   );
 
-  return (
-    <div className={styles.screen}>
-      <div className="shell">
-        <nav className={styles.crumbs} aria-label="현재 위치">
-          <Link href="/wiki" className={styles.crumbLink}>
-            위키
-          </Link>
-          <span aria-hidden="true"> / </span>
-          <span className={styles.crumbCurrent}>{title}</span>
-        </nav>
+  const Heading = headingLevel;
 
-        <header className={styles.documentHeader}>
-          <p className={`mono ${styles.documentKicker}`}>WIKI ARTICLE</p>
-          <h1 className={`display ${styles.documentTitle}`}>{title}</h1>
-        </header>
+  return (
+    <>
+      <header className={styles.documentHeader}>
+        <p className={`mono ${styles.documentKicker}`}>{kicker}</p>
+        <Heading className={`display ${styles.documentTitle}`}>{title}</Heading>
+      </header>
 
         {/*
           승인 전 문서는 목록·검색·링크 어디에도 없다. 주소를 아는 사람만 여기 닿으므로,
           지금 보고 있는 것이 아직 문서가 아니라는 사실을 화면이 직접 말해야 한다.
         */}
-        {proposed && (
-          <p className={styles.proposed}>
-            <span className="sticker sticker--gum">검토 대기</span> 아직 만들어지지 않은 문서입니다.
-            운영자가 승인하면 이 이름으로 게시됩니다.
-          </p>
-        )}
+      {proposed && (
+        <p className={styles.proposed}>
+          <span className="sticker sticker--gum">검토 대기</span> 아직 만들어지지 않은 문서입니다.
+          운영자가 승인하면 이 이름으로 게시됩니다.
+        </p>
+      )}
 
-        <div className={`${styles.paper} on-paper`}>
-          <WikiDocument sections={sections} resolveLink={resolveLink} />
-        </div>
+      <div className={`${styles.paper} on-paper`}>
+        <WikiDocument sections={sections} resolveLink={resolveLink} />
+      </div>
 
-        {categories.length > 0 && (
-          <p className={styles.categories}>
-            <span className={styles.categoriesLabel}>분류</span>
-            {categories.map((name) => (
-              <Link key={name} href={articleHref(`분류:${name}`)} className={styles.categoryTag}>
-                {name}
-              </Link>
-            ))}
-          </p>
-        )}
+      {categories.length > 0 && (
+        <p className={styles.categories}>
+          <span className={styles.categoriesLabel}>분류</span>
+          {categories.map((name) => (
+            <Link key={name} href={articleHref(`분류:${name}`)} className={styles.categoryTag}>
+              {name}
+            </Link>
+          ))}
+        </p>
+      )}
 
         {/*
           손으로 쓴 본문 아래에 이 문서 아래의 문서를 자동으로 이어 붙인다. 분류 문서든
           일반 문서든 똑같이 붙는다 — `동수 법칙`을 열면 그 아래 `전선`이 보여야 한다.
         */}
-        {childDocs.length > 0 && (
-          <section className={styles.memberList} aria-label="이 문서 아래의 문서">
-            <p className={styles.memberListTitle}>이 문서 아래</p>
-            <ChildDocs nodes={childDocs} />
-          </section>
-        )}
+      {childDocs.length > 0 && (
+        <section className={styles.memberList} aria-label="이 문서 아래의 문서">
+          <p className={styles.memberListTitle}>이 문서 아래</p>
+          <ChildDocs nodes={childDocs} />
+        </section>
+      )}
 
         {/*
           운영자만 보는 자리. 문서를 내리는 일은 읽는 흐름의 일부가 아니므로 본문과
           목록 아래, 메타 줄 옆에 둔다.
         */}
-        {!proposed && viewer?.role === "admin" && (
-          <div className={styles.adminBar}>
-            <DeleteArticleButton
-              titleKey={titleKey}
-              title={title}
-              childCount={childDocs.length}
-            />
-          </div>
-        )}
+      {!proposed && viewer?.role === "admin" && (
+        <div className={styles.adminBar}>
+          <DeleteArticleButton titleKey={titleKey} title={title} childCount={childDocs.length} />
+        </div>
+      )}
 
-        {!proposed && (
-          <p className={`mono ${styles.meta}`}>
-            <Link href={`${base}/history`} className={styles.historyLink}>
-              r{revision} 역사
-            </Link>
-            <span aria-hidden="true">|</span>
-            <span>{formatDate(updatedAt)} 갱신</span>
-            {updatedBy && (
-              <>
-                <span aria-hidden="true">|</span>
-                <span>{updatedBy}</span>
-              </>
-            )}
-          </p>
-        )}
-      </div>
-    </div>
+      {!proposed && (
+        <p className={`mono ${styles.meta}`}>
+          <Link href={`${base}/history`} className={styles.historyLink}>
+            r{revision} 역사
+          </Link>
+          <span aria-hidden="true">|</span>
+          <span>{formatDate(updatedAt)} 갱신</span>
+          {updatedBy && (
+            <>
+              <span aria-hidden="true">|</span>
+              <span>{updatedBy}</span>
+            </>
+          )}
+        </p>
+      )}
+    </>
   );
 }
 

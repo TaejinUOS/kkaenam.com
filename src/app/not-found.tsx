@@ -23,7 +23,7 @@ export default function NotFound() {
         다시 골라 주세요.
       </p>
       <Link className="btn btn--acid" href="/">
-        상대법으로 돌아가기
+        챔피언으로 돌아가기
       </Link>
     </div>
   );

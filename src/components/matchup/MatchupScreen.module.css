@@ -78,6 +78,7 @@
   font-weight: 800;
   font-size: clamp(15px, 1.5vw, 18px);
   letter-spacing: -0.02em;
+  white-space: nowrap;
   transition:
     background-color var(--t-poster) var(--ease),
     color var(--t-poster) var(--ease);

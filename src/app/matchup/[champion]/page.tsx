@@ -9,8 +9,8 @@ import { eulReul } from "@/lib/josa";
 import { type MatchupRouteParams, resolveMatchup } from "@/lib/matchupRoute";
 import { getTaxonomy } from "@/lib/taxonomyStore";
 import { listVideosFor } from "@/lib/videoStore";
-import { matchupDocTitle } from "@/lib/wikiLink";
-import { getWikiView, resolveDocLinks } from "@/lib/wikiStore";
+import { titleKey } from "@/lib/wikiTitle";
+import { getArticleView, getDocTree, getWikiView, resolveDocLinks } from "@/lib/wikiStore";
 
 type RouteParams = MatchupRouteParams;
 
@@ -24,8 +24,8 @@ export async function generateMetadata({
 
   const { championData } = resolved;
   return {
-    title: matchupDocTitle(championData.name),
-    description: `${championData.name}${eulReul(championData.name)} 상대하는 방법. 보편 상대법 General과 내 챔피언 전용 상대법 Me를 함께 확인하세요.`,
+    title: championData.name,
+    description: `${championData.name} 위키와 ${championData.name}${eulReul(championData.name)} 상대하는 방법, 운영자 선별 영상을 한 페이지에서 확인하세요.`,
   };
 }
 
@@ -62,11 +62,21 @@ export default async function MatchupPage({ params }: { params: Promise<RoutePar
    * 걸러내기가 아니라 문서 안 이동이 되었고, 그래서 서버가 읽는 내용이 선택과
    * 무관해졌다 (PRD FR-12, FR-13, `docs/WIKI_MODEL.md` "문서 구조").
    */
-  const [wiki, viewer, videos] = await Promise.all([
+  const [wiki, viewer, videos, article, championChildDocs] = await Promise.all([
     getWikiView(championData.slug),
     getViewer(),
     listVideosFor(championData.slug),
+    getArticleView(titleKey(championData.name)),
+    getDocTree(championData.name),
   ]);
+
+  const championArticle =
+    article &&
+    (article.status === "published" ||
+      (article.status === "proposed" &&
+        (viewer?.role === "admin" || viewer?.id === article.proposedBy)))
+      ? article
+      : null;
 
   /*
    * 본문에 적힌 `[[아리 상대법]]`·`[[정글 동선]]`을 여기서 미리 풀어 둔다. 해석에
@@ -75,6 +85,7 @@ export default async function MatchupPage({ params }: { params: Promise<RoutePar
   const wikiLinks = await resolveDocLinks([
     wiki.general,
     ...wiki.meSections.map((s) => s.body),
+    ...(championArticle ? [championArticle.body] : []),
   ]);
 
   return (
@@ -104,6 +115,8 @@ export default async function MatchupPage({ params }: { params: Promise<RoutePar
           })),
         }}
         wiki={wiki}
+        championArticle={championArticle}
+        championChildDocs={championChildDocs}
         wikiLinks={wikiLinks}
         videos={videos}
         viewer={viewer}

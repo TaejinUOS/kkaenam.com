@@ -79,7 +79,7 @@ export function ContactSheet({ positionSlug, positionName, category, champions }
             className={styles.searchInput}
             type="search"
             value={term}
-            placeholder="상대법 검색"
+            placeholder="챔피언 검색"
             autoComplete="off"
             onChange={(event) => setTerm(event.target.value)}
           />

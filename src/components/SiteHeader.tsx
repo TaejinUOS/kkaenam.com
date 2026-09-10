@@ -17,7 +17,7 @@ type NavItem = {
 };
 
 const NAV: NavItem[] = [
-  { label: "상대법", href: "/", match: "/matchup" },
+  { label: "챔피언", href: "/", match: "/matchup" },
   /*
    * 이 사이트에서 위키는 곁다리가 아니라 본체이므로 `soon` 딱지가 붙은 메뉴들보다
    * 앞선다 (`docs/WIKI_EXPANSION.md` "위키 메뉴").
