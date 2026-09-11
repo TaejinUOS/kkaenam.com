@@ -15,6 +15,9 @@
 /** 각주 참조가 가리키는 href 접두사. `MarkdownBody`가 이 값으로 각주를 알아본다. */
 export const FOOTNOTE_HREF = "#wiki-fn-";
 
+/** 이 제목 아래의 원고를 주황색으로 표시한다. 같은 단계의 다음 제목에서 끝난다. */
+export const AI_DRAFT_HEADING = "AI 작성 초안";
+
 /**
  * 분류 위키링크의 대상 이름 접두사. `[[분류:정글]]`이 이 접두사로 시작한다
  * (`docs/WIKI_EXPANSION.md` "분류").

@@ -25,6 +25,16 @@
   scroll-margin-top: calc(var(--header-h) + 16px);
 }
 
+/* 원고 제목의 범위만 칠한다. 이후 사람이 덧붙인 동급 제목까지 칠하지 않는다. */
+.node[data-ai-draft="true"] {
+  color: var(--ai-ink);
+}
+
+.node[data-ai-draft="true"] .number,
+.node[data-ai-draft="true"] a {
+  color: inherit;
+}
+
 .head {
   display: flex;
   align-items: center;

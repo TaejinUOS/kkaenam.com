@@ -3,6 +3,7 @@
 import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import {
+  AI_DRAFT_HEADING,
   type Footnote,
   type OutlineNode,
   type WikiLinkResolver,
@@ -224,6 +225,7 @@ function NodeView({
       id={node.id}
       data-level={node.level}
       data-current={section?.current || undefined}
+      data-ai-draft={node.title === AI_DRAFT_HEADING || undefined}
     >
       <div className={styles.head}>
         <button
