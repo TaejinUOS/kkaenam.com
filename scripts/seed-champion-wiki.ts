@@ -12,7 +12,6 @@ import { join } from "node:path";
 import catalog from "../src/data/generated/champions.json";
 import { MAX_BODY_LENGTH, SYSTEM_USER_ID } from "../src/data/wiki";
 import {
-  AI_DRAFT_HEADING,
   buildOutline,
   collectWikiLinkTitles,
   extractFootnotes,
@@ -20,12 +19,14 @@ import {
 import { unresolvedWikiTitles } from "../src/lib/wikiLink";
 import { checkArticleTitle, titleKey } from "../src/lib/wikiTitle";
 
+const AI_DRAFT_HEADING = "AI 작성 초안";
+
 const drafts = [
   // 2026-09-11 운영 D1의 mid / assassin sort_order 1~5를 확인한 명단.
   ...["katarina", "zed", "akali", "fizz", "leblanc"].map((slug) => ({
     slug,
     createdAt: "2026-09-11T05:03:01.000Z",
-    richMarkup: false,
+    richMarkup: true,
   })),
   // 2026-09-12 taxonomy.ts의 mid / bruiser-adc 전체 명단.
   ...[
@@ -74,10 +75,6 @@ for (const { slug, createdAt, richMarkup } of drafts) {
     assert(/^- /mu.test(body), `${slug}: 목록 문법 누락`);
     assert(collectWikiLinkTitles(body).length >= 2, `${slug}: 위키링크 문법 누락`);
     assert(extractFootnotes(body).notes.length >= 1, `${slug}: 각주 문법 누락`);
-  } else {
-    // 첫 배치 원고는 헤더와 평문만 쓰기로 한 당시의 승인 규칙을 유지한다.
-    assert(!/[*_`~\[\]<>|]/u.test(body), `${slug}: 헤더 외 마크다운 문법`);
-    assert(!/^(?:\s*[-+]\s|\s*\d+[.)]\s|\s{4}|-{3,}$)/mu.test(body));
   }
 
   const batch = createdAt.slice(0, 10).replaceAll("-", "");
