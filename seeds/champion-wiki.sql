@@ -546,3 +546,1059 @@ W로 상대 체력을 깎았어도 돌아온 뒤 상대가 웨이브를 밀면 �
 Riot 공식 르블랑 소개: https://www.leagueoflegends.com/ko-kr/champions/leblanc/'
 AND NOT EXISTS (SELECT 1 FROM wiki_edits WHERE id = 'edit-ai-champion-leblanc-20260911');
 
+-- 사일러스 (1218자)
+INSERT INTO wiki_docs (id, kind, title, title_key, doc_status, champion_slug, general, revision, patch, edit_policy, created_at, updated_at, updated_by)
+SELECT 'doc-ai-champion-sylas-20260912', 'article', '사일러스', '사일러스', 'published', NULL, '# AI 작성 초안
+
+[[분류:미드]] [[분류:브루저/원딜]]
+
+## 짧게 때리고 빠질 때보다 두 번째 회전에 강하다
+
+사일러스는 스킬 사이에 강화 기본 공격을 섞어야 피해와 라인 정리가 함께 나온다. 스킬을 한꺼번에 누른 뒤 평타를 몰아 치기보다 **스킬 하나 → 강화 평타 → 다음 스킬**의 리듬을 잡는다. 강화 공격은 주변 미니언에도 닿으므로 상대를 때리면서 웨이브가 예상보다 빨리 밀릴 수 있다.
+
+> 교환을 시작하기 전에 `국왕시해자(W)`로 회복할 수 있는 적 챔피언과 빠져나올 미니언 위치를 같이 본다.
+
+## 레벨별 라인전
+
+| 구간 | 우선할 판단 |
+| --- | --- |
+| 1레벨 | `사슬 후려치기(Q)`의 교차 지점을 미니언과 챔피언에 함께 맞힌다. 두 번째 폭발까지 맞힐 수 없으면 마나만 쓰지 않는다. |
+| 2~3레벨 | `도주(E1)`는 진입 버튼이면서 회피 버튼이다. `억압(E2)`이 빗나갔을 때 돌아올 길이 없으면 먼저 쓰지 않는다. |
+| 6레벨 이후 | 훔친 궁극기의 이름보다 **지금 라인에서 바로 쓸 수 있는가**를 본다. 교전이 끝난 뒤 필요한 궁을 미리 훔쳐 라인 압박을 버리지 않는다. |
+
+## 교환 전 체크
+
+- 적의 핵심 견제기가 빠졌는가.
+- `억압(E2)` 앞을 미니언이 막고 있지 않은가.
+- `국왕시해자(W)`를 너무 일찍 써서 회복 구간을 버리지 않는가.
+- 스킬 사용 뒤 강화 평타를 칠 거리인가.
+
+`Q`는 첫 타격보다 교차 지점의 지연 폭발 비중이 크다. 상대가 막타를 치려고 멈추는 순간에 교차점을 놓으면 적중률이 올라간다. 반대로 이동기가 남은 상대에게 최대 사거리로 던지면 첫 타만 맞고 끝나기 쉽다.
+
+## 같이 보면 좋은 문서
+
+사일러스처럼 근접 교환 뒤 회복으로 버티는 챔피언은 [[다이애나]]와 라인 관리의 결이 다르다. 다이애나는 표식을 이용한 재진입을, 사일러스는 빗나간 `E2` 뒤의 공백을 더 엄격하게 관리한다.
+
+이 글은 인벤 사일러스 공략 게시판과 미드 공략의 스킬 구조·라인 클리어 설명을 참고해, 현재 Data Dragon 스킬 설명과 맞는 내용만 남겼다.[* [사일러스 공략 게시판](https://lol.inven.co.kr/dataninfo/champion/manualTool.php?champnum=143), [미드 사일러스 설명서](https://lol.inven.co.kr/dataninfo/champion/manualToolView.php?idx=146557)]', 1, '16.17.1', 'guarded', '2026-09-12T00:00:00.000Z', '2026-09-12T00:00:00.000Z', 'user-system'
+WHERE NOT EXISTS (SELECT 1 FROM wiki_docs WHERE id = 'doc-ai-champion-sylas-20260912' OR (kind = 'article' AND title_key = '사일러스'));
+INSERT INTO wiki_edits (id, doc_id, me_slug, base_revision, body, summary, status, author, created_at, accepted_via, revision)
+SELECT 'edit-ai-champion-sylas-20260912', id, NULL, 0, general, 'AI 작성: 실전 라인전 초안', 'accepted', 'user-system', '2026-09-12T00:00:00.000Z', 'admin', 1 FROM wiki_docs
+WHERE id = 'doc-ai-champion-sylas-20260912' AND revision = 1 AND general = '# AI 작성 초안
+
+[[분류:미드]] [[분류:브루저/원딜]]
+
+## 짧게 때리고 빠질 때보다 두 번째 회전에 강하다
+
+사일러스는 스킬 사이에 강화 기본 공격을 섞어야 피해와 라인 정리가 함께 나온다. 스킬을 한꺼번에 누른 뒤 평타를 몰아 치기보다 **스킬 하나 → 강화 평타 → 다음 스킬**의 리듬을 잡는다. 강화 공격은 주변 미니언에도 닿으므로 상대를 때리면서 웨이브가 예상보다 빨리 밀릴 수 있다.
+
+> 교환을 시작하기 전에 `국왕시해자(W)`로 회복할 수 있는 적 챔피언과 빠져나올 미니언 위치를 같이 본다.
+
+## 레벨별 라인전
+
+| 구간 | 우선할 판단 |
+| --- | --- |
+| 1레벨 | `사슬 후려치기(Q)`의 교차 지점을 미니언과 챔피언에 함께 맞힌다. 두 번째 폭발까지 맞힐 수 없으면 마나만 쓰지 않는다. |
+| 2~3레벨 | `도주(E1)`는 진입 버튼이면서 회피 버튼이다. `억압(E2)`이 빗나갔을 때 돌아올 길이 없으면 먼저 쓰지 않는다. |
+| 6레벨 이후 | 훔친 궁극기의 이름보다 **지금 라인에서 바로 쓸 수 있는가**를 본다. 교전이 끝난 뒤 필요한 궁을 미리 훔쳐 라인 압박을 버리지 않는다. |
+
+## 교환 전 체크
+
+- 적의 핵심 견제기가 빠졌는가.
+- `억압(E2)` 앞을 미니언이 막고 있지 않은가.
+- `국왕시해자(W)`를 너무 일찍 써서 회복 구간을 버리지 않는가.
+- 스킬 사용 뒤 강화 평타를 칠 거리인가.
+
+`Q`는 첫 타격보다 교차 지점의 지연 폭발 비중이 크다. 상대가 막타를 치려고 멈추는 순간에 교차점을 놓으면 적중률이 올라간다. 반대로 이동기가 남은 상대에게 최대 사거리로 던지면 첫 타만 맞고 끝나기 쉽다.
+
+## 같이 보면 좋은 문서
+
+사일러스처럼 근접 교환 뒤 회복으로 버티는 챔피언은 [[다이애나]]와 라인 관리의 결이 다르다. 다이애나는 표식을 이용한 재진입을, 사일러스는 빗나간 `E2` 뒤의 공백을 더 엄격하게 관리한다.
+
+이 글은 인벤 사일러스 공략 게시판과 미드 공략의 스킬 구조·라인 클리어 설명을 참고해, 현재 Data Dragon 스킬 설명과 맞는 내용만 남겼다.[* [사일러스 공략 게시판](https://lol.inven.co.kr/dataninfo/champion/manualTool.php?champnum=143), [미드 사일러스 설명서](https://lol.inven.co.kr/dataninfo/champion/manualToolView.php?idx=146557)]'
+AND NOT EXISTS (SELECT 1 FROM wiki_edits WHERE id = 'edit-ai-champion-sylas-20260912');
+INSERT OR IGNORE INTO wiki_links (source_doc, source_key, target_key, target_title)
+SELECT 'doc-ai-champion-sylas-20260912', NULL, '분류:미드', '분류:미드' FROM wiki_docs WHERE id = 'doc-ai-champion-sylas-20260912';
+INSERT OR IGNORE INTO wiki_links (source_doc, source_key, target_key, target_title)
+SELECT 'doc-ai-champion-sylas-20260912', NULL, '분류:브루저/원딜', '분류:브루저/원딜' FROM wiki_docs WHERE id = 'doc-ai-champion-sylas-20260912';
+INSERT OR IGNORE INTO wiki_links (source_doc, source_key, target_key, target_title)
+SELECT 'doc-ai-champion-sylas-20260912', NULL, '다이애나', '다이애나' FROM wiki_docs WHERE id = 'doc-ai-champion-sylas-20260912';
+
+-- 요네 (1014자)
+INSERT INTO wiki_docs (id, kind, title, title_key, doc_status, champion_slug, general, revision, patch, edit_policy, created_at, updated_at, updated_by)
+SELECT 'doc-ai-champion-yone-20260912', 'article', '요네', '요네', 'published', NULL, '# AI 작성 초안
+
+[[분류:미드]] [[분류:브루저/원딜]]
+
+## 1~2레벨은 버티고 3레벨부터 교환한다
+
+요네는 초반 두 레벨에 먼저 맞기 시작하면 되받아칠 수단이 부족하다. `영혼 가르기(W)`로 **상대와 미니언을 함께 긁어** 보호막과 막타를 동시에 챙기고, `필멸의 검(Q)` 중첩과 `영혼해방(E)`가 모두 준비된 뒤 교환을 연다.[* 인벤의 요네 공략도 1~2레벨은 약하고 3레벨부터 딜교환과 합류가 가능해진다고 설명한다. [요네 공략 원문](https://lol.inven.co.kr/dataninfo/champion/manualToolView.php?idx=146418)]
+
+## Q3은 맞히는 기술보다 예고되는 시간이다
+
+`Q`를 두 번 맞히면 다음 `Q`가 돌진과 에어본으로 바뀐다. 이때 상대도 요네가 들어올 것을 안다.
+
+- 바로 쓰지 말고 막타를 먹는 척하며 옆각을 만든다.
+- 적이 뒤로 빠지면 무리해 소모하지 않고 웨이브 압박에 쓴다.
+- `E`로 먼저 나간 뒤 `Q3`를 쓰면, 돌아갈 육신과 적 정글의 접근 방향을 확인한다.
+
+## E는 안전장치가 아니라 제한 시간이다
+
+`영혼해방(E)`는 시작점으로 반드시 돌아온다. 따라서 시작점을 적이 장악할 수 있는 강가 입구나 포탑 사거리 가까이에 두면, 교환을 이겨도 복귀 순간 손해를 본다.
+
+| 좋은 시작점 | 나쁜 시작점 |
+| --- | --- |
+| 아군 원거리 미니언 뒤 | 적 정글이 올 수 있는 강가 쪽 |
+| 포탑 쪽으로 한 걸음 빠진 자리 | 적의 설치형 스킬 위 |
+| 적 핵심 CC가 빠진 뒤 | 상대 CC가 그대로 남은 상태 |
+
+`E`가 끝나기 직전에는 한 대를 더 치는 것보다 안전하게 돌아가는 편이 낫다. 돌아갈 때 증폭 피해가 들어가므로, 이미 충분히 교환했다면 욕심을 줄인다.
+
+## 같이 보면 좋은 문서
+
+`Q3` 준비와 미니언 돌진 경로를 함께 관리한다는 점은 [[야스오]]와 닮았다. 차이는 요네가 `E`의 복귀점을, 야스오가 `질풍검(E)`에 남겨 둘 미니언을 더 먼저 계산한다는 데 있다.', 1, '16.17.1', 'guarded', '2026-09-12T00:00:00.000Z', '2026-09-12T00:00:00.000Z', 'user-system'
+WHERE NOT EXISTS (SELECT 1 FROM wiki_docs WHERE id = 'doc-ai-champion-yone-20260912' OR (kind = 'article' AND title_key = '요네'));
+INSERT INTO wiki_edits (id, doc_id, me_slug, base_revision, body, summary, status, author, created_at, accepted_via, revision)
+SELECT 'edit-ai-champion-yone-20260912', id, NULL, 0, general, 'AI 작성: 실전 라인전 초안', 'accepted', 'user-system', '2026-09-12T00:00:00.000Z', 'admin', 1 FROM wiki_docs
+WHERE id = 'doc-ai-champion-yone-20260912' AND revision = 1 AND general = '# AI 작성 초안
+
+[[분류:미드]] [[분류:브루저/원딜]]
+
+## 1~2레벨은 버티고 3레벨부터 교환한다
+
+요네는 초반 두 레벨에 먼저 맞기 시작하면 되받아칠 수단이 부족하다. `영혼 가르기(W)`로 **상대와 미니언을 함께 긁어** 보호막과 막타를 동시에 챙기고, `필멸의 검(Q)` 중첩과 `영혼해방(E)`가 모두 준비된 뒤 교환을 연다.[* 인벤의 요네 공략도 1~2레벨은 약하고 3레벨부터 딜교환과 합류가 가능해진다고 설명한다. [요네 공략 원문](https://lol.inven.co.kr/dataninfo/champion/manualToolView.php?idx=146418)]
+
+## Q3은 맞히는 기술보다 예고되는 시간이다
+
+`Q`를 두 번 맞히면 다음 `Q`가 돌진과 에어본으로 바뀐다. 이때 상대도 요네가 들어올 것을 안다.
+
+- 바로 쓰지 말고 막타를 먹는 척하며 옆각을 만든다.
+- 적이 뒤로 빠지면 무리해 소모하지 않고 웨이브 압박에 쓴다.
+- `E`로 먼저 나간 뒤 `Q3`를 쓰면, 돌아갈 육신과 적 정글의 접근 방향을 확인한다.
+
+## E는 안전장치가 아니라 제한 시간이다
+
+`영혼해방(E)`는 시작점으로 반드시 돌아온다. 따라서 시작점을 적이 장악할 수 있는 강가 입구나 포탑 사거리 가까이에 두면, 교환을 이겨도 복귀 순간 손해를 본다.
+
+| 좋은 시작점 | 나쁜 시작점 |
+| --- | --- |
+| 아군 원거리 미니언 뒤 | 적 정글이 올 수 있는 강가 쪽 |
+| 포탑 쪽으로 한 걸음 빠진 자리 | 적의 설치형 스킬 위 |
+| 적 핵심 CC가 빠진 뒤 | 상대 CC가 그대로 남은 상태 |
+
+`E`가 끝나기 직전에는 한 대를 더 치는 것보다 안전하게 돌아가는 편이 낫다. 돌아갈 때 증폭 피해가 들어가므로, 이미 충분히 교환했다면 욕심을 줄인다.
+
+## 같이 보면 좋은 문서
+
+`Q3` 준비와 미니언 돌진 경로를 함께 관리한다는 점은 [[야스오]]와 닮았다. 차이는 요네가 `E`의 복귀점을, 야스오가 `질풍검(E)`에 남겨 둘 미니언을 더 먼저 계산한다는 데 있다.'
+AND NOT EXISTS (SELECT 1 FROM wiki_edits WHERE id = 'edit-ai-champion-yone-20260912');
+INSERT OR IGNORE INTO wiki_links (source_doc, source_key, target_key, target_title)
+SELECT 'doc-ai-champion-yone-20260912', NULL, '분류:미드', '분류:미드' FROM wiki_docs WHERE id = 'doc-ai-champion-yone-20260912';
+INSERT OR IGNORE INTO wiki_links (source_doc, source_key, target_key, target_title)
+SELECT 'doc-ai-champion-yone-20260912', NULL, '분류:브루저/원딜', '분류:브루저/원딜' FROM wiki_docs WHERE id = 'doc-ai-champion-yone-20260912';
+INSERT OR IGNORE INTO wiki_links (source_doc, source_key, target_key, target_title)
+SELECT 'doc-ai-champion-yone-20260912', NULL, '야스오', '야스오' FROM wiki_docs WHERE id = 'doc-ai-champion-yone-20260912';
+
+-- 야스오 (1105자)
+INSERT INTO wiki_docs (id, kind, title, title_key, doc_status, champion_slug, general, revision, patch, edit_policy, created_at, updated_at, updated_by)
+SELECT 'doc-ai-champion-yasuo-20260912', 'article', '야스오', '야스오', 'published', NULL, '# AI 작성 초안
+
+[[분류:미드]] [[분류:브루저/원딜]]
+
+## 미니언은 진입로이자 퇴로다
+
+야스오는 `질풍검(E)`으로 같은 대상에게 연속 돌진할 수 없다. 상대에게 갈 때 앞 미니언을 전부 써 버리면 돌아올 경로가 사라진다. **들어갈 미니언 하나, 빠질 미니언 하나**를 나눠 두고 교환한다.
+
+- 적 원거리 미니언을 타고 접근했다면 근거리 미니언은 퇴로로 남긴다.
+- 웨이브가 적 포탑 쪽으로 너무 기울면 긴 교환을 열지 않는다.
+- `E` 도중 `Q`를 써 원형 공격을 맞히려다 포탑 사거리까지 미끄러지지 않는지 본다.
+
+## 보호막을 먼저 빼앗기지 않는다
+
+기류 보호막이 준비됐을 때 적의 약한 평타 한 대에 맞으면 중요한 교환 전에 보호막이 사라진다. 반대로 내가 먼저 거리를 좁힐 수 있다면 보호막으로 첫 견제를 흡수하고 짧게 때린 뒤 나온다.
+
+| 준비된 것 | 선택 |
+| --- | --- |
+| `Q3` + 보호막 | 막타에 멈춘 적에게 진입을 압박한다. |
+| `Q3`만 준비 | 약한 견제에 보호막이 빠졌다면 에어본을 맞혀도 길게 쫓지 않는다. |
+| `바람 장막(W)`만 준비 | 핵심 투사체를 막은 뒤 미니언 경로로 접근한다. |
+
+## 장막은 피해량보다 다음 행동을 막는다
+
+`바람 장막(W)`은 투사체를 막지만 모든 스킬을 막는 것은 아니다. 상대의 가장 아픈 기술보다 **맞으면 추격이 이어지는 속박·표식·에어본**에 우선 사용한다. 장막이 사라지기 전에 미니언을 타고 안전한 쪽으로 빠진다.
+
+야스오는 2레벨과 6레벨에 강한 교환을 만들기 쉽다.[* 인벤 장문 공략은 2·6레벨의 강한 구간과 빠른 초반 합류, 장막으로 이렐리아의 E 또는 궁극기를 선택해 막는 판단을 강조한다. [야스오 공략 원문](https://lol.inven.co.kr/dataninfo/champion/manualToolView.php?idx=143233)] 먼저 레벨이 오를 웨이브라면 `Q` 중첩과 기류를 미리 준비하고, 레벨이 늦으면 미니언 뒤에서 경험치부터 받는다.
+
+## 같이 보면 좋은 문서
+
+미니언을 연속 돌진 경로로 쓰는 [[이렐리아]]를 상대할 때는 낮은 체력 미니언을 내 퇴로로 착각하지 않는다. 이렐리아가 먼저 처치하며 따라올 수 있다.', 1, '16.17.1', 'guarded', '2026-09-12T00:00:00.000Z', '2026-09-12T00:00:00.000Z', 'user-system'
+WHERE NOT EXISTS (SELECT 1 FROM wiki_docs WHERE id = 'doc-ai-champion-yasuo-20260912' OR (kind = 'article' AND title_key = '야스오'));
+INSERT INTO wiki_edits (id, doc_id, me_slug, base_revision, body, summary, status, author, created_at, accepted_via, revision)
+SELECT 'edit-ai-champion-yasuo-20260912', id, NULL, 0, general, 'AI 작성: 실전 라인전 초안', 'accepted', 'user-system', '2026-09-12T00:00:00.000Z', 'admin', 1 FROM wiki_docs
+WHERE id = 'doc-ai-champion-yasuo-20260912' AND revision = 1 AND general = '# AI 작성 초안
+
+[[분류:미드]] [[분류:브루저/원딜]]
+
+## 미니언은 진입로이자 퇴로다
+
+야스오는 `질풍검(E)`으로 같은 대상에게 연속 돌진할 수 없다. 상대에게 갈 때 앞 미니언을 전부 써 버리면 돌아올 경로가 사라진다. **들어갈 미니언 하나, 빠질 미니언 하나**를 나눠 두고 교환한다.
+
+- 적 원거리 미니언을 타고 접근했다면 근거리 미니언은 퇴로로 남긴다.
+- 웨이브가 적 포탑 쪽으로 너무 기울면 긴 교환을 열지 않는다.
+- `E` 도중 `Q`를 써 원형 공격을 맞히려다 포탑 사거리까지 미끄러지지 않는지 본다.
+
+## 보호막을 먼저 빼앗기지 않는다
+
+기류 보호막이 준비됐을 때 적의 약한 평타 한 대에 맞으면 중요한 교환 전에 보호막이 사라진다. 반대로 내가 먼저 거리를 좁힐 수 있다면 보호막으로 첫 견제를 흡수하고 짧게 때린 뒤 나온다.
+
+| 준비된 것 | 선택 |
+| --- | --- |
+| `Q3` + 보호막 | 막타에 멈춘 적에게 진입을 압박한다. |
+| `Q3`만 준비 | 약한 견제에 보호막이 빠졌다면 에어본을 맞혀도 길게 쫓지 않는다. |
+| `바람 장막(W)`만 준비 | 핵심 투사체를 막은 뒤 미니언 경로로 접근한다. |
+
+## 장막은 피해량보다 다음 행동을 막는다
+
+`바람 장막(W)`은 투사체를 막지만 모든 스킬을 막는 것은 아니다. 상대의 가장 아픈 기술보다 **맞으면 추격이 이어지는 속박·표식·에어본**에 우선 사용한다. 장막이 사라지기 전에 미니언을 타고 안전한 쪽으로 빠진다.
+
+야스오는 2레벨과 6레벨에 강한 교환을 만들기 쉽다.[* 인벤 장문 공략은 2·6레벨의 강한 구간과 빠른 초반 합류, 장막으로 이렐리아의 E 또는 궁극기를 선택해 막는 판단을 강조한다. [야스오 공략 원문](https://lol.inven.co.kr/dataninfo/champion/manualToolView.php?idx=143233)] 먼저 레벨이 오를 웨이브라면 `Q` 중첩과 기류를 미리 준비하고, 레벨이 늦으면 미니언 뒤에서 경험치부터 받는다.
+
+## 같이 보면 좋은 문서
+
+미니언을 연속 돌진 경로로 쓰는 [[이렐리아]]를 상대할 때는 낮은 체력 미니언을 내 퇴로로 착각하지 않는다. 이렐리아가 먼저 처치하며 따라올 수 있다.'
+AND NOT EXISTS (SELECT 1 FROM wiki_edits WHERE id = 'edit-ai-champion-yasuo-20260912');
+INSERT OR IGNORE INTO wiki_links (source_doc, source_key, target_key, target_title)
+SELECT 'doc-ai-champion-yasuo-20260912', NULL, '분류:미드', '분류:미드' FROM wiki_docs WHERE id = 'doc-ai-champion-yasuo-20260912';
+INSERT OR IGNORE INTO wiki_links (source_doc, source_key, target_key, target_title)
+SELECT 'doc-ai-champion-yasuo-20260912', NULL, '분류:브루저/원딜', '분류:브루저/원딜' FROM wiki_docs WHERE id = 'doc-ai-champion-yasuo-20260912';
+INSERT OR IGNORE INTO wiki_links (source_doc, source_key, target_key, target_title)
+SELECT 'doc-ai-champion-yasuo-20260912', NULL, '이렐리아', '이렐리아' FROM wiki_docs WHERE id = 'doc-ai-champion-yasuo-20260912';
+
+-- 갈리오 (1082자)
+INSERT INTO wiki_docs (id, kind, title, title_key, doc_status, champion_slug, general, revision, patch, edit_policy, created_at, updated_at, updated_by)
+SELECT 'doc-ai-champion-galio-20260912', 'article', '갈리오', '갈리오', 'published', NULL, '# AI 작성 초안
+
+[[분류:미드]] [[분류:브루저/원딜]]
+
+## 상대와 웨이브를 따로 때리지 않는다
+
+갈리오의 `전장의 돌풍(Q)`은 미니언을 밀면서 상대를 건드릴 때 가치가 가장 크다. 원거리 미니언을 향해 쏘되 돌풍의 경로가 상대 챔피언을 지나게 만든다. 상대만 노리다 빗나가면 라인 주도권과 견제를 함께 잃는다.[* 인벤 갈리오 원챔 공략은 Q로 챔피언과 미니언을 함께 맞히고, 합류가 필요할 때는 원거리 미니언 정리를 우선하라고 설명한다. [갈리오 공략 원문](https://lol.inven.co.kr/dataninfo/champion/manualToolView.php?idx=146848)]
+
+`석상의 강타` 광역 피해는 근접 챔피언을 직접 누르지 않아도 옆 미니언을 때려 묻힐 수 있다. 상대가 막타를 치러 들어올 때 가까운 미니언을 쳐서 **상대의 평타 사거리 밖에서 짧게 교환**한다.
+
+## W는 길게 모으는 것이 항상 정답이 아니다
+
+> 도발 범위에서 곧 벗어날 상대라면 짧게 끊고, 도망갈 길이 막힌 상대라면 더 모은다.
+
+- 이동기가 남은 원거리 상대에게는 `듀란드의 방패(W)`를 짧게 사용한다.
+- 아군 쪽으로 도망치는 상대에게는 `정의의 주먹(E)`을 먼저 맞히고 도발을 잇는다.
+- `E`의 시작 동작은 잠깐 뒤로 물러나므로, 벽과 너무 가깝거나 포탑 앞이면 예상한 거리가 나오지 않는지 확인한다.
+
+## 라인을 민 다음에만 자리를 비운다
+
+| 라인 상태 | 행동 |
+| --- | --- |
+| 적 포탑에 웨이브가 들어감 | 강가 시야를 잡거나 궁극기 사거리 안의 사이드를 살핀다. |
+| 중앙에 웨이브가 만남 | `Q`와 강화 평타로 먼저 정리한다. |
+| 아군 포탑에 큰 웨이브가 옴 | 무리한 합류보다 경험치와 포탑 피해를 막는다. |
+
+궁극기가 있다는 이유만으로 항상 먼저 움직일 필요는 없다. 갈리오가 사라지는 것 자체가 압박이므로, 라인을 버리고 성급히 뛰기보다 상대 미드의 이동을 끊는 선택도 있다.
+
+## 같이 보면 좋은 문서
+
+[[사일러스]]가 갈리오의 궁극기를 훔칠 수 있는 구도라면 아군만 보고 착지하지 않는다. 사일러스가 같은 범위 싸움을 뒤집을 수 있는지 함께 확인한다.', 1, '16.17.1', 'guarded', '2026-09-12T00:00:00.000Z', '2026-09-12T00:00:00.000Z', 'user-system'
+WHERE NOT EXISTS (SELECT 1 FROM wiki_docs WHERE id = 'doc-ai-champion-galio-20260912' OR (kind = 'article' AND title_key = '갈리오'));
+INSERT INTO wiki_edits (id, doc_id, me_slug, base_revision, body, summary, status, author, created_at, accepted_via, revision)
+SELECT 'edit-ai-champion-galio-20260912', id, NULL, 0, general, 'AI 작성: 실전 라인전 초안', 'accepted', 'user-system', '2026-09-12T00:00:00.000Z', 'admin', 1 FROM wiki_docs
+WHERE id = 'doc-ai-champion-galio-20260912' AND revision = 1 AND general = '# AI 작성 초안
+
+[[분류:미드]] [[분류:브루저/원딜]]
+
+## 상대와 웨이브를 따로 때리지 않는다
+
+갈리오의 `전장의 돌풍(Q)`은 미니언을 밀면서 상대를 건드릴 때 가치가 가장 크다. 원거리 미니언을 향해 쏘되 돌풍의 경로가 상대 챔피언을 지나게 만든다. 상대만 노리다 빗나가면 라인 주도권과 견제를 함께 잃는다.[* 인벤 갈리오 원챔 공략은 Q로 챔피언과 미니언을 함께 맞히고, 합류가 필요할 때는 원거리 미니언 정리를 우선하라고 설명한다. [갈리오 공략 원문](https://lol.inven.co.kr/dataninfo/champion/manualToolView.php?idx=146848)]
+
+`석상의 강타` 광역 피해는 근접 챔피언을 직접 누르지 않아도 옆 미니언을 때려 묻힐 수 있다. 상대가 막타를 치러 들어올 때 가까운 미니언을 쳐서 **상대의 평타 사거리 밖에서 짧게 교환**한다.
+
+## W는 길게 모으는 것이 항상 정답이 아니다
+
+> 도발 범위에서 곧 벗어날 상대라면 짧게 끊고, 도망갈 길이 막힌 상대라면 더 모은다.
+
+- 이동기가 남은 원거리 상대에게는 `듀란드의 방패(W)`를 짧게 사용한다.
+- 아군 쪽으로 도망치는 상대에게는 `정의의 주먹(E)`을 먼저 맞히고 도발을 잇는다.
+- `E`의 시작 동작은 잠깐 뒤로 물러나므로, 벽과 너무 가깝거나 포탑 앞이면 예상한 거리가 나오지 않는지 확인한다.
+
+## 라인을 민 다음에만 자리를 비운다
+
+| 라인 상태 | 행동 |
+| --- | --- |
+| 적 포탑에 웨이브가 들어감 | 강가 시야를 잡거나 궁극기 사거리 안의 사이드를 살핀다. |
+| 중앙에 웨이브가 만남 | `Q`와 강화 평타로 먼저 정리한다. |
+| 아군 포탑에 큰 웨이브가 옴 | 무리한 합류보다 경험치와 포탑 피해를 막는다. |
+
+궁극기가 있다는 이유만으로 항상 먼저 움직일 필요는 없다. 갈리오가 사라지는 것 자체가 압박이므로, 라인을 버리고 성급히 뛰기보다 상대 미드의 이동을 끊는 선택도 있다.
+
+## 같이 보면 좋은 문서
+
+[[사일러스]]가 갈리오의 궁극기를 훔칠 수 있는 구도라면 아군만 보고 착지하지 않는다. 사일러스가 같은 범위 싸움을 뒤집을 수 있는지 함께 확인한다.'
+AND NOT EXISTS (SELECT 1 FROM wiki_edits WHERE id = 'edit-ai-champion-galio-20260912');
+INSERT OR IGNORE INTO wiki_links (source_doc, source_key, target_key, target_title)
+SELECT 'doc-ai-champion-galio-20260912', NULL, '분류:미드', '분류:미드' FROM wiki_docs WHERE id = 'doc-ai-champion-galio-20260912';
+INSERT OR IGNORE INTO wiki_links (source_doc, source_key, target_key, target_title)
+SELECT 'doc-ai-champion-galio-20260912', NULL, '분류:브루저/원딜', '분류:브루저/원딜' FROM wiki_docs WHERE id = 'doc-ai-champion-galio-20260912';
+INSERT OR IGNORE INTO wiki_links (source_doc, source_key, target_key, target_title)
+SELECT 'doc-ai-champion-galio-20260912', NULL, '사일러스', '사일러스' FROM wiki_docs WHERE id = 'doc-ai-champion-galio-20260912';
+
+-- 에코 (1131자)
+INSERT INTO wiki_docs (id, kind, title, title_key, doc_status, champion_slug, general, revision, patch, edit_policy, created_at, updated_at, updated_by)
+SELECT 'doc-ai-champion-ekko-20260912', 'article', '에코', '에코', 'published', NULL, '# AI 작성 초안
+
+[[분류:미드]] [[분류:브루저/원딜]]
+
+## Q의 왕복 경로로 웨이브를 접는다
+
+`시간의 톱니바퀴(Q)`는 나갈 때보다 돌아오는 경로까지 맞혀야 라인 정리와 교환이 완성된다. 미니언이 일렬로 올 때 던지고, 돌아오는 위치에 상대가 막타를 치러 서게 만든다.[* 인벤 에코 공략은 Q 왕복으로 미니언을 정리하고, 빠르게 민 뒤 다음 행동을 고르는 운영을 강조한다. [미드 에코 공략](https://lol.inven.co.kr/dataninfo/champion/manualToolView.php?idx=147488), [에코 운영 공략](https://lol.inven.co.kr/dataninfo/champion/manualToolView.php?idx=116830)]
+
+상대를 맞히겠다고 `Q` 각도를 비틀어 웨이브를 놓치면 다음 교환 전에 미니언이 쌓인다. **라인을 밀 목적과 체력을 깎을 목적을 한 번의 Q로 겹칠 수 있을 때** 가장 좋다.
+
+## W는 적중보다 이동을 강요한다
+
+`평행 시간 교차(W)`는 발동까지 시간이 있어 보고 맞히기 어렵다. 상대가 이동해야 할 곳에 미리 깐다.
+
+- 대포 미니언을 먹으러 올 자리 뒤쪽
+- 아군 정글을 보고 포탑으로 도망갈 경로
+- 내가 `시간 도약(E)`으로 들어간 뒤 빠질 방향
+
+상대가 장판 밖으로 피하면 그만큼 막타나 좋은 위치를 포기한 것이다. 기절만 성공으로 보지 않는다. 에코가 장판에 들어가 얻는 보호막으로 짧은 교환만 하고 나오는 선택도 충분하다.
+
+## 3타 뒤에는 더 쫓지 않아도 된다
+
+| 상황 | 판단 |
+| --- | --- |
+| 패시브 3타 발동 + 이동 속도 획득 | 상대 핵심 스킬이 남았으면 곧바로 빠진다. |
+| `E` 첫 이동만 사용 | 상대 반응을 보고 강화 공격의 순간이동을 쓸지 정한다. |
+| 궁극기 잔상이 웨이브 뒤에 있음 | 잔상 위치가 안전할 때만 긴 교환을 허용한다. |
+
+궁극기는 체력을 되돌리지만 교환을 시작한 위치까지 안전하게 만들어 주지는 않는다. 잔상이 적 포탑 쪽에 남아 있으면 회복을 믿고 버티지 않는다.
+
+## 같이 보면 좋은 문서
+
+[[다이애나]]처럼 한 번에 붙는 챔피언을 상대할 때는 `W`를 내 발밑보다 **상대가 추격해 들어올 한 걸음 뒤**에 두어 재진입을 막는다.', 1, '16.17.1', 'guarded', '2026-09-12T00:00:00.000Z', '2026-09-12T00:00:00.000Z', 'user-system'
+WHERE NOT EXISTS (SELECT 1 FROM wiki_docs WHERE id = 'doc-ai-champion-ekko-20260912' OR (kind = 'article' AND title_key = '에코'));
+INSERT INTO wiki_edits (id, doc_id, me_slug, base_revision, body, summary, status, author, created_at, accepted_via, revision)
+SELECT 'edit-ai-champion-ekko-20260912', id, NULL, 0, general, 'AI 작성: 실전 라인전 초안', 'accepted', 'user-system', '2026-09-12T00:00:00.000Z', 'admin', 1 FROM wiki_docs
+WHERE id = 'doc-ai-champion-ekko-20260912' AND revision = 1 AND general = '# AI 작성 초안
+
+[[분류:미드]] [[분류:브루저/원딜]]
+
+## Q의 왕복 경로로 웨이브를 접는다
+
+`시간의 톱니바퀴(Q)`는 나갈 때보다 돌아오는 경로까지 맞혀야 라인 정리와 교환이 완성된다. 미니언이 일렬로 올 때 던지고, 돌아오는 위치에 상대가 막타를 치러 서게 만든다.[* 인벤 에코 공략은 Q 왕복으로 미니언을 정리하고, 빠르게 민 뒤 다음 행동을 고르는 운영을 강조한다. [미드 에코 공략](https://lol.inven.co.kr/dataninfo/champion/manualToolView.php?idx=147488), [에코 운영 공략](https://lol.inven.co.kr/dataninfo/champion/manualToolView.php?idx=116830)]
+
+상대를 맞히겠다고 `Q` 각도를 비틀어 웨이브를 놓치면 다음 교환 전에 미니언이 쌓인다. **라인을 밀 목적과 체력을 깎을 목적을 한 번의 Q로 겹칠 수 있을 때** 가장 좋다.
+
+## W는 적중보다 이동을 강요한다
+
+`평행 시간 교차(W)`는 발동까지 시간이 있어 보고 맞히기 어렵다. 상대가 이동해야 할 곳에 미리 깐다.
+
+- 대포 미니언을 먹으러 올 자리 뒤쪽
+- 아군 정글을 보고 포탑으로 도망갈 경로
+- 내가 `시간 도약(E)`으로 들어간 뒤 빠질 방향
+
+상대가 장판 밖으로 피하면 그만큼 막타나 좋은 위치를 포기한 것이다. 기절만 성공으로 보지 않는다. 에코가 장판에 들어가 얻는 보호막으로 짧은 교환만 하고 나오는 선택도 충분하다.
+
+## 3타 뒤에는 더 쫓지 않아도 된다
+
+| 상황 | 판단 |
+| --- | --- |
+| 패시브 3타 발동 + 이동 속도 획득 | 상대 핵심 스킬이 남았으면 곧바로 빠진다. |
+| `E` 첫 이동만 사용 | 상대 반응을 보고 강화 공격의 순간이동을 쓸지 정한다. |
+| 궁극기 잔상이 웨이브 뒤에 있음 | 잔상 위치가 안전할 때만 긴 교환을 허용한다. |
+
+궁극기는 체력을 되돌리지만 교환을 시작한 위치까지 안전하게 만들어 주지는 않는다. 잔상이 적 포탑 쪽에 남아 있으면 회복을 믿고 버티지 않는다.
+
+## 같이 보면 좋은 문서
+
+[[다이애나]]처럼 한 번에 붙는 챔피언을 상대할 때는 `W`를 내 발밑보다 **상대가 추격해 들어올 한 걸음 뒤**에 두어 재진입을 막는다.'
+AND NOT EXISTS (SELECT 1 FROM wiki_edits WHERE id = 'edit-ai-champion-ekko-20260912');
+INSERT OR IGNORE INTO wiki_links (source_doc, source_key, target_key, target_title)
+SELECT 'doc-ai-champion-ekko-20260912', NULL, '분류:미드', '분류:미드' FROM wiki_docs WHERE id = 'doc-ai-champion-ekko-20260912';
+INSERT OR IGNORE INTO wiki_links (source_doc, source_key, target_key, target_title)
+SELECT 'doc-ai-champion-ekko-20260912', NULL, '분류:브루저/원딜', '분류:브루저/원딜' FROM wiki_docs WHERE id = 'doc-ai-champion-ekko-20260912';
+INSERT OR IGNORE INTO wiki_links (source_doc, source_key, target_key, target_title)
+SELECT 'doc-ai-champion-ekko-20260912', NULL, '다이애나', '다이애나' FROM wiki_docs WHERE id = 'doc-ai-champion-ekko-20260912';
+
+-- 다이애나 (1155자)
+INSERT INTO wiki_docs (id, kind, title, title_key, doc_status, champion_slug, general, revision, patch, edit_policy, created_at, updated_at, updated_by)
+SELECT 'doc-ai-champion-diana-20260912', 'article', '다이애나', '다이애나', 'published', NULL, '# AI 작성 초안
+
+[[분류:미드]] [[분류:브루저/원딜]]
+
+## 세 번째 기본 공격을 미리 준비한다
+
+다이애나는 세 번째 기본 공격이 광역 피해를 준다. 상대가 막타를 먹으러 들어오기 전에 미니언에 두 번 공격해 두면, 다음 기본 공격 하나로 챔피언과 웨이브를 함께 칠 수 있다. 다만 광역 피해 때문에 라인이 밀리므로 정글 위치가 보이지 않을 때는 스택을 무조건 소비하지 않는다.
+
+## Q 표식이 진입 허가증이다
+
+`초승달 검기(Q)`가 맞은 대상에게 `월광 쇄도(E)`를 쓰면 E를 다시 사용할 수 있다. **표식 없는 상대에게 먼저 돌진하면 퇴로와 추격 수단을 한 번에 잃는다.**[* 인벤의 에코 상대법과 다이애나 공략에서도 Q 적중 뒤 두 번의 돌진이 가능해지는 구간, W 보호막을 동반한 짧은 교환을 핵심으로 다룬다. [에코의 다이애나 상대법](https://lol.inven.co.kr/dataninfo/champion/manualToolView.php?idx=144254), [다이애나 공략](https://lol.inven.co.kr/dataninfo/champion/manualToolView.php?idx=147829)]
+
+- `Q`가 빗나가면 억지로 `E`를 쓰지 않는다.
+- 미니언과 챔피언을 함께 맞혀, 미니언을 중간 발판이나 퇴로로 남긴다.
+- `은빛 가호(W)` 구체 세 개가 모두 터질 거리에서만 긴 교환을 한다.
+
+## 짧은 교환과 긴 교환을 구분한다
+
+| 목적 | 순서의 핵심 |
+| --- | --- |
+| 체력만 깎기 | `Q` 적중 뒤 `E-W-평타`, 상대 핵심 스킬이 오기 전에 미니언으로 재이동한다. |
+| 킬 압박 | 상대 이동기가 빠진 뒤 표식과 두 번째 E를 추격용으로 남긴다. |
+| 갱 회피 | 전방 미니언에 E를 먼저 쓰지 말고, 뒤쪽 미니언을 탈 수 있게 남긴다. |
+
+6레벨 이후 `달빛 낙하(R)`를 쓸 때는 상대를 끌어당기는 것보다 이후에 빠질 위치를 먼저 본다. 미드 한가운데서 한 명을 잡겠다고 적 정글 쪽으로 돌진하면, 궁극기를 맞혀도 살아 나오기 어렵다.
+
+## 같이 보면 좋은 문서
+
+같은 근접 AP 챔피언인 [[사일러스]]는 낮은 체력에서 회복하며 교환을 늘이고, 다이애나는 보호막과 표식 재사용으로 짧은 시간에 두 번 붙는다. 상대할 때도 둘의 두 번째 진입 조건을 다르게 본다.', 1, '16.17.1', 'guarded', '2026-09-12T00:00:00.000Z', '2026-09-12T00:00:00.000Z', 'user-system'
+WHERE NOT EXISTS (SELECT 1 FROM wiki_docs WHERE id = 'doc-ai-champion-diana-20260912' OR (kind = 'article' AND title_key = '다이애나'));
+INSERT INTO wiki_edits (id, doc_id, me_slug, base_revision, body, summary, status, author, created_at, accepted_via, revision)
+SELECT 'edit-ai-champion-diana-20260912', id, NULL, 0, general, 'AI 작성: 실전 라인전 초안', 'accepted', 'user-system', '2026-09-12T00:00:00.000Z', 'admin', 1 FROM wiki_docs
+WHERE id = 'doc-ai-champion-diana-20260912' AND revision = 1 AND general = '# AI 작성 초안
+
+[[분류:미드]] [[분류:브루저/원딜]]
+
+## 세 번째 기본 공격을 미리 준비한다
+
+다이애나는 세 번째 기본 공격이 광역 피해를 준다. 상대가 막타를 먹으러 들어오기 전에 미니언에 두 번 공격해 두면, 다음 기본 공격 하나로 챔피언과 웨이브를 함께 칠 수 있다. 다만 광역 피해 때문에 라인이 밀리므로 정글 위치가 보이지 않을 때는 스택을 무조건 소비하지 않는다.
+
+## Q 표식이 진입 허가증이다
+
+`초승달 검기(Q)`가 맞은 대상에게 `월광 쇄도(E)`를 쓰면 E를 다시 사용할 수 있다. **표식 없는 상대에게 먼저 돌진하면 퇴로와 추격 수단을 한 번에 잃는다.**[* 인벤의 에코 상대법과 다이애나 공략에서도 Q 적중 뒤 두 번의 돌진이 가능해지는 구간, W 보호막을 동반한 짧은 교환을 핵심으로 다룬다. [에코의 다이애나 상대법](https://lol.inven.co.kr/dataninfo/champion/manualToolView.php?idx=144254), [다이애나 공략](https://lol.inven.co.kr/dataninfo/champion/manualToolView.php?idx=147829)]
+
+- `Q`가 빗나가면 억지로 `E`를 쓰지 않는다.
+- 미니언과 챔피언을 함께 맞혀, 미니언을 중간 발판이나 퇴로로 남긴다.
+- `은빛 가호(W)` 구체 세 개가 모두 터질 거리에서만 긴 교환을 한다.
+
+## 짧은 교환과 긴 교환을 구분한다
+
+| 목적 | 순서의 핵심 |
+| --- | --- |
+| 체력만 깎기 | `Q` 적중 뒤 `E-W-평타`, 상대 핵심 스킬이 오기 전에 미니언으로 재이동한다. |
+| 킬 압박 | 상대 이동기가 빠진 뒤 표식과 두 번째 E를 추격용으로 남긴다. |
+| 갱 회피 | 전방 미니언에 E를 먼저 쓰지 말고, 뒤쪽 미니언을 탈 수 있게 남긴다. |
+
+6레벨 이후 `달빛 낙하(R)`를 쓸 때는 상대를 끌어당기는 것보다 이후에 빠질 위치를 먼저 본다. 미드 한가운데서 한 명을 잡겠다고 적 정글 쪽으로 돌진하면, 궁극기를 맞혀도 살아 나오기 어렵다.
+
+## 같이 보면 좋은 문서
+
+같은 근접 AP 챔피언인 [[사일러스]]는 낮은 체력에서 회복하며 교환을 늘이고, 다이애나는 보호막과 표식 재사용으로 짧은 시간에 두 번 붙는다. 상대할 때도 둘의 두 번째 진입 조건을 다르게 본다.'
+AND NOT EXISTS (SELECT 1 FROM wiki_edits WHERE id = 'edit-ai-champion-diana-20260912');
+INSERT OR IGNORE INTO wiki_links (source_doc, source_key, target_key, target_title)
+SELECT 'doc-ai-champion-diana-20260912', NULL, '분류:미드', '분류:미드' FROM wiki_docs WHERE id = 'doc-ai-champion-diana-20260912';
+INSERT OR IGNORE INTO wiki_links (source_doc, source_key, target_key, target_title)
+SELECT 'doc-ai-champion-diana-20260912', NULL, '분류:브루저/원딜', '분류:브루저/원딜' FROM wiki_docs WHERE id = 'doc-ai-champion-diana-20260912';
+INSERT OR IGNORE INTO wiki_links (source_doc, source_key, target_key, target_title)
+SELECT 'doc-ai-champion-diana-20260912', NULL, '사일러스', '사일러스' FROM wiki_docs WHERE id = 'doc-ai-champion-diana-20260912';
+
+-- 이렐리아 (1073자)
+INSERT INTO wiki_docs (id, kind, title, title_key, doc_status, champion_slug, general, revision, patch, edit_policy, created_at, updated_at, updated_by)
+SELECT 'doc-ai-champion-irelia-20260912', 'article', '이렐리아', '이렐리아', 'published', NULL, '# AI 작성 초안
+
+[[분류:미드]] [[분류:브루저/원딜]]
+
+## 낮은 체력 미니언이 곧 이동 경로다
+
+이렐리아의 라인전은 `칼날 쇄도(Q)`로 처치할 수 있는 미니언을 몇 개 만들어 두는 데서 시작한다. 들어갈 때 쓸 미니언만 보지 말고, 교환 뒤 아군 쪽으로 돌아올 미니언도 남긴다.
+
+- 원거리 미니언 체력을 비슷하게 깎아 연속 Q 경로를 만든다.
+- Q 한 번에 죽지 않을 미니언으로 먼저 들어가지 않는다.
+- 표식이 없는 챔피언에게 Q를 쓰면 초기화되지 않는다는 점을 확인한다.
+
+## 패시브 중첩을 보고 싸운다
+
+스킬을 맞힐 때마다 공격 속도 중첩이 쌓이고 최대 중첩에서는 기본 공격 피해도 강해진다.[* 인벤 그랜드마스터 공략과 챔피언 정보는 Q 처치·표식 초기화, 최대 중첩을 이용한 교환을 핵심으로 설명한다. [이렐리아 공략 원문](https://lol.inven.co.kr/dataninfo/champion/manualToolView.php?idx=145057)] 상대가 미니언을 먹으러 왔다고 바로 진입하기보다 **Q로 중첩과 경로를 준비한 뒤** 싸운다.
+
+| 상태 | 선택 |
+| --- | --- |
+| 중첩이 낮고 E가 없음 | 막타만 챙기고 교환하지 않는다. |
+| 중첩이 높고 뒤쪽 미니언이 남음 | 짧게 진입한 뒤 Q로 복귀한다. |
+| 적의 큰 물리 피해가 예고됨 | `저항의 춤(W)`으로 받아내고 곧바로 재평가한다. |
+
+`W`는 충전 중 물리 피해를 크게 줄이고 끊기지 않는다. 그러나 제자리에서 충전하므로 마법 견제나 장판까지 모두 버티는 기술로 쓰면 안 된다.
+
+## E는 첫 칼날보다 두 번째 칼날이 중요하다
+
+`쌍검협무(E)`의 첫 칼날을 상대가 보는 곳에 던지면 두 번째 선을 읽기 쉽다. 첫 칼날을 내 발밑이나 시야가 덜 닿는 곳에 두고, 상대가 막타를 칠 때 두 번째 칼날로 선을 만든다. 적중해 표식이 생겨도 적 포탑 아래라면 Q로 따라가지 않는다.
+
+## 같이 보면 좋은 문서
+
+[[야스오]]와 맞붙을 때 E와 궁극기 중 어느 투사체에 장막을 쓰게 할지 나눠 생각한다. 장막이 빠진 뒤 다음 표식을 노리는 편이 한 번에 모든 스킬을 던지는 것보다 안전하다.', 1, '16.17.1', 'guarded', '2026-09-12T00:00:00.000Z', '2026-09-12T00:00:00.000Z', 'user-system'
+WHERE NOT EXISTS (SELECT 1 FROM wiki_docs WHERE id = 'doc-ai-champion-irelia-20260912' OR (kind = 'article' AND title_key = '이렐리아'));
+INSERT INTO wiki_edits (id, doc_id, me_slug, base_revision, body, summary, status, author, created_at, accepted_via, revision)
+SELECT 'edit-ai-champion-irelia-20260912', id, NULL, 0, general, 'AI 작성: 실전 라인전 초안', 'accepted', 'user-system', '2026-09-12T00:00:00.000Z', 'admin', 1 FROM wiki_docs
+WHERE id = 'doc-ai-champion-irelia-20260912' AND revision = 1 AND general = '# AI 작성 초안
+
+[[분류:미드]] [[분류:브루저/원딜]]
+
+## 낮은 체력 미니언이 곧 이동 경로다
+
+이렐리아의 라인전은 `칼날 쇄도(Q)`로 처치할 수 있는 미니언을 몇 개 만들어 두는 데서 시작한다. 들어갈 때 쓸 미니언만 보지 말고, 교환 뒤 아군 쪽으로 돌아올 미니언도 남긴다.
+
+- 원거리 미니언 체력을 비슷하게 깎아 연속 Q 경로를 만든다.
+- Q 한 번에 죽지 않을 미니언으로 먼저 들어가지 않는다.
+- 표식이 없는 챔피언에게 Q를 쓰면 초기화되지 않는다는 점을 확인한다.
+
+## 패시브 중첩을 보고 싸운다
+
+스킬을 맞힐 때마다 공격 속도 중첩이 쌓이고 최대 중첩에서는 기본 공격 피해도 강해진다.[* 인벤 그랜드마스터 공략과 챔피언 정보는 Q 처치·표식 초기화, 최대 중첩을 이용한 교환을 핵심으로 설명한다. [이렐리아 공략 원문](https://lol.inven.co.kr/dataninfo/champion/manualToolView.php?idx=145057)] 상대가 미니언을 먹으러 왔다고 바로 진입하기보다 **Q로 중첩과 경로를 준비한 뒤** 싸운다.
+
+| 상태 | 선택 |
+| --- | --- |
+| 중첩이 낮고 E가 없음 | 막타만 챙기고 교환하지 않는다. |
+| 중첩이 높고 뒤쪽 미니언이 남음 | 짧게 진입한 뒤 Q로 복귀한다. |
+| 적의 큰 물리 피해가 예고됨 | `저항의 춤(W)`으로 받아내고 곧바로 재평가한다. |
+
+`W`는 충전 중 물리 피해를 크게 줄이고 끊기지 않는다. 그러나 제자리에서 충전하므로 마법 견제나 장판까지 모두 버티는 기술로 쓰면 안 된다.
+
+## E는 첫 칼날보다 두 번째 칼날이 중요하다
+
+`쌍검협무(E)`의 첫 칼날을 상대가 보는 곳에 던지면 두 번째 선을 읽기 쉽다. 첫 칼날을 내 발밑이나 시야가 덜 닿는 곳에 두고, 상대가 막타를 칠 때 두 번째 칼날로 선을 만든다. 적중해 표식이 생겨도 적 포탑 아래라면 Q로 따라가지 않는다.
+
+## 같이 보면 좋은 문서
+
+[[야스오]]와 맞붙을 때 E와 궁극기 중 어느 투사체에 장막을 쓰게 할지 나눠 생각한다. 장막이 빠진 뒤 다음 표식을 노리는 편이 한 번에 모든 스킬을 던지는 것보다 안전하다.'
+AND NOT EXISTS (SELECT 1 FROM wiki_edits WHERE id = 'edit-ai-champion-irelia-20260912');
+INSERT OR IGNORE INTO wiki_links (source_doc, source_key, target_key, target_title)
+SELECT 'doc-ai-champion-irelia-20260912', NULL, '분류:미드', '분류:미드' FROM wiki_docs WHERE id = 'doc-ai-champion-irelia-20260912';
+INSERT OR IGNORE INTO wiki_links (source_doc, source_key, target_key, target_title)
+SELECT 'doc-ai-champion-irelia-20260912', NULL, '분류:브루저/원딜', '분류:브루저/원딜' FROM wiki_docs WHERE id = 'doc-ai-champion-irelia-20260912';
+INSERT OR IGNORE INTO wiki_links (source_doc, source_key, target_key, target_title)
+SELECT 'doc-ai-champion-irelia-20260912', NULL, '야스오', '야스오' FROM wiki_docs WHERE id = 'doc-ai-champion-irelia-20260912';
+
+-- 사이온 (1221자)
+INSERT INTO wiki_docs (id, kind, title, title_key, doc_status, champion_slug, general, revision, patch, edit_policy, created_at, updated_at, updated_by)
+SELECT 'doc-ai-champion-sion-20260912', 'article', '사이온', '사이온', 'published', NULL, '# AI 작성 초안
+
+[[분류:미드]] [[분류:브루저/원딜]]
+
+## Q는 오래 모으는 기술이 아니라 시간을 빼앗는 기술이다
+
+`대량 학살 강타(Q)`를 끝까지 충전하면 강하지만, 상대가 범위 밖으로 나가면 아무 일도 없다. **짧게 눌러 피해를 확정하고 기본 공격을 잇는 선택**과, 수풀·시야 밖에서 길게 모아 띄우는 선택을 구분한다.
+
+> 상대가 Q 범위를 벗어나느라 막타를 포기했다면 이미 작은 이득을 본 것이다. 끝까지 맞히려고 내 위치를 망치지 않는다.
+
+- 시야가 열린 중앙에서는 짧게 끊는다.
+- 상대 이동기가 빠졌거나 둔화가 묻었을 때만 길게 모은다.
+- 적 정글이 안 보이면 Q 충전으로 제자리에 오래 서 있지 않는다.
+
+## E로 미니언 뒤의 상대를 노린다
+
+`학살자의 포효(E)`가 미니언을 맞히면 그 미니언이 뒤로 밀려나며 경로의 적에게 영향을 준다. 상대가 자기 미니언 뒤를 안전지대로 생각할 때, 낮은 체력 미니언을 골라 밀어낸다.[* 인벤 사이온 공략 게시판의 실용 공략과 챔피언 스킬 설명을 참고했다. [사이온 공략 원문](https://lol.inven.co.kr/dataninfo/champion/manualToolView.php?idx=143260), [사이온 공략 목록](https://lol.inven.co.kr/dataninfo/champion/manualTool.php?champnum=57)]
+
+| E 적중 뒤 상대 반응 | 다음 선택 |
+| --- | --- |
+| 옆으로 빠짐 | 그 방향을 막도록 Q를 짧게 충전한다. |
+| 뒤로 빠짐 | 웨이브를 밀고 시야를 잡는다. |
+| 앞으로 들어옴 | `영혼의 용광로(W)` 보호막을 켜고 짧게 맞교환한다. |
+
+## W는 터뜨릴 수 있을 때 켠다
+
+`W` 보호막은 일정 시간이 지나야 다시 눌러 주변 피해를 줄 수 있다. 상대의 한 번짜리 견제를 막는 데만 쓰면 폭발 피해 없이 끝날 수 있다. 미니언을 먹으러 서로 가까워질 때 미리 켜고, 보호막이 깨지기 전에 폭발 범위로 걸어간다.
+
+궁극기로 라인에 복귀하거나 로밍하기 전에는 웨이브가 어느 쪽으로 움직이는지 확인한다. 미드 웨이브가 아군 포탑에 쌓이는데 다른 길로 달리면, 성공해도 경험치 손해가 커진다.
+
+## 같이 보면 좋은 문서
+
+[[제이스]]처럼 원거리에서 계속 체력을 깎는 상대에게는 모든 막타를 몸으로 먹으려 하지 않는다. E와 짧은 Q로 안전한 미니언만 챙기고, 상대가 앞으로 나온 순간에만 W를 켜고 거리를 좁힌다.', 1, '16.17.1', 'guarded', '2026-09-12T00:00:00.000Z', '2026-09-12T00:00:00.000Z', 'user-system'
+WHERE NOT EXISTS (SELECT 1 FROM wiki_docs WHERE id = 'doc-ai-champion-sion-20260912' OR (kind = 'article' AND title_key = '사이온'));
+INSERT INTO wiki_edits (id, doc_id, me_slug, base_revision, body, summary, status, author, created_at, accepted_via, revision)
+SELECT 'edit-ai-champion-sion-20260912', id, NULL, 0, general, 'AI 작성: 실전 라인전 초안', 'accepted', 'user-system', '2026-09-12T00:00:00.000Z', 'admin', 1 FROM wiki_docs
+WHERE id = 'doc-ai-champion-sion-20260912' AND revision = 1 AND general = '# AI 작성 초안
+
+[[분류:미드]] [[분류:브루저/원딜]]
+
+## Q는 오래 모으는 기술이 아니라 시간을 빼앗는 기술이다
+
+`대량 학살 강타(Q)`를 끝까지 충전하면 강하지만, 상대가 범위 밖으로 나가면 아무 일도 없다. **짧게 눌러 피해를 확정하고 기본 공격을 잇는 선택**과, 수풀·시야 밖에서 길게 모아 띄우는 선택을 구분한다.
+
+> 상대가 Q 범위를 벗어나느라 막타를 포기했다면 이미 작은 이득을 본 것이다. 끝까지 맞히려고 내 위치를 망치지 않는다.
+
+- 시야가 열린 중앙에서는 짧게 끊는다.
+- 상대 이동기가 빠졌거나 둔화가 묻었을 때만 길게 모은다.
+- 적 정글이 안 보이면 Q 충전으로 제자리에 오래 서 있지 않는다.
+
+## E로 미니언 뒤의 상대를 노린다
+
+`학살자의 포효(E)`가 미니언을 맞히면 그 미니언이 뒤로 밀려나며 경로의 적에게 영향을 준다. 상대가 자기 미니언 뒤를 안전지대로 생각할 때, 낮은 체력 미니언을 골라 밀어낸다.[* 인벤 사이온 공략 게시판의 실용 공략과 챔피언 스킬 설명을 참고했다. [사이온 공략 원문](https://lol.inven.co.kr/dataninfo/champion/manualToolView.php?idx=143260), [사이온 공략 목록](https://lol.inven.co.kr/dataninfo/champion/manualTool.php?champnum=57)]
+
+| E 적중 뒤 상대 반응 | 다음 선택 |
+| --- | --- |
+| 옆으로 빠짐 | 그 방향을 막도록 Q를 짧게 충전한다. |
+| 뒤로 빠짐 | 웨이브를 밀고 시야를 잡는다. |
+| 앞으로 들어옴 | `영혼의 용광로(W)` 보호막을 켜고 짧게 맞교환한다. |
+
+## W는 터뜨릴 수 있을 때 켠다
+
+`W` 보호막은 일정 시간이 지나야 다시 눌러 주변 피해를 줄 수 있다. 상대의 한 번짜리 견제를 막는 데만 쓰면 폭발 피해 없이 끝날 수 있다. 미니언을 먹으러 서로 가까워질 때 미리 켜고, 보호막이 깨지기 전에 폭발 범위로 걸어간다.
+
+궁극기로 라인에 복귀하거나 로밍하기 전에는 웨이브가 어느 쪽으로 움직이는지 확인한다. 미드 웨이브가 아군 포탑에 쌓이는데 다른 길로 달리면, 성공해도 경험치 손해가 커진다.
+
+## 같이 보면 좋은 문서
+
+[[제이스]]처럼 원거리에서 계속 체력을 깎는 상대에게는 모든 막타를 몸으로 먹으려 하지 않는다. E와 짧은 Q로 안전한 미니언만 챙기고, 상대가 앞으로 나온 순간에만 W를 켜고 거리를 좁힌다.'
+AND NOT EXISTS (SELECT 1 FROM wiki_edits WHERE id = 'edit-ai-champion-sion-20260912');
+INSERT OR IGNORE INTO wiki_links (source_doc, source_key, target_key, target_title)
+SELECT 'doc-ai-champion-sion-20260912', NULL, '분류:미드', '분류:미드' FROM wiki_docs WHERE id = 'doc-ai-champion-sion-20260912';
+INSERT OR IGNORE INTO wiki_links (source_doc, source_key, target_key, target_title)
+SELECT 'doc-ai-champion-sion-20260912', NULL, '분류:브루저/원딜', '분류:브루저/원딜' FROM wiki_docs WHERE id = 'doc-ai-champion-sion-20260912';
+INSERT OR IGNORE INTO wiki_links (source_doc, source_key, target_key, target_title)
+SELECT 'doc-ai-champion-sion-20260912', NULL, '제이스', '제이스' FROM wiki_docs WHERE id = 'doc-ai-champion-sion-20260912';
+
+-- 코르키 (1114자)
+INSERT INTO wiki_docs (id, kind, title, title_key, doc_status, champion_slug, general, revision, patch, edit_policy, created_at, updated_at, updated_by)
+SELECT 'doc-ai-champion-corki-20260912', 'article', '코르키', '코르키', 'published', NULL, '# AI 작성 초안
+
+[[분류:미드]] [[분류:브루저/원딜]]
+
+## 라인 정리와 견제를 같은 방향에 둔다
+
+코르키는 `인광탄(Q)`과 `개틀링 건(E)`으로 미니언을 밀면서 상대를 함께 때릴 때 라인전이 편해진다.[* 인벤 코르키 공략들은 원거리 미니언에 Q와 E를 겹쳐 빠르게 정리하고, 초반에는 과감한 앞무빙보다 안전한 라인 관리가 중요하다고 설명한다. [코르키 공략](https://lol.inven.co.kr/dataninfo/champion/manualToolView.php?idx=134908), [코르키 딜교 공략](https://lol.inven.co.kr/dataninfo/champion/manualToolView.php?idx=148079)] **상대만 향해 Q를 던지다 빗나가면 웨이브를 밀 수단과 견제 수단을 동시에 잃는다.**
+
+- 상대가 원거리 미니언 옆에 설 때 Q 범위를 겹친다.
+- E를 켰다면 정면을 계속 향해야 한다. 옆으로 크게 틀어 피해 시간을 버리지 않는다.
+- 평타 한 대를 더 치려고 미니언 앞으로 나가 `발키리(W)`를 강제로 쓰지 않는다.
+
+## W는 공격 버튼보다 퇴로다
+
+상대의 진입기가 빠졌을 때 앞 `W`로 따라갈 수 있지만, 정글 위치가 보이지 않으면 뒤로 빠질 수단을 남긴다. 특히 미드 중앙에서 옆 벽을 넘은 뒤에는 다음 웨이브와 멀어지므로, 킬이 확실하지 않다면 걸어서 압박한다.
+
+| 상대 상태 | 코르키의 선택 |
+| --- | --- |
+| 핵심 이동기가 남음 | 미사일과 Q로 체력만 깎는다. |
+| 진입기가 빠짐 | E를 켜고 앞으로 걸어 짧게 맞교환한다. |
+| 적 정글이 안 보임 | W를 보존하고 웨이브 뒤에서 공격한다. |
+
+## 큰 미사일은 막타보다 챔피언에게
+
+`미사일 폭격(R)`은 세 번째 발사가 더 강하다. 작은 미사일로 웨이브 체력을 정리하고 큰 미사일이 준비될 때 상대가 막타를 먹는 자리를 겨눈다. 미사일을 연속으로 모두 쓰면 다음 웨이브에서 압박이 사라지므로 한 발씩 목적을 정한다.
+
+## 같이 보면 좋은 문서
+
+[[스몰더]]와 달리 코르키는 Q 막타로 영구 중첩을 모으지 않는다. 성장 욕심 때문에 라인을 오래 붙잡기보다, 빠르게 민 뒤 안전한 위치에서 다음 웨이브를 기다리는 것이 낫다.', 1, '16.17.1', 'guarded', '2026-09-12T00:00:00.000Z', '2026-09-12T00:00:00.000Z', 'user-system'
+WHERE NOT EXISTS (SELECT 1 FROM wiki_docs WHERE id = 'doc-ai-champion-corki-20260912' OR (kind = 'article' AND title_key = '코르키'));
+INSERT INTO wiki_edits (id, doc_id, me_slug, base_revision, body, summary, status, author, created_at, accepted_via, revision)
+SELECT 'edit-ai-champion-corki-20260912', id, NULL, 0, general, 'AI 작성: 실전 라인전 초안', 'accepted', 'user-system', '2026-09-12T00:00:00.000Z', 'admin', 1 FROM wiki_docs
+WHERE id = 'doc-ai-champion-corki-20260912' AND revision = 1 AND general = '# AI 작성 초안
+
+[[분류:미드]] [[분류:브루저/원딜]]
+
+## 라인 정리와 견제를 같은 방향에 둔다
+
+코르키는 `인광탄(Q)`과 `개틀링 건(E)`으로 미니언을 밀면서 상대를 함께 때릴 때 라인전이 편해진다.[* 인벤 코르키 공략들은 원거리 미니언에 Q와 E를 겹쳐 빠르게 정리하고, 초반에는 과감한 앞무빙보다 안전한 라인 관리가 중요하다고 설명한다. [코르키 공략](https://lol.inven.co.kr/dataninfo/champion/manualToolView.php?idx=134908), [코르키 딜교 공략](https://lol.inven.co.kr/dataninfo/champion/manualToolView.php?idx=148079)] **상대만 향해 Q를 던지다 빗나가면 웨이브를 밀 수단과 견제 수단을 동시에 잃는다.**
+
+- 상대가 원거리 미니언 옆에 설 때 Q 범위를 겹친다.
+- E를 켰다면 정면을 계속 향해야 한다. 옆으로 크게 틀어 피해 시간을 버리지 않는다.
+- 평타 한 대를 더 치려고 미니언 앞으로 나가 `발키리(W)`를 강제로 쓰지 않는다.
+
+## W는 공격 버튼보다 퇴로다
+
+상대의 진입기가 빠졌을 때 앞 `W`로 따라갈 수 있지만, 정글 위치가 보이지 않으면 뒤로 빠질 수단을 남긴다. 특히 미드 중앙에서 옆 벽을 넘은 뒤에는 다음 웨이브와 멀어지므로, 킬이 확실하지 않다면 걸어서 압박한다.
+
+| 상대 상태 | 코르키의 선택 |
+| --- | --- |
+| 핵심 이동기가 남음 | 미사일과 Q로 체력만 깎는다. |
+| 진입기가 빠짐 | E를 켜고 앞으로 걸어 짧게 맞교환한다. |
+| 적 정글이 안 보임 | W를 보존하고 웨이브 뒤에서 공격한다. |
+
+## 큰 미사일은 막타보다 챔피언에게
+
+`미사일 폭격(R)`은 세 번째 발사가 더 강하다. 작은 미사일로 웨이브 체력을 정리하고 큰 미사일이 준비될 때 상대가 막타를 먹는 자리를 겨눈다. 미사일을 연속으로 모두 쓰면 다음 웨이브에서 압박이 사라지므로 한 발씩 목적을 정한다.
+
+## 같이 보면 좋은 문서
+
+[[스몰더]]와 달리 코르키는 Q 막타로 영구 중첩을 모으지 않는다. 성장 욕심 때문에 라인을 오래 붙잡기보다, 빠르게 민 뒤 안전한 위치에서 다음 웨이브를 기다리는 것이 낫다.'
+AND NOT EXISTS (SELECT 1 FROM wiki_edits WHERE id = 'edit-ai-champion-corki-20260912');
+INSERT OR IGNORE INTO wiki_links (source_doc, source_key, target_key, target_title)
+SELECT 'doc-ai-champion-corki-20260912', NULL, '분류:미드', '분류:미드' FROM wiki_docs WHERE id = 'doc-ai-champion-corki-20260912';
+INSERT OR IGNORE INTO wiki_links (source_doc, source_key, target_key, target_title)
+SELECT 'doc-ai-champion-corki-20260912', NULL, '분류:브루저/원딜', '분류:브루저/원딜' FROM wiki_docs WHERE id = 'doc-ai-champion-corki-20260912';
+INSERT OR IGNORE INTO wiki_links (source_doc, source_key, target_key, target_title)
+SELECT 'doc-ai-champion-corki-20260912', NULL, '스몰더', '스몰더' FROM wiki_docs WHERE id = 'doc-ai-champion-corki-20260912';
+
+-- 제이스 (1056자)
+INSERT INTO wiki_docs (id, kind, title, title_key, doc_status, champion_slug, general, revision, patch, edit_policy, created_at, updated_at, updated_by)
+SELECT 'doc-ai-champion-jayce-20260912', 'article', '제이스', '제이스', 'published', NULL, '# AI 작성 초안
+
+[[분류:미드]] [[분류:브루저/원딜]]
+
+## Q를 먼저 쏘고 관문을 연다
+
+캐논 상태의 `전격 폭발(Q)`을 먼저 쏜 뒤 제이스 바로 앞에 `가속 관문(E)`을 열면, 강화된 투사체를 상대가 보고 피할 시간이 줄어든다.[* 인벤 미드 제이스 공략은 견제할 때 Q-E를 쓰고, 이동하거나 뒤로 빠질 때는 E-Q를 구분한다고 설명한다. [미드 제이스 공략 원문](https://lol.inven.co.kr/dataninfo/champion/manualToolView.php?idx=148113)] **관문을 너무 멀리 깔면 상대에게 발사 방향을 미리 알려 준다.**
+
+- 견제: `Q → 내 앞 E`
+- 빠지며 카이팅: `E → Q`
+- 이동: 관문을 진행 방향과 나란히 길게 깔아 통과 시간을 늘린다.
+
+## 해머 진입은 밀쳐낼 위치까지 본다
+
+가까운 적 미니언에 `하늘로!(Q)`를 써 챔피언까지 범위 피해를 묻힐 수 있다. 그러나 들어간 뒤 `천둥 강타(E)`가 상대를 안전한 포탑 쪽으로 밀어 주면 손해다. 상대를 아군 쪽이나 벽 쪽으로 밀 수 있는 각에서만 해머 교환을 연다.
+
+| 해머로 들어가도 되는 때 | 캐논을 유지할 때 |
+| --- | --- |
+| 상대 핵심 CC가 빠짐 | 적 정글이 안 보임 |
+| 밀친 뒤 걸어서 빠질 수 있음 | 퇴로 미니언이 없음 |
+| 원거리 기술을 이미 맞힘 | 웨이브가 적 포탑에 가까움 |
+
+## 초반 우위가 과한 전진의 허가는 아니다
+
+제이스는 낮은 레벨부터 기본 공격과 여섯 개 기술로 압박할 수 있지만, 도주 전용 기술은 없다. 상대 체력을 깎았더라도 정글 위치가 보이지 않으면 웨이브 옆을 넘지 않는다. 변환 뒤 잠깐 얻는 이동 속도는 스킬을 피하고 거리를 다시 잡는 데 쓴다.
+
+> 상대가 로밍을 갔을 때는 뒤늦게 따라갈지, 웨이브를 포탑에 넣을지 하나를 빠르게 정한다. 두 행동을 반씩 하면 둘 다 늦는다.
+
+## 같이 보면 좋은 문서
+
+[[사이온]]의 Q 충전은 해머 E로 끊거나 밀어낼 수 있지만, 이미 사거리 밖이라면 캐논 견제를 유지한다. 끊겠다고 먼저 들어가 다른 스킬을 전부 맞지 않는다.', 1, '16.17.1', 'guarded', '2026-09-12T00:00:00.000Z', '2026-09-12T00:00:00.000Z', 'user-system'
+WHERE NOT EXISTS (SELECT 1 FROM wiki_docs WHERE id = 'doc-ai-champion-jayce-20260912' OR (kind = 'article' AND title_key = '제이스'));
+INSERT INTO wiki_edits (id, doc_id, me_slug, base_revision, body, summary, status, author, created_at, accepted_via, revision)
+SELECT 'edit-ai-champion-jayce-20260912', id, NULL, 0, general, 'AI 작성: 실전 라인전 초안', 'accepted', 'user-system', '2026-09-12T00:00:00.000Z', 'admin', 1 FROM wiki_docs
+WHERE id = 'doc-ai-champion-jayce-20260912' AND revision = 1 AND general = '# AI 작성 초안
+
+[[분류:미드]] [[분류:브루저/원딜]]
+
+## Q를 먼저 쏘고 관문을 연다
+
+캐논 상태의 `전격 폭발(Q)`을 먼저 쏜 뒤 제이스 바로 앞에 `가속 관문(E)`을 열면, 강화된 투사체를 상대가 보고 피할 시간이 줄어든다.[* 인벤 미드 제이스 공략은 견제할 때 Q-E를 쓰고, 이동하거나 뒤로 빠질 때는 E-Q를 구분한다고 설명한다. [미드 제이스 공략 원문](https://lol.inven.co.kr/dataninfo/champion/manualToolView.php?idx=148113)] **관문을 너무 멀리 깔면 상대에게 발사 방향을 미리 알려 준다.**
+
+- 견제: `Q → 내 앞 E`
+- 빠지며 카이팅: `E → Q`
+- 이동: 관문을 진행 방향과 나란히 길게 깔아 통과 시간을 늘린다.
+
+## 해머 진입은 밀쳐낼 위치까지 본다
+
+가까운 적 미니언에 `하늘로!(Q)`를 써 챔피언까지 범위 피해를 묻힐 수 있다. 그러나 들어간 뒤 `천둥 강타(E)`가 상대를 안전한 포탑 쪽으로 밀어 주면 손해다. 상대를 아군 쪽이나 벽 쪽으로 밀 수 있는 각에서만 해머 교환을 연다.
+
+| 해머로 들어가도 되는 때 | 캐논을 유지할 때 |
+| --- | --- |
+| 상대 핵심 CC가 빠짐 | 적 정글이 안 보임 |
+| 밀친 뒤 걸어서 빠질 수 있음 | 퇴로 미니언이 없음 |
+| 원거리 기술을 이미 맞힘 | 웨이브가 적 포탑에 가까움 |
+
+## 초반 우위가 과한 전진의 허가는 아니다
+
+제이스는 낮은 레벨부터 기본 공격과 여섯 개 기술로 압박할 수 있지만, 도주 전용 기술은 없다. 상대 체력을 깎았더라도 정글 위치가 보이지 않으면 웨이브 옆을 넘지 않는다. 변환 뒤 잠깐 얻는 이동 속도는 스킬을 피하고 거리를 다시 잡는 데 쓴다.
+
+> 상대가 로밍을 갔을 때는 뒤늦게 따라갈지, 웨이브를 포탑에 넣을지 하나를 빠르게 정한다. 두 행동을 반씩 하면 둘 다 늦는다.
+
+## 같이 보면 좋은 문서
+
+[[사이온]]의 Q 충전은 해머 E로 끊거나 밀어낼 수 있지만, 이미 사거리 밖이라면 캐논 견제를 유지한다. 끊겠다고 먼저 들어가 다른 스킬을 전부 맞지 않는다.'
+AND NOT EXISTS (SELECT 1 FROM wiki_edits WHERE id = 'edit-ai-champion-jayce-20260912');
+INSERT OR IGNORE INTO wiki_links (source_doc, source_key, target_key, target_title)
+SELECT 'doc-ai-champion-jayce-20260912', NULL, '분류:미드', '분류:미드' FROM wiki_docs WHERE id = 'doc-ai-champion-jayce-20260912';
+INSERT OR IGNORE INTO wiki_links (source_doc, source_key, target_key, target_title)
+SELECT 'doc-ai-champion-jayce-20260912', NULL, '분류:브루저/원딜', '분류:브루저/원딜' FROM wiki_docs WHERE id = 'doc-ai-champion-jayce-20260912';
+INSERT OR IGNORE INTO wiki_links (source_doc, source_key, target_key, target_title)
+SELECT 'doc-ai-champion-jayce-20260912', NULL, '사이온', '사이온' FROM wiki_docs WHERE id = 'doc-ai-champion-jayce-20260912';
+
+-- 스몰더 (1069자)
+INSERT INTO wiki_docs (id, kind, title, title_key, doc_status, champion_slug, general, revision, patch, edit_policy, created_at, updated_at, updated_by)
+SELECT 'doc-ai-champion-smolder-20260912', 'article', '스몰더', '스몰더', 'published', NULL, '# AI 작성 초안
+
+[[분류:미드]] [[분류:브루저/원딜]]
+
+## Q 한 번마다 막타와 견제 중 하나를 확실히 고른다
+
+스몰더는 `초강력 화염 숨결(Q)`로 유닛을 처치하거나 챔피언을 맞혀 영구 중첩을 쌓는다. 애매한 체력의 미니언에 Q를 써서 막타를 놓치고 챔피언도 못 맞히는 상황을 가장 먼저 줄인다.
+
+- 안전한 막타가 있으면 Q로 확정한다.
+- 상대가 막타를 먹으러 멈추면 Q로 챔피언을 건드린다.
+- 둘 다 어렵다면 평타로 미니언 체력을 정리해 다음 Q를 준비한다.
+
+## W는 맞힐 수 있을 때만 쓴다
+
+`에취!(W)`는 적 챔피언에게 맞으면 폭발하지만, 빗나갔을 때 자원 손해가 크다.[* 인벤 미드 스몰더 공략도 초반 W 견제와 Q 중첩을 구분하고, 맞힐 수 없는 W를 반복하지 말라고 강조한다. [스몰더 공략 원문](https://lol.inven.co.kr/dataninfo/champion/manualToolView.php?idx=148096)] 상대가 원거리 미니언을 치려고 멈추거나 좁은 강가 입구로 움직일 때 사용한다.
+
+| W 결과 | 다음 행동 |
+| --- | --- |
+| 챔피언 적중 | 폭발 범위와 Q 사거리가 겹칠 때만 한 걸음 전진한다. |
+| 미니언만 적중 | 라인을 밀 목적이었는지 확인하고 더 따라가지 않는다. |
+| 빗나감 | 다음 웨이브에서는 Q 막타에 집중한다. |
+
+## E는 벽을 넘는 마지막 수단으로 남긴다
+
+`펄럭펄럭(E)`은 지형을 무시할 수 있어 짧은 견제보다 갱 회피 가치가 크다. 적 정글이 안 보일 때 앞으로 쓰면 미드의 짧은 벽조차 안전지대가 되지 못한다. E를 켰을 때는 체력이 낮은 적을 자동으로 노리는 공격보다 **어느 벽을 넘어 끝낼지**를 먼저 정한다.
+
+궁극기는 중앙 경로로 스몰더 자신을 맞히면 회복할 수 있다. 라인에서 맞교환 뒤 사용할 때는 상대만 겨누지 말고 나와 상대가 같은 직선에 놓이도록 움직인다.
+
+## 같이 보면 좋은 문서
+
+[[코르키]]는 미사일을 저장해 순간 압박을 만들고, 스몰더는 Q 사용마다 미래의 힘을 쌓는다. 둘 다 원거리라고 같은 속도로 웨이브를 지우면 스몰더가 챙길 Q 막타가 사라질 수 있다.', 1, '16.17.1', 'guarded', '2026-09-12T00:00:00.000Z', '2026-09-12T00:00:00.000Z', 'user-system'
+WHERE NOT EXISTS (SELECT 1 FROM wiki_docs WHERE id = 'doc-ai-champion-smolder-20260912' OR (kind = 'article' AND title_key = '스몰더'));
+INSERT INTO wiki_edits (id, doc_id, me_slug, base_revision, body, summary, status, author, created_at, accepted_via, revision)
+SELECT 'edit-ai-champion-smolder-20260912', id, NULL, 0, general, 'AI 작성: 실전 라인전 초안', 'accepted', 'user-system', '2026-09-12T00:00:00.000Z', 'admin', 1 FROM wiki_docs
+WHERE id = 'doc-ai-champion-smolder-20260912' AND revision = 1 AND general = '# AI 작성 초안
+
+[[분류:미드]] [[분류:브루저/원딜]]
+
+## Q 한 번마다 막타와 견제 중 하나를 확실히 고른다
+
+스몰더는 `초강력 화염 숨결(Q)`로 유닛을 처치하거나 챔피언을 맞혀 영구 중첩을 쌓는다. 애매한 체력의 미니언에 Q를 써서 막타를 놓치고 챔피언도 못 맞히는 상황을 가장 먼저 줄인다.
+
+- 안전한 막타가 있으면 Q로 확정한다.
+- 상대가 막타를 먹으러 멈추면 Q로 챔피언을 건드린다.
+- 둘 다 어렵다면 평타로 미니언 체력을 정리해 다음 Q를 준비한다.
+
+## W는 맞힐 수 있을 때만 쓴다
+
+`에취!(W)`는 적 챔피언에게 맞으면 폭발하지만, 빗나갔을 때 자원 손해가 크다.[* 인벤 미드 스몰더 공략도 초반 W 견제와 Q 중첩을 구분하고, 맞힐 수 없는 W를 반복하지 말라고 강조한다. [스몰더 공략 원문](https://lol.inven.co.kr/dataninfo/champion/manualToolView.php?idx=148096)] 상대가 원거리 미니언을 치려고 멈추거나 좁은 강가 입구로 움직일 때 사용한다.
+
+| W 결과 | 다음 행동 |
+| --- | --- |
+| 챔피언 적중 | 폭발 범위와 Q 사거리가 겹칠 때만 한 걸음 전진한다. |
+| 미니언만 적중 | 라인을 밀 목적이었는지 확인하고 더 따라가지 않는다. |
+| 빗나감 | 다음 웨이브에서는 Q 막타에 집중한다. |
+
+## E는 벽을 넘는 마지막 수단으로 남긴다
+
+`펄럭펄럭(E)`은 지형을 무시할 수 있어 짧은 견제보다 갱 회피 가치가 크다. 적 정글이 안 보일 때 앞으로 쓰면 미드의 짧은 벽조차 안전지대가 되지 못한다. E를 켰을 때는 체력이 낮은 적을 자동으로 노리는 공격보다 **어느 벽을 넘어 끝낼지**를 먼저 정한다.
+
+궁극기는 중앙 경로로 스몰더 자신을 맞히면 회복할 수 있다. 라인에서 맞교환 뒤 사용할 때는 상대만 겨누지 말고 나와 상대가 같은 직선에 놓이도록 움직인다.
+
+## 같이 보면 좋은 문서
+
+[[코르키]]는 미사일을 저장해 순간 압박을 만들고, 스몰더는 Q 사용마다 미래의 힘을 쌓는다. 둘 다 원거리라고 같은 속도로 웨이브를 지우면 스몰더가 챙길 Q 막타가 사라질 수 있다.'
+AND NOT EXISTS (SELECT 1 FROM wiki_edits WHERE id = 'edit-ai-champion-smolder-20260912');
+INSERT OR IGNORE INTO wiki_links (source_doc, source_key, target_key, target_title)
+SELECT 'doc-ai-champion-smolder-20260912', NULL, '분류:미드', '분류:미드' FROM wiki_docs WHERE id = 'doc-ai-champion-smolder-20260912';
+INSERT OR IGNORE INTO wiki_links (source_doc, source_key, target_key, target_title)
+SELECT 'doc-ai-champion-smolder-20260912', NULL, '분류:브루저/원딜', '분류:브루저/원딜' FROM wiki_docs WHERE id = 'doc-ai-champion-smolder-20260912';
+INSERT OR IGNORE INTO wiki_links (source_doc, source_key, target_key, target_title)
+SELECT 'doc-ai-champion-smolder-20260912', NULL, '코르키', '코르키' FROM wiki_docs WHERE id = 'doc-ai-champion-smolder-20260912';
+
+-- 트리스타나 (1095자)
+INSERT INTO wiki_docs (id, kind, title, title_key, doc_status, champion_slug, general, revision, patch, edit_policy, created_at, updated_at, updated_by)
+SELECT 'doc-ai-champion-tristana-20260912', 'article', '트리스타나', '트리스타나', 'published', NULL, '# AI 작성 초안
+
+[[분류:미드]] [[분류:브루저/원딜]]
+
+## 라인을 당기기 어려운 챔피언임을 먼저 인정한다
+
+트리스타나는 미니언을 처치할 때 주변에 피해를 주므로 막타만 쳐도 웨이브가 밀리기 쉽다. 완벽한 프리징을 고집하기보다 **먼저 밀고 강가 쪽을 안전하게 만든 뒤** 다음 웨이브를 받는다.
+
+- 적 정글이 안 보이면 원거리 미니언보다 뒤에 선다.
+- 폭발 피해로 다음 미니언 막타가 예상보다 빨리 사라지는지 본다.
+- 포탑에 웨이브를 넣은 뒤 남은 미니언을 치려고 오래 머물지 않는다.
+
+## 폭발 화약의 네 번째 중첩을 목표로 한다
+
+`폭발 화약(E)`는 기본 공격과 스킬로 중첩을 쌓을수록 강해진다. 상대가 네 번째 공격 전에 사거리 밖으로 빠질 수 있다면 E부터 붙이지 않는다.[* 인벤 트리스타나 공략은 W와 E를 함께 쓸 때 자원 소모가 크고, 점프를 섞은 교환 뒤 생존까지 계산해야 한다고 설명한다. [트리스타나 공략 원문](https://lol.inven.co.kr/dataninfo/champion/manualToolView.php?idx=144608)]
+
+| E를 붙인 뒤 | 판단 |
+| --- | --- |
+| 상대 CC가 남음 | `속사(Q)`와 평타로 가능한 만큼만 쌓고 W는 보존한다. |
+| 상대 이동기가 빠짐 | W 착지 피해까지 더해 최대 중첩 폭발을 노린다. |
+| 적 정글이 보이지 않음 | 앞으로 점프하지 않고 평타 사거리에서 끝낸다. |
+
+## W는 상대 CC 다음에 쓴다
+
+`로켓 점프(W)`는 진입과 도주를 모두 맡는다. 상대의 속박이나 밀치기가 남아 있을 때 먼저 날면 착지 전에 교환이 끊길 수 있다. 걸어서 E를 붙일 수 있다면 먼저 걸어가고, 핵심 기술이 빠진 뒤 점프로 따라간다.
+
+`대구경 탄환(R)`은 마무리 피해뿐 아니라 거리를 다시 벌리는 기술이다. E가 붙은 상대를 너무 일찍 밀어 폭발 중첩을 포기하지 말고, 반대로 적 정글이 나타났다면 피해보다 생존을 위해 바로 밀어낸다.
+
+## 같이 보면 좋은 문서
+
+[[아크샨]]처럼 낮은 레벨부터 기본 공격 중첩으로 압박하지만, 트리스타나는 앞으로 점프한 뒤 돌아올 벽 기술이 없다. 같은 킬각이라도 정글 위치 확인을 더 엄격하게 한다.', 1, '16.17.1', 'guarded', '2026-09-12T00:00:00.000Z', '2026-09-12T00:00:00.000Z', 'user-system'
+WHERE NOT EXISTS (SELECT 1 FROM wiki_docs WHERE id = 'doc-ai-champion-tristana-20260912' OR (kind = 'article' AND title_key = '트리스타나'));
+INSERT INTO wiki_edits (id, doc_id, me_slug, base_revision, body, summary, status, author, created_at, accepted_via, revision)
+SELECT 'edit-ai-champion-tristana-20260912', id, NULL, 0, general, 'AI 작성: 실전 라인전 초안', 'accepted', 'user-system', '2026-09-12T00:00:00.000Z', 'admin', 1 FROM wiki_docs
+WHERE id = 'doc-ai-champion-tristana-20260912' AND revision = 1 AND general = '# AI 작성 초안
+
+[[분류:미드]] [[분류:브루저/원딜]]
+
+## 라인을 당기기 어려운 챔피언임을 먼저 인정한다
+
+트리스타나는 미니언을 처치할 때 주변에 피해를 주므로 막타만 쳐도 웨이브가 밀리기 쉽다. 완벽한 프리징을 고집하기보다 **먼저 밀고 강가 쪽을 안전하게 만든 뒤** 다음 웨이브를 받는다.
+
+- 적 정글이 안 보이면 원거리 미니언보다 뒤에 선다.
+- 폭발 피해로 다음 미니언 막타가 예상보다 빨리 사라지는지 본다.
+- 포탑에 웨이브를 넣은 뒤 남은 미니언을 치려고 오래 머물지 않는다.
+
+## 폭발 화약의 네 번째 중첩을 목표로 한다
+
+`폭발 화약(E)`는 기본 공격과 스킬로 중첩을 쌓을수록 강해진다. 상대가 네 번째 공격 전에 사거리 밖으로 빠질 수 있다면 E부터 붙이지 않는다.[* 인벤 트리스타나 공략은 W와 E를 함께 쓸 때 자원 소모가 크고, 점프를 섞은 교환 뒤 생존까지 계산해야 한다고 설명한다. [트리스타나 공략 원문](https://lol.inven.co.kr/dataninfo/champion/manualToolView.php?idx=144608)]
+
+| E를 붙인 뒤 | 판단 |
+| --- | --- |
+| 상대 CC가 남음 | `속사(Q)`와 평타로 가능한 만큼만 쌓고 W는 보존한다. |
+| 상대 이동기가 빠짐 | W 착지 피해까지 더해 최대 중첩 폭발을 노린다. |
+| 적 정글이 보이지 않음 | 앞으로 점프하지 않고 평타 사거리에서 끝낸다. |
+
+## W는 상대 CC 다음에 쓴다
+
+`로켓 점프(W)`는 진입과 도주를 모두 맡는다. 상대의 속박이나 밀치기가 남아 있을 때 먼저 날면 착지 전에 교환이 끊길 수 있다. 걸어서 E를 붙일 수 있다면 먼저 걸어가고, 핵심 기술이 빠진 뒤 점프로 따라간다.
+
+`대구경 탄환(R)`은 마무리 피해뿐 아니라 거리를 다시 벌리는 기술이다. E가 붙은 상대를 너무 일찍 밀어 폭발 중첩을 포기하지 말고, 반대로 적 정글이 나타났다면 피해보다 생존을 위해 바로 밀어낸다.
+
+## 같이 보면 좋은 문서
+
+[[아크샨]]처럼 낮은 레벨부터 기본 공격 중첩으로 압박하지만, 트리스타나는 앞으로 점프한 뒤 돌아올 벽 기술이 없다. 같은 킬각이라도 정글 위치 확인을 더 엄격하게 한다.'
+AND NOT EXISTS (SELECT 1 FROM wiki_edits WHERE id = 'edit-ai-champion-tristana-20260912');
+INSERT OR IGNORE INTO wiki_links (source_doc, source_key, target_key, target_title)
+SELECT 'doc-ai-champion-tristana-20260912', NULL, '분류:미드', '분류:미드' FROM wiki_docs WHERE id = 'doc-ai-champion-tristana-20260912';
+INSERT OR IGNORE INTO wiki_links (source_doc, source_key, target_key, target_title)
+SELECT 'doc-ai-champion-tristana-20260912', NULL, '분류:브루저/원딜', '분류:브루저/원딜' FROM wiki_docs WHERE id = 'doc-ai-champion-tristana-20260912';
+INSERT OR IGNORE INTO wiki_links (source_doc, source_key, target_key, target_title)
+SELECT 'doc-ai-champion-tristana-20260912', NULL, '아크샨', '아크샨' FROM wiki_docs WHERE id = 'doc-ai-champion-tristana-20260912';
+
+-- 아크샨 (1110자)
+INSERT INTO wiki_docs (id, kind, title, title_key, doc_status, champion_slug, general, revision, patch, edit_policy, created_at, updated_at, updated_by)
+SELECT 'doc-ai-champion-akshan-20260912', 'article', '아크샨', '아크샨', 'published', NULL, '# AI 작성 초안
+
+[[분류:미드]] [[분류:브루저/원딜]]
+
+## Q는 미니언을 통과시켜 사거리를 늘린다
+
+`복수의 부메랑(Q)`은 적에게 맞을 때마다 더 멀리 날아간다. 상대를 직접 겨누기보다 미니언 줄을 통과시켜 뒤의 챔피언까지 맞힌다. 왕복 경로가 다르므로 첫 타를 맞혔다면 상대의 퇴로 쪽으로 걸어 돌아오는 Q까지 겹친다.[* 인벤 아크샨 공략은 미니언을 통과한 Q, 기본 공격 두 번째 탄을 취소해 얻는 이동 속도, 벽과의 거리에 따른 E 궤도를 핵심 라인전 기술로 설명한다. [아크샨 공략 원문](https://lol.inven.co.kr/dataninfo/champion/manualToolView.php?idx=147363)]
+
+## 두 번째 탄은 피해와 이동 중 하나를 고른다
+
+기본 공격 뒤 자동으로 나가는 두 번째 탄을 끝까지 쏘면 피해와 3타 효과를 빠르게 쌓을 수 있다. **반대로 두 번째 탄을 취소하면 이동 속도를 얻는다.**
+
+- 상대가 도망갈 길이 없으면 두 발을 모두 쏜다.
+- 적의 논타깃 기술이 날아오면 두 번째 탄을 취소하고 옆으로 움직인다.
+- 보호막이 발동한 뒤에는 한 대를 더 욕심내기보다 사거리 밖으로 빠진다.
+
+| 원하는 E 궤도 | 갈고리 위치 |
+| --- | --- |
+| 빠르게 붙기 | 내 쪽에 가까운 벽에 걸어 작은 원을 돈다. |
+| 도망가는 적 추격 | 상대 쪽 벽에 걸어 더 큰 원을 그린다. |
+| 갱 회피 | 적 챔피언과 부딪히지 않을 빈 경로를 먼저 본다. |
+
+## E는 충돌하면 끝난다
+
+`영웅의 비상(E)`은 챔피언이나 지형에 부딪히면 떨어진다. 화려하게 긴 궤도를 그리는 것보다 적과 미니언 사이의 빈 공간을 확보하는 일이 먼저다. 벽에 갈고리를 걸고 이동 방향을 여러 번 입력하다 즉시 뛰어내리지 않도록 한 번만 확실히 지정한다.
+
+궁극기 탄환은 챔피언뿐 아니라 미니언과 구조물에도 막힌다. 라인에서 상대가 낮은 체력이라고 바로 조준하지 말고, 다음 웨이브와 포탑 사이로 숨을 수 있는지 확인한다.
+
+## 같이 보면 좋은 문서
+
+[[트리스타나]]와 맞라인에서는 서로 낮은 레벨부터 강하다. 트리스타나가 E를 붙였을 때 갈고리로 큰 원을 돌려 시간을 끌 수 있는지, 충돌할 미니언이 많은지를 먼저 본다.', 1, '16.17.1', 'guarded', '2026-09-12T00:00:00.000Z', '2026-09-12T00:00:00.000Z', 'user-system'
+WHERE NOT EXISTS (SELECT 1 FROM wiki_docs WHERE id = 'doc-ai-champion-akshan-20260912' OR (kind = 'article' AND title_key = '아크샨'));
+INSERT INTO wiki_edits (id, doc_id, me_slug, base_revision, body, summary, status, author, created_at, accepted_via, revision)
+SELECT 'edit-ai-champion-akshan-20260912', id, NULL, 0, general, 'AI 작성: 실전 라인전 초안', 'accepted', 'user-system', '2026-09-12T00:00:00.000Z', 'admin', 1 FROM wiki_docs
+WHERE id = 'doc-ai-champion-akshan-20260912' AND revision = 1 AND general = '# AI 작성 초안
+
+[[분류:미드]] [[분류:브루저/원딜]]
+
+## Q는 미니언을 통과시켜 사거리를 늘린다
+
+`복수의 부메랑(Q)`은 적에게 맞을 때마다 더 멀리 날아간다. 상대를 직접 겨누기보다 미니언 줄을 통과시켜 뒤의 챔피언까지 맞힌다. 왕복 경로가 다르므로 첫 타를 맞혔다면 상대의 퇴로 쪽으로 걸어 돌아오는 Q까지 겹친다.[* 인벤 아크샨 공략은 미니언을 통과한 Q, 기본 공격 두 번째 탄을 취소해 얻는 이동 속도, 벽과의 거리에 따른 E 궤도를 핵심 라인전 기술로 설명한다. [아크샨 공략 원문](https://lol.inven.co.kr/dataninfo/champion/manualToolView.php?idx=147363)]
+
+## 두 번째 탄은 피해와 이동 중 하나를 고른다
+
+기본 공격 뒤 자동으로 나가는 두 번째 탄을 끝까지 쏘면 피해와 3타 효과를 빠르게 쌓을 수 있다. **반대로 두 번째 탄을 취소하면 이동 속도를 얻는다.**
+
+- 상대가 도망갈 길이 없으면 두 발을 모두 쏜다.
+- 적의 논타깃 기술이 날아오면 두 번째 탄을 취소하고 옆으로 움직인다.
+- 보호막이 발동한 뒤에는 한 대를 더 욕심내기보다 사거리 밖으로 빠진다.
+
+| 원하는 E 궤도 | 갈고리 위치 |
+| --- | --- |
+| 빠르게 붙기 | 내 쪽에 가까운 벽에 걸어 작은 원을 돈다. |
+| 도망가는 적 추격 | 상대 쪽 벽에 걸어 더 큰 원을 그린다. |
+| 갱 회피 | 적 챔피언과 부딪히지 않을 빈 경로를 먼저 본다. |
+
+## E는 충돌하면 끝난다
+
+`영웅의 비상(E)`은 챔피언이나 지형에 부딪히면 떨어진다. 화려하게 긴 궤도를 그리는 것보다 적과 미니언 사이의 빈 공간을 확보하는 일이 먼저다. 벽에 갈고리를 걸고 이동 방향을 여러 번 입력하다 즉시 뛰어내리지 않도록 한 번만 확실히 지정한다.
+
+궁극기 탄환은 챔피언뿐 아니라 미니언과 구조물에도 막힌다. 라인에서 상대가 낮은 체력이라고 바로 조준하지 말고, 다음 웨이브와 포탑 사이로 숨을 수 있는지 확인한다.
+
+## 같이 보면 좋은 문서
+
+[[트리스타나]]와 맞라인에서는 서로 낮은 레벨부터 강하다. 트리스타나가 E를 붙였을 때 갈고리로 큰 원을 돌려 시간을 끌 수 있는지, 충돌할 미니언이 많은지를 먼저 본다.'
+AND NOT EXISTS (SELECT 1 FROM wiki_edits WHERE id = 'edit-ai-champion-akshan-20260912');
+INSERT OR IGNORE INTO wiki_links (source_doc, source_key, target_key, target_title)
+SELECT 'doc-ai-champion-akshan-20260912', NULL, '분류:미드', '분류:미드' FROM wiki_docs WHERE id = 'doc-ai-champion-akshan-20260912';
+INSERT OR IGNORE INTO wiki_links (source_doc, source_key, target_key, target_title)
+SELECT 'doc-ai-champion-akshan-20260912', NULL, '분류:브루저/원딜', '분류:브루저/원딜' FROM wiki_docs WHERE id = 'doc-ai-champion-akshan-20260912';
+INSERT OR IGNORE INTO wiki_links (source_doc, source_key, target_key, target_title)
+SELECT 'doc-ai-champion-akshan-20260912', NULL, '트리스타나', '트리스타나' FROM wiki_docs WHERE id = 'doc-ai-champion-akshan-20260912';
+
+-- 로크 (1262자)
+INSERT INTO wiki_docs (id, kind, title, title_key, doc_status, champion_slug, general, revision, patch, edit_policy, created_at, updated_at, updated_by)
+SELECT 'doc-ai-champion-locke-20260912', 'article', '로크', '로크', 'published', NULL, '# AI 작성 초안
+
+[[분류:미드]] [[분류:브루저/원딜]]
+
+## Q 표식을 기본 공격으로 회수한다
+
+`의식용 대못(Q)`은 대못을 던져 표식을 남기고, 기본 공격으로 표식을 소모해 추가 피해를 준다. Q만 맞히고 물러나면 교환의 절반만 쓴 셈이므로 **표식을 회수할 수 있는 거리에서 Q를 던지는가**를 먼저 본다.
+
+- 상대가 막타를 치려고 멈출 때 Q를 던진다.
+- 표식이 생겨도 적 미니언이 많으면 기본 공격 한 대를 포기한다.
+- 여러 대못을 준비했을 때 한 번에 모두 던지지 말고 상대의 좌우 무빙을 확인한다.
+
+## W의 체력 손실을 교환 비용에 넣는다
+
+`영혼 점화(W)`는 공격 속도와 이동 속도를 주지만 로크 자신에게도 피해를 준다. 지속시간 뒤 일부를 회복하더라도, 그 전에 큰 피해를 받으면 회복을 기다릴 수 없다.[* 로크는 신규 챔피언이라 인벤 공략 목록에 축적된 장문 공략이 아직 부족하다. 인벤의 로크 필터와 Data Dragon 16.17.1 한국어 스킬 설명에서 확인되는 범위만 사용했다. [로크 공략 목록](https://lol.inven.co.kr/dataninfo/champion/manualTool.php?champnum=173)]
+
+| W를 켜기 좋은 때 | 보존할 때 |
+| --- | --- |
+| 상대 핵심 피해 기술이 빠짐 | 현재 체력이 낮음 |
+| Q 표식을 기본 공격으로 회수 가능 | 상대가 사거리 밖으로 즉시 이탈 가능 |
+| 교환 뒤 안전하게 물러날 길이 있음 | 적 정글 위치가 보이지 않음 |
+
+## E는 진입 지점과 다음 대상을 함께 본다
+
+`잿빛 추격(E)`는 지정 위치로 순간이동한 뒤 다음 대상을 향해 돌진한다. 첫 위치만 보고 누르면 원하지 않은 대상이나 위험한 방향으로 이어질 수 있다. 미니언 수가 많은 웨이브에서는 **도착 지점 뒤에 무엇이 있는지** 확인하고 사용한다.
+
+> Q 표식 회수 → W의 이동 속도로 거리 조절 → E 보존. 모든 기술을 한 번의 교환에 쓰지 않는 것이 기본이다.
+
+궁극기 `연옥(R)`은 적을 구속하고 조건에 따라 처형한다. 낮은 체력 표시만 보고 먼저 쓰기보다, 상대 이동기가 빠졌고 투사체 경로가 열렸는지 확인한다. 봉인으로 얻는 추가 위력은 다음 교환을 강하게 만들지만, 현재 웨이브를 버릴 이유는 아니다.
+
+## 같이 보면 좋은 문서
+
+[[아크샨]]처럼 기본 공격을 이어야 기술의 가치가 완성되는 원거리 챔피언이다. 다만 아크샨은 두 번째 탄을 취소해 이동하고, 로크는 W가 자기 체력을 소모하므로 같은 거리에서도 교환 비용이 다르다.', 1, '16.17.1', 'guarded', '2026-09-12T00:00:00.000Z', '2026-09-12T00:00:00.000Z', 'user-system'
+WHERE NOT EXISTS (SELECT 1 FROM wiki_docs WHERE id = 'doc-ai-champion-locke-20260912' OR (kind = 'article' AND title_key = '로크'));
+INSERT INTO wiki_edits (id, doc_id, me_slug, base_revision, body, summary, status, author, created_at, accepted_via, revision)
+SELECT 'edit-ai-champion-locke-20260912', id, NULL, 0, general, 'AI 작성: 실전 라인전 초안', 'accepted', 'user-system', '2026-09-12T00:00:00.000Z', 'admin', 1 FROM wiki_docs
+WHERE id = 'doc-ai-champion-locke-20260912' AND revision = 1 AND general = '# AI 작성 초안
+
+[[분류:미드]] [[분류:브루저/원딜]]
+
+## Q 표식을 기본 공격으로 회수한다
+
+`의식용 대못(Q)`은 대못을 던져 표식을 남기고, 기본 공격으로 표식을 소모해 추가 피해를 준다. Q만 맞히고 물러나면 교환의 절반만 쓴 셈이므로 **표식을 회수할 수 있는 거리에서 Q를 던지는가**를 먼저 본다.
+
+- 상대가 막타를 치려고 멈출 때 Q를 던진다.
+- 표식이 생겨도 적 미니언이 많으면 기본 공격 한 대를 포기한다.
+- 여러 대못을 준비했을 때 한 번에 모두 던지지 말고 상대의 좌우 무빙을 확인한다.
+
+## W의 체력 손실을 교환 비용에 넣는다
+
+`영혼 점화(W)`는 공격 속도와 이동 속도를 주지만 로크 자신에게도 피해를 준다. 지속시간 뒤 일부를 회복하더라도, 그 전에 큰 피해를 받으면 회복을 기다릴 수 없다.[* 로크는 신규 챔피언이라 인벤 공략 목록에 축적된 장문 공략이 아직 부족하다. 인벤의 로크 필터와 Data Dragon 16.17.1 한국어 스킬 설명에서 확인되는 범위만 사용했다. [로크 공략 목록](https://lol.inven.co.kr/dataninfo/champion/manualTool.php?champnum=173)]
+
+| W를 켜기 좋은 때 | 보존할 때 |
+| --- | --- |
+| 상대 핵심 피해 기술이 빠짐 | 현재 체력이 낮음 |
+| Q 표식을 기본 공격으로 회수 가능 | 상대가 사거리 밖으로 즉시 이탈 가능 |
+| 교환 뒤 안전하게 물러날 길이 있음 | 적 정글 위치가 보이지 않음 |
+
+## E는 진입 지점과 다음 대상을 함께 본다
+
+`잿빛 추격(E)`는 지정 위치로 순간이동한 뒤 다음 대상을 향해 돌진한다. 첫 위치만 보고 누르면 원하지 않은 대상이나 위험한 방향으로 이어질 수 있다. 미니언 수가 많은 웨이브에서는 **도착 지점 뒤에 무엇이 있는지** 확인하고 사용한다.
+
+> Q 표식 회수 → W의 이동 속도로 거리 조절 → E 보존. 모든 기술을 한 번의 교환에 쓰지 않는 것이 기본이다.
+
+궁극기 `연옥(R)`은 적을 구속하고 조건에 따라 처형한다. 낮은 체력 표시만 보고 먼저 쓰기보다, 상대 이동기가 빠졌고 투사체 경로가 열렸는지 확인한다. 봉인으로 얻는 추가 위력은 다음 교환을 강하게 만들지만, 현재 웨이브를 버릴 이유는 아니다.
+
+## 같이 보면 좋은 문서
+
+[[아크샨]]처럼 기본 공격을 이어야 기술의 가치가 완성되는 원거리 챔피언이다. 다만 아크샨은 두 번째 탄을 취소해 이동하고, 로크는 W가 자기 체력을 소모하므로 같은 거리에서도 교환 비용이 다르다.'
+AND NOT EXISTS (SELECT 1 FROM wiki_edits WHERE id = 'edit-ai-champion-locke-20260912');
+INSERT OR IGNORE INTO wiki_links (source_doc, source_key, target_key, target_title)
+SELECT 'doc-ai-champion-locke-20260912', NULL, '분류:미드', '분류:미드' FROM wiki_docs WHERE id = 'doc-ai-champion-locke-20260912';
+INSERT OR IGNORE INTO wiki_links (source_doc, source_key, target_key, target_title)
+SELECT 'doc-ai-champion-locke-20260912', NULL, '분류:브루저/원딜', '분류:브루저/원딜' FROM wiki_docs WHERE id = 'doc-ai-champion-locke-20260912';
+INSERT OR IGNORE INTO wiki_links (source_doc, source_key, target_key, target_title)
+SELECT 'doc-ai-champion-locke-20260912', NULL, '아크샨', '아크샨' FROM wiki_docs WHERE id = 'doc-ai-champion-locke-20260912';
+
